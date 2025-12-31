@@ -1,0 +1,22 @@
+{
+  "sidebar": {
+    "home": "Home",
+    "patients": "Patients",
+    "patients_list": "Patients list",
+    "patients_add": "Add patient",
+    "doctors": "Doctors",
+    "doctors_list": "Doctors list",
+    "doctors_add": "Add doctor"
+  },
+  "topbar": {
+    "settings": "Settings",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "breadcrumbs": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "add": "Add",
+    "list": "List"
+  }
+}

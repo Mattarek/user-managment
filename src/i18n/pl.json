@@ -1,0 +1,22 @@
+{
+  "sidebar": {
+    "home": "Strona główna",
+    "patients": "Pacjenci",
+    "patients_list": "Lista pacjentów",
+    "patients_add": "Dodaj pacjenta",
+    "doctors": "Lekarze",
+    "doctors_list": "Lista lekarzy",
+    "doctors_add": "Dodaj lekarza"
+  },
+  "topbar": {
+    "settings": "Ustawienia",
+    "logout": "Wyloguj",
+    "language": "Język"
+  },
+  "breadcrumbs": {
+    "dashboard": "Panel",
+    "patients": "Pacjenci",
+    "add": "Dodaj",
+    "list": "Lista"
+  }
+}
