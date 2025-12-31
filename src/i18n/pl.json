@@ -33,5 +33,13 @@
     "lang_pl": "Polski",
     "lang_en": "Angielski",
     "enterYourCredentials": "Podaj dane logowania"
+  },
+
+  "error": {
+    "oops": "Ups!",
+    "message": "Coś poszło nie tak lub ta strona nie istnieje.",
+    "hint": "Spróbuj odświeżyć stronę lub wróć do panelu.",
+    "goToDashboard": "Przejdź do panelu",
+    "backToLogin": "Wróć do logowania"
   }
 }

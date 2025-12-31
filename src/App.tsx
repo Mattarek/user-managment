@@ -24,6 +24,7 @@ function App() {
             <Route path="products/add" element={<h1>Add product</h1>} />
           </Route>
         </Route>
+
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>

@@ -1,31 +1,31 @@
-import { Box, Button, Typography, Stack } from '@mui/material';
+import { Button, Typography, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { AuthBackground } from '../layouts/AuthBackground';
+import { useTranslation } from 'react-i18next';
 
 export default function ErrorPage() {
+  const { t } = useTranslation();
+
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        width: '100%',
-        background: 'linear-gradient(135deg,#6fb1fc 0%,#4364f7 50%,#1e3c72 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        textAlign: 'center',
-        p: 3,
-      }}
-    >
-      <Stack spacing={2} maxWidth={500}>
+    <AuthBackground>
+      <Stack
+        spacing={2}
+        maxWidth={600}
+        sx={{
+          alignItems: 'center',
+          color: 'white',
+          '& .MuiTypography-root': {
+            color: 'inherit',
+          },
+        }}
+      >
         <Typography variant="h2" fontWeight={800}>
-          Oops!
+          {t('error.oops')}
         </Typography>
 
-        <Typography variant="h5">Something went wrong or this page does not exist.</Typography>
+        <Typography variant="h5">{t('error.message')}</Typography>
 
-        <Typography variant="body1" sx={{ opacity: 0.9 }}>
-          Please try refreshing the page or return to the dashboard.
-        </Typography>
+        <Typography variant="body1">{t('error.hint')}</Typography>
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
           <Button
@@ -34,7 +34,7 @@ export default function ErrorPage() {
             to="/dashboard"
             sx={{ bgcolor: 'white', color: '#1e3c72' }}
           >
-            Go to Dashboard
+            {t('error.goToDashboard')}
           </Button>
 
           <Button
@@ -43,10 +43,10 @@ export default function ErrorPage() {
             to="/login"
             sx={{ borderColor: 'white', color: 'white' }}
           >
-            Back to Login
+            {t('error.backToLogin')}
           </Button>
         </Stack>
       </Stack>
-    </Box>
+    </AuthBackground>
   );
 }

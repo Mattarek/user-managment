@@ -9,7 +9,7 @@ export default function LanguageSwitcher() {
   const open = Boolean(anchorEl);
 
   return (
-    <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+    <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 1 }}>
       <IconButton sx={{ color: 'white' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
         <LanguageIcon />
       </IconButton>

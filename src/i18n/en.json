@@ -33,5 +33,12 @@
     "lang_en": "English",
     "login": "Login",
     "enterYourCredentials": "Enter your login details"
+  },
+    "error": {
+    "oops": "Oops!",
+    "message": "Something went wrong or this page does not exist.",
+    "hint": "Please try refreshing the page or return to the dashboard.",
+    "goToDashboard": "Go to Dashboard",
+    "backToLogin": "Back to Login"
   }
 }
