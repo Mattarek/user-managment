@@ -4,7 +4,6 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Outlet } from 'react-router-dom';
 import type { SidebarItem } from '../types/types';
 import { useTranslation } from 'react-i18next';
-import { AsyncButton } from '../components/AsyncButton';
 
 export function DashboardLayout() {
   const { t } = useTranslation();

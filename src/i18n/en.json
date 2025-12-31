@@ -18,5 +18,21 @@
     "patients": "Patients",
     "add": "Add",
     "list": "List"
+  },
+  "auth": {
+    "login_title": "Log in",
+    "login_subtitle": "Enter your credentials",
+    "email": "Email",
+    "password": "Password",
+    "login_btn": "Log in",
+    "login": "Log in",
+    "forgotPassword": "Forgot password",
+    "createAccount": "Create account",
+    "register": "Register",
+    "forgot": "Forgot your password?",
+    "lang_pl": "Polish",
+    "lang_en": "English",
+    "login": "Login",
+    "enterYourCredentials": "Enter your login details"
   }
 }

@@ -18,5 +18,20 @@
     "patients": "Pacjenci",
     "add": "Dodaj",
     "list": "Lista"
+  },
+  "auth": {
+    "login_title": "Zaloguj się",
+    "login_subtitle": "Wprowadź swoje dane",
+    "email": "Email",
+    "password": "Hasło",
+    "login_btn": "Zaloguj",
+    "login": "Zaloguj",
+    "forgotPassword": "Zapomniałem hasła",
+    "createAccount": "Zarejestruj się",
+    "register": "Stwórz konto",
+    "forgot": "Zapomniałeś hasła?",
+    "lang_pl": "Polski",
+    "lang_en": "Angielski",
+    "enterYourCredentials": "Podaj dane logowania"
   }
 }
