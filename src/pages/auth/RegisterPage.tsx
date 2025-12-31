@@ -2,11 +2,10 @@ import { BasePageLayout } from '../../layouts/BasePageLayout';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { TextField } from 'formik-mui';
-import { Button, Stack, Box, Link, IconButton, Menu, MenuItem } from '@mui/material';
-import LanguageIcon from '@mui/icons-material/Language';
+import { Button, Stack, Box, Link } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 import { emailSchema, passwordSchema } from '../../auth/authSchemas';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 
 const registerSchema = Yup.object({
   email: emailSchema,
@@ -14,9 +13,7 @@ const registerSchema = Yup.object({
 });
 
 export default function RegisterPage() {
-  const { i18n, t } = useTranslation();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const { t } = useTranslation();
 
   return (
     <Box
@@ -30,37 +27,7 @@ export default function RegisterPage() {
         position: 'relative',
       }}
     >
-      <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-        <IconButton sx={{ color: 'white' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <LanguageIcon />
-        </IconButton>
-
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => setAnchorEl(null)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        >
-          <MenuItem
-            onClick={() => {
-              i18n.changeLanguage('pl');
-              setAnchorEl(null);
-            }}
-          >
-            🇵🇱 {t('auth.lang_pl')}
-          </MenuItem>
-
-          <MenuItem
-            onClick={() => {
-              i18n.changeLanguage('en');
-              setAnchorEl(null);
-            }}
-          >
-            🇬🇧 {t('auth.lang_en')}
-          </MenuItem>
-        </Menu>
-      </Box>
+      <LanguageSwitcher />
 
       <BasePageLayout title={t('auth.register')} subtitle={t('auth.enterYourCredentials')}>
         <Formik

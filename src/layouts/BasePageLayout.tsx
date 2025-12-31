@@ -1,5 +1,6 @@
 import { Box, Paper, Typography, Container } from '@mui/material';
 import { type ReactNode } from 'react';
+import { AuthBackground } from './AuthBackground';
 
 type BasePageLayoutProps = {
   title?: string;
@@ -15,16 +16,7 @@ export function BasePageLayout({
   rightSide,
 }: Readonly<BasePageLayoutProps>) {
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'grid',
-        gridTemplateColumns: {
-          xs: '1fr',
-          md: rightSide ? '1fr 1fr' : '1fr',
-        },
-      }}
-    >
+    <AuthBackground>
       <Box
         sx={{
           display: 'flex',
@@ -66,6 +58,6 @@ export function BasePageLayout({
           {rightSide}
         </Box>
       )}
-    </Box>
+    </AuthBackground>
   );
 }
