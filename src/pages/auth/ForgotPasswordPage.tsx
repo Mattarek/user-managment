@@ -1,4 +1,4 @@
-import { BasePageLayout } from '../../layouts/BasePageLayout';
+import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { TextField } from 'formik-mui';
@@ -17,8 +17,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthBackground>
       <LanguageSwitcher />
-
-      <BasePageLayout title={t('auth.forgot')} subtitle={t('auth.enterYourCredentials')}>
+      <BasePageLayout title={t('auth.forgot')} subtitle={t('auth.enterYourCredentialsEmail')}>
         <Formik
           initialValues={{ email: '' }}
           validationSchema={ForgotSchema}

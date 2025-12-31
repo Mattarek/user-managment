@@ -1,11 +1,12 @@
-import { BasePageLayout } from '../../layouts/BasePageLayout';
+import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { TextField } from 'formik-mui';
-import { Button, Stack, Box, Link } from '@mui/material';
+import { Button, Stack, Link } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { emailSchema, passwordSchema } from '../../auth/authSchemas';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
+import { AuthBackground } from '../../layouts/AuthBackground';
 
 const registerSchema = Yup.object({
   email: emailSchema,
@@ -16,17 +17,7 @@ export default function RegisterPage() {
   const { t } = useTranslation();
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        width: '100%',
-        background: 'linear-gradient(135deg,#6fb1fc 0%,#4364f7 50%,#1e3c72 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-      }}
-    >
+    <AuthBackground>
       <LanguageSwitcher />
 
       <BasePageLayout title={t('auth.register')} subtitle={t('auth.enterYourCredentials')}>
@@ -70,6 +61,6 @@ export default function RegisterPage() {
           )}
         </Formik>
       </BasePageLayout>
-    </Box>
+    </AuthBackground>
   );
 }

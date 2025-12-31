@@ -44,20 +44,7 @@ export function BasePageLayout({
         </Container>
       </Box>
 
-      {rightSide && (
-        <Box
-          sx={{
-            display: { xs: 'none', md: 'flex' },
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-            color: 'white',
-            p: 6,
-          }}
-        >
-          {rightSide}
-        </Box>
-      )}
+      {rightSide && <AuthBackground>{rightSide}</AuthBackground>}
     </AuthBackground>
   );
 }

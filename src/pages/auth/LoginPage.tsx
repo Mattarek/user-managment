@@ -1,4 +1,4 @@
-import { BasePageLayout } from '../../layouts/BasePageLayout';
+import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { TextField } from 'formik-mui';

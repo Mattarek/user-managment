@@ -32,7 +32,8 @@
     "forgot": "Zapomniałeś hasła?",
     "lang_pl": "Polski",
     "lang_en": "Angielski",
-    "enterYourCredentials": "Podaj dane logowania"
+    "enterYourCredentials": "Podaj dane logowania",
+    "enterYourCredentialsEmail": "Podaj adress e-mail"
   },
 
   "error": {
