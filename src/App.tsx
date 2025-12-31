@@ -5,6 +5,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import { RequireAuth } from './components/RequireAuth';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="products/add" element={<h1>Add product</h1>} />
           </Route>
         </Route>
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>
   );
