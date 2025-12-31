@@ -14,7 +14,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'; // 👈 tu zmiana
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import logo from '../assets/logo.svg';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -25,8 +25,7 @@ export function Topbar() {
   return (
     <AppBar position="fixed" sx={{ ml: 260, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <DashboardIcon fontSize="large" />
-
+        <img src={logo} alt="Logo" width={180} height={180} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Typography>przyklad@testowy.pl</Typography>
           <Avatar />
