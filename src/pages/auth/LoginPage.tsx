@@ -12,7 +12,7 @@ const LoginSchema = Yup.object({
     password: passwordSchema,
 });
 
-export default function LoginPage() {
+export function LoginPage() {
     const {t} = useTranslation();
 
     return (

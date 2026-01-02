@@ -1,0 +1,21 @@
+export const appPaths = {
+    login: "/login",
+    register: "/register",
+    forgotPassword: "/forgot-password",
+
+    dashboard: {
+        root: "/dashboard",
+        patients: "/dashboard/patients",
+        patientsAdd: "/dashboard/patients/add",
+        products: "/dashboard/products",
+        productsAdd: "/dashboard/products/add",
+    },
+
+    patients: {
+        root: "/patients",
+        add: "/patients/add",
+    },
+
+
+    notFound: "*",
+} as const;

@@ -10,7 +10,7 @@ const ForgotSchema = Yup.object({
     email: Yup.string().email('Invalid email').required('Required'),
 });
 
-export default function ForgotPasswordPage() {
+export function ForgotPasswordPage() {
     const {t} = useTranslation();
 
     return (
