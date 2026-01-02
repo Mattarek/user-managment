@@ -1,0 +1,45 @@
+{
+  "sidebar": {
+    "home": "Home",
+    "patients": "Patients",
+    "patients_list": "Patients list",
+    "patients_add": "Add patient",
+    "doctors": "Doctors",
+    "doctors_list": "Doctors list",
+    "doctors_add": "Add doctor"
+  },
+  "topbar": {
+    "settings": "Settings",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "breadcrumbs": {
+    "dashboard": "Dashboard",
+    "patients": "Patients",
+    "add": "Add",
+    "list": "List"
+  },
+  "auth": {
+    "login_title": "Log in",
+    "login_subtitle": "Enter your credentials",
+    "email": "Email",
+    "password": "Password",
+    "login_btn": "Log in",
+    "forgotPassword": "Forgot password",
+    "createAccount": "Create account",
+    "register": "Register",
+    "forgot": "Forgot your password?",
+    "lang_pl": "Polish",
+    "lang_en": "English",
+    "login": "Login",
+    "enterYourCredentials": "Enter your login details",
+    "enterYourCredentialsEmail": "Enter your e-mail address"
+  },
+  "error": {
+    "oops": "Oops!",
+    "message": "Something went wrong or this page does not exist.",
+    "hint": "Please try refreshing the page or return to the dashboard.",
+    "goToDashboard": "Go to Dashboard",
+    "backToLogin": "Back to Login"
+  }
+}

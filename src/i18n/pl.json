@@ -1,0 +1,46 @@
+{
+  "sidebar": {
+    "home": "Strona główna",
+    "patients": "Pacjenci",
+    "patients_list": "Lista pacjentów",
+    "patients_add": "Dodaj pacjenta",
+    "doctors": "Lekarze",
+    "doctors_list": "Lista lekarzy",
+    "doctors_add": "Dodaj lekarza"
+  },
+  "topbar": {
+    "settings": "Ustawienia",
+    "logout": "Wyloguj",
+    "language": "Język"
+  },
+  "breadcrumbs": {
+    "dashboard": "Panel",
+    "patients": "Pacjenci",
+    "add": "Dodaj",
+    "list": "Lista"
+  },
+  "auth": {
+    "login_title": "Zaloguj się",
+    "login_subtitle": "Wprowadź swoje dane",
+    "email": "Email",
+    "password": "Hasło",
+    "login_btn": "Zaloguj",
+    "login": "Zaloguj",
+    "forgotPassword": "Zapomniałem hasła",
+    "createAccount": "Zarejestruj się",
+    "register": "Stwórz konto",
+    "forgot": "Zapomniałeś hasła?",
+    "lang_pl": "Polski",
+    "lang_en": "Angielski",
+    "enterYourCredentials": "Podaj dane logowania",
+    "enterYourCredentialsEmail": "Podaj adress e-mail"
+  },
+
+  "error": {
+    "oops": "Ups!",
+    "message": "Coś poszło nie tak lub ta strona nie istnieje.",
+    "hint": "Spróbuj odświeżyć stronę lub wróć do panelu.",
+    "goToDashboard": "Przejdź do panelu",
+    "backToLogin": "Wróć do logowania"
+  }
+}
