@@ -12,9 +12,7 @@ rezerwować wizyty oraz odzyskiwać dostęp do konta.
 - **Build & Dev:** Vite
 - **Język:** TypeScript
 - **Zarządzanie paczkami:** Yarn
-- Frontend: (np. React – uzupełnij)
-- Backend: (np. Express / Nest – uzupełnij)
-- Baza danych: (np. PostgreSQL / MongoDB – uzupełnij)
+- **Frontend:** React
 
 ---
 
