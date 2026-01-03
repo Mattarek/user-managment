@@ -7,16 +7,17 @@ export function Breadcrumbs() {
     const parts = location.pathname.split('/').filter(Boolean);
     const {t} = useTranslation();
 
+
     return (
         <MUIBreadcrumbs sx={{mb: 2}}>
             <Link component={RouterLink} to="/dashboard">
                 {t('dashboard')}
             </Link>
 
-            {parts.map((part, idx) => {
-                const path = '/' + parts.slice(0, idx + 1).join('/');
+            {parts.map((part, id) => {
+                const path = '/' + parts.slice(0, id + 1).join('/');
 
-                const isLast = idx === parts.length - 1;
+                const isLast = id === parts.length - 1;
 
                 return isLast ? (
                     <Typography key={path}>{part}</Typography>

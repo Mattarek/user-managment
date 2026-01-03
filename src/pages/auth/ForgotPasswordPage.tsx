@@ -7,10 +7,12 @@ import {AuthBackground} from '../../layouts/AuthBackground';
 import {useMemo} from "react";
 import {getForgotSchema} from "../../i18n/authSchema.ts";
 import i18n from "i18next";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 export function ForgotPasswordPage() {
     const {t} = useTranslation();
     const validationSchema = useMemo(() => getForgotSchema(t), [t]);
+    const {recovery} = useAuth();
 
     return (
         <AuthBackground>
@@ -20,7 +22,11 @@ export function ForgotPasswordPage() {
                     key={i18n.language}
                     initialValues={{email: ''}}
                     validationSchema={validationSchema}
-                    onSubmit={async (values) => console.log('FORGOT', values)}
+                    onSubmit={async (values) => {
+                        recovery({
+                            email: values.email
+                        })
+                    }}
                 >
                     {({isSubmitting}) => (
                         <Form>

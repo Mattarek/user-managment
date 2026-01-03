@@ -26,6 +26,12 @@ function App() {
                 <Route path={appPaths.dashboard.patientsAdd}
                        element={<h1>Add patient</h1>}/>
 
+                <Route path={appPaths.dashboard.doctors}
+                       element={<h1>Doctors</h1>}/>
+
+                <Route path={appPaths.dashboard.doctorsAdd}
+                       element={<h1>Add doctor</h1>}/>
+
                 {/*</Route>*/}
                 <Route path={appPaths.notFound} element={<ErrorPage/>}/>
             </Routes>

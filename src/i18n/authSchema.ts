@@ -18,6 +18,14 @@ export const getRegisterSchema = (t: TFunction) =>
             .email(t("validation.emailRequired"))
             .required(t("validation.emailRequired")),
 
+        name: Yup.string()
+            .matches(/^[A-Z][a-z]+$/, t("validation.invalidNameFormat"))
+            .required(t("validation.nameRequired")),
+
+        surname: Yup.string()
+            .matches(/^[A-Z][a-z]+$/, t("validation.invalidSurnameFormat"))
+            .required(t("validation.surnameRequired")),
+
         password: Yup.string()
             .required(t("validation.passwordRequired"))
             .min(minPasswordLength, t("validation.passwordMin", {min: minPasswordLength})),

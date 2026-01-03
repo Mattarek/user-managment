@@ -7,9 +7,11 @@ import {AuthBackground} from '../../layouts/AuthBackground';
 import {useMemo} from "react";
 import {getLoginSchema} from "../../i18n/authSchema.ts";
 import i18n from "i18next";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 export function LoginPage() {
     const {t} = useTranslation();
+    const {login} = useAuth();
     const validationSchema = useMemo(() => getLoginSchema(t), [t]);
 
     return (
@@ -21,7 +23,10 @@ export function LoginPage() {
                     initialValues={{email: '', password: ''}}
                     validationSchema={validationSchema}
                     onSubmit={async (values) => {
-                        console.log('LOGIN', values);
+                        await login({
+                            email: values.email,
+                            password: values.password
+                        })
                     }}
                 >
                     {({isSubmitting}) => (

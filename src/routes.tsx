@@ -7,6 +7,9 @@ export const appPaths = {
         root: "/dashboard",
         patients: "/dashboard/patients",
         patientsAdd: "/dashboard/patients/add",
+
+        doctors: "/dashboard/doctors",
+        doctorsAdd: "/dashboard/doctors/add",
     },
 
     notFound: "*",

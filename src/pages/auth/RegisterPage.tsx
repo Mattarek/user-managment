@@ -7,9 +7,11 @@ import {AuthBackground} from '../../layouts/AuthBackground';
 import {useMemo} from "react";
 import {getRegisterSchema} from "../../i18n/authSchema.ts";
 import i18n from "i18next";
+import {useAuth} from "../../hooks/useAuth.ts";
 
 export function RegisterPage() {
     const {t} = useTranslation();
+    const {register} = useAuth();
     const validationSchema = useMemo(() => getRegisterSchema(t), [t]);
 
     return (
@@ -21,15 +23,43 @@ export function RegisterPage() {
                     key={i18n.language}
                     initialValues={{
                         email: '',
+                        name: '',
+                        surname: '',
                         password: '',
                         confirmPassword: ''
                     }}
                     validationSchema={validationSchema}
-                    onSubmit={async (values) => console.log('REGISTER', values)}
+                    onSubmit={async (values, {setSubmitting}) => {
+                        try {
+                            const data = await register({
+                                email: values.email,
+                                name: values.name,
+                                surname: values.surname,
+                                password: values.password,
+                                confirmPassword: values.confirmPassword
+                            });
+
+                            console.log(data);
+                        } catch (e) {
+                            console.error(e);
+                        } finally {
+                            setSubmitting(false);
+                        }
+                    }}
                 >
                     {({isSubmitting}) => (
                         <Form>
                             <Stack spacing={2}>
+                                <Field component={TextField}
+                                       name="name"
+                                       label={t('auth.name')}
+                                       fullWidth
+                                />
+                                <Field component={TextField}
+                                       name="surname"
+                                       label={t('auth.surname')}
+                                       fullWidth
+                                />
                                 <Field component={TextField}
                                        name="email"
                                        label={t('auth.email')}

@@ -33,7 +33,9 @@
     "lang_en": "English",
     "login": "Login",
     "enterYourCredentials": "Enter your login details",
-    "enterYourCredentialsEmail": "Enter your e-mail address"
+    "enterYourCredentialsEmail": "Enter your e-mail address",
+    "name": "Name",
+    "surname": "Surname"
   },
   "error": {
     "oops": "Oops!",
@@ -43,9 +45,13 @@
     "backToLogin": "Back to Login"
   },
   "validation": {
+    "invalidNameFormat": "The first name should contain one capital letter and lowercase letters",
+    "invalidSurnameFormat": "The surname should contain one capital letter and lowercase letters",
     "required": "This field is required",
     "emailInvalid": "Invalid email address",
     "emailRequired": "Email is required",
+    "nameRequired": "Name is required",
+    "surnameRequired": "Surname is required",
     "passwordRequired": "Password is required",
     "passwordMin": "Password must be at least {{min}} characters",
     "passwordConfirmRequired": "Please confirm your password",

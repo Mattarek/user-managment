@@ -33,7 +33,9 @@
     "lang_pl": "Polski",
     "lang_en": "Angielski",
     "enterYourCredentials": "Podaj dane logowania",
-    "enterYourCredentialsEmail": "Podaj adress e-mail"
+    "enterYourCredentialsEmail": "Podaj adress e-mail",
+    "name": "Imie",
+    "surname": "Nazwisko"
   },
   "error": {
     "oops": "Ups!",
@@ -43,9 +45,13 @@
     "backToLogin": "Wróć do logowania"
   },
   "validation": {
+    "invalidNameFormat": "Imie powinno zawierać jedną dużą literę oraz małe litery",
+    "invalidSurnameFormat": "Nazwisko powinno zawierać jedną dużą literę oraz małe litery",
     "required": "Pole jest wymagane",
     "emailInvalid": "Nieprawidłowy adres e-mail",
     "emailRequired": "Email jest wymagany",
+    "nameRequired": "Imie jest wymagane",
+    "surnameRequired": "Nazwisko jest wymagane",
     "passwordRequired": "Hasło jest wymagane",
     "passwordMin": "Hasło musi mieć co najmniej {{min}} znaków",
     "passwordConfirmRequired": "Potwierdź hasło",
