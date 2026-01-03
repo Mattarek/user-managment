@@ -1,19 +1,16 @@
 import {BasePageLayout} from '../../layouts/BaseAuthLayout';
 import {Field, Form, Formik} from 'formik';
-import * as Yup from 'yup';
 import {TextField} from 'formik-mui';
 import {Button, Link, Stack} from '@mui/material';
 import {useTranslation} from 'react-i18next';
-import {emailSchema, passwordSchema} from '../../auth/authSchemas';
 import {AuthBackground} from '../../layouts/AuthBackground';
-
-const registerSchema = Yup.object({
-    email: emailSchema,
-    password: passwordSchema,
-});
+import {useMemo} from "react";
+import {getRegisterSchema} from "../../i18n/authSchema.ts";
+import i18n from "i18next";
 
 export function RegisterPage() {
     const {t} = useTranslation();
+    const validationSchema = useMemo(() => getRegisterSchema(t), [t]);
 
     return (
         <AuthBackground>
@@ -21,19 +18,23 @@ export function RegisterPage() {
             <BasePageLayout title={t('auth.register')}
                             subtitle={t('auth.enterYourCredentials')}>
                 <Formik
+                    key={i18n.language}
                     initialValues={{
                         email: '',
                         password: '',
                         confirmPassword: ''
                     }}
-                    validationSchema={registerSchema}
+                    validationSchema={validationSchema}
                     onSubmit={async (values) => console.log('REGISTER', values)}
                 >
                     {({isSubmitting}) => (
                         <Form>
                             <Stack spacing={2}>
-                                <Field component={TextField} name="email"
-                                       label={t('auth.email')} fullWidth/>
+                                <Field component={TextField}
+                                       name="email"
+                                       label={t('auth.email')}
+                                       fullWidth
+                                />
 
                                 <Field
                                     component={TextField}

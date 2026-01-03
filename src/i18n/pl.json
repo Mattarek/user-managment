@@ -41,5 +41,14 @@
     "hint": "Spróbuj odświeżyć stronę lub wróć do panelu.",
     "goToDashboard": "Przejdź do panelu",
     "backToLogin": "Wróć do logowania"
+  },
+  "validation": {
+    "required": "Pole jest wymagane",
+    "emailInvalid": "Nieprawidłowy adres e-mail",
+    "emailRequired": "Email jest wymagany",
+    "passwordRequired": "Hasło jest wymagane",
+    "passwordMin": "Hasło musi mieć co najmniej {{min}} znaków",
+    "passwordConfirmRequired": "Potwierdź hasło",
+    "passwordNotMatch": "Hasła nie są takie same"
   }
 }

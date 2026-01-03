@@ -4,6 +4,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import en from './en.json';
 import pl from './pl.json';
+import {setLocale} from "yup";
+
+setLocale({
+    mixed: {
+        required: "Pole jest wymagane",
+    },
+    string: {
+        email: "Nieprawidłowy adres email",
+        min: "Za krótki tekst",
+    },
+});
 
 i18n
     .use(LanguageDetector)

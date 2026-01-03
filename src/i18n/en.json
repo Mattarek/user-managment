@@ -41,5 +41,14 @@
     "hint": "Please try refreshing the page or return to the dashboard.",
     "goToDashboard": "Go to Dashboard",
     "backToLogin": "Back to Login"
+  },
+  "validation": {
+    "required": "This field is required",
+    "emailInvalid": "Invalid email address",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least {{min}} characters",
+    "passwordConfirmRequired": "Please confirm your password",
+    "passwordNotMatch": "Passwords do not match"
   }
 }
