@@ -20,10 +20,13 @@
     "list": "Lista"
   },
   "auth": {
+    "registerSuccess": "Konto zostało utworzone",
+    "registerFailed": "Rejestracja nie powiodła się",
     "login_title": "Zaloguj się",
     "login_subtitle": "Wprowadź swoje dane",
     "email": "Email",
     "password": "Hasło",
+    "repeatPassword": "Powtórz hasło",
     "login_btn": "Zaloguj",
     "login": "Zaloguj",
     "forgotPassword": "Zapomniałem hasła",
@@ -54,7 +57,7 @@
     "surnameRequired": "Nazwisko jest wymagane",
     "passwordRequired": "Hasło jest wymagane",
     "passwordMin": "Hasło musi mieć co najmniej {{min}} znaków",
-    "passwordConfirmRequired": "Potwierdź hasło",
+    "passwordRepeatRequired": "Potwierdź hasło",
     "passwordNotMatch": "Hasła nie są takie same"
   }
 }

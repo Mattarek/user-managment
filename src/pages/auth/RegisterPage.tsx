@@ -1,19 +1,34 @@
 import {BasePageLayout} from '../../layouts/BaseAuthLayout';
 import {Field, Form, Formik} from 'formik';
 import {TextField} from 'formik-mui';
-import {Button, Link, Stack} from '@mui/material';
+import {Alert, Button, Link, Snackbar, Stack} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {AuthBackground} from '../../layouts/AuthBackground';
-import {useMemo} from "react";
+import {useMemo, useState} from "react";
 import {getRegisterSchema} from "../../i18n/authSchema.ts";
 import i18n from "i18next";
 import {useAuth} from "../../hooks/useAuth.ts";
+import {useNavigate} from "react-router-dom";
+
 
 export function RegisterPage() {
     const {t} = useTranslation();
     const {register} = useAuth();
     const validationSchema = useMemo(() => getRegisterSchema(t), [t]);
+    const navigate = useNavigate();
 
+    const [snackbar, setSnackbar] = useState<{
+        open: boolean;
+        type: "success" | "error";
+        message: string;
+    }>({
+        open: false,
+        type: "success",
+        message: ""
+    });
+
+    const showSnackbar = (type: "success" | "error", message: string) =>
+        setSnackbar({open: true, type, message});
     return (
         <AuthBackground>
 
@@ -26,22 +41,26 @@ export function RegisterPage() {
                         name: '',
                         surname: '',
                         password: '',
-                        confirmPassword: ''
+                        repeatedPassword: ''
                     }}
                     validationSchema={validationSchema}
                     onSubmit={async (values, {setSubmitting}) => {
                         try {
-                            const data = await register({
+                            const result = await register({
                                 email: values.email,
                                 name: values.name,
                                 surname: values.surname,
                                 password: values.password,
-                                confirmPassword: values.confirmPassword
+                                repeatedPassword: values.repeatedPassword
                             });
 
-                            console.log(data);
-                        } catch (e) {
-                            console.error(e);
+                            if (result.ok) {
+                                showSnackbar("success", t("auth.registerSuccess"));
+                                navigate("/login");
+                            } else {
+                                showSnackbar("error", result.message || t("auth.registerFailed"));
+                            }
+
                         } finally {
                             setSubmitting(false);
                         }
@@ -76,9 +95,9 @@ export function RegisterPage() {
 
                                 <Field
                                     component={TextField}
-                                    name="confirmPassword"
+                                    name="repeatedPassword"
                                     type="password"
-                                    label={t('auth.password')}
+                                    label={t('auth.repeatPassword')}
                                     fullWidth
                                 />
 
@@ -99,6 +118,21 @@ export function RegisterPage() {
                         </Form>
                     )}
                 </Formik>
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={4000}
+                    onClose={() => setSnackbar(s => ({...s, open: false}))}
+                    anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+                >
+                    <Alert
+                        severity={snackbar.type}
+                        variant="filled"
+                        onClose={() => setSnackbar(s => ({...s, open: false}))}
+                    >
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
+
             </BasePageLayout>
         </AuthBackground>
     );

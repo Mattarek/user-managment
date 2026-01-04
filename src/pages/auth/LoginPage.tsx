@@ -1,18 +1,30 @@
 import {BasePageLayout} from '../../layouts/BaseAuthLayout';
 import {Field, Form, Formik} from 'formik';
 import {TextField} from 'formik-mui';
-import {Button, Link, Stack} from '@mui/material';
+import {Alert, Button, Link, Snackbar, Stack} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {AuthBackground} from '../../layouts/AuthBackground';
-import {useMemo} from "react";
+import {useMemo, useState} from "react";
 import {getLoginSchema} from "../../i18n/authSchema.ts";
 import i18n from "i18next";
 import {useAuth} from "../../hooks/useAuth.ts";
+import {useNavigate} from "react-router-dom";
 
 export function LoginPage() {
     const {t} = useTranslation();
     const {login} = useAuth();
     const validationSchema = useMemo(() => getLoginSchema(t), [t]);
+    const navigate = useNavigate();
+
+    const [snackbar, setSnackbar] = useState<{
+        open: boolean;
+        type: "success" | "error";
+        message: string;
+    }>({open: false, type: "success", message: ""});
+
+    const showSnackbar = (type: "success" | "error", message: string) =>
+        setSnackbar({open: true, type, message});
+
 
     return (
         <AuthBackground>
@@ -22,11 +34,31 @@ export function LoginPage() {
                     key={i18n.language}
                     initialValues={{email: '', password: ''}}
                     validationSchema={validationSchema}
-                    onSubmit={async (values) => {
-                        await login({
-                            email: values.email,
-                            password: values.password
-                        })
+                    onSubmit={async (values, {setSubmitting}) => {
+                        try {
+                            const result = await login({
+                                email: values.email,
+                                password: values.password,
+                            });
+
+                            if (result.ok) {
+                                showSnackbar("success", t("auth.loginSuccess"));
+                                navigate("/dashboard");
+                            } else {
+                                showSnackbar(
+                                    "error",
+                                    result.message || t("auth.loginFailed")
+                                );
+                            }
+                        } catch (e: unknown) {
+                            if (e instanceof Error) {
+                                showSnackbar("error", e.message);
+                            } else {
+                                showSnackbar("error", t("auth.loginFailed"));
+                            }
+                        } finally {
+                            setSubmitting(false)
+                        }
                     }}
                 >
                     {({isSubmitting}) => (
@@ -66,6 +98,20 @@ export function LoginPage() {
                         </Form>
                     )}
                 </Formik>
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={4000}
+                    onClose={() => setSnackbar(s => ({...s, open: false}))}
+                    anchorOrigin={{vertical: "top", horizontal: "center"}}
+                >
+                    <Alert
+                        severity={snackbar.type}
+                        onClose={() => setSnackbar(s => ({...s, open: false}))}
+                        variant="filled"
+                    >
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
             </BasePageLayout>
         </AuthBackground>
     );

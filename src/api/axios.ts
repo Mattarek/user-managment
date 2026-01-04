@@ -4,7 +4,6 @@ const API_URL = "https://patients-care-toci-server.onrender.com/api";
 
 export const api = axios.create({
     baseURL: API_URL,
-    withCredentials: true,
 });
 
 let isRefreshing = false;

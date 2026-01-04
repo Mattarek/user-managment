@@ -20,10 +20,13 @@
     "list": "List"
   },
   "auth": {
+    "registerSuccess": "Account has been created",
+    "registerFailed": "Registration failed",
     "login_title": "Log in",
     "login_subtitle": "Enter your credentials",
     "email": "Email",
     "password": "Password",
+    "repeatPassword": "Repeat Password",
     "login_btn": "Log in",
     "forgotPassword": "Forgot password",
     "createAccount": "Create account",
@@ -54,7 +57,7 @@
     "surnameRequired": "Surname is required",
     "passwordRequired": "Password is required",
     "passwordMin": "Password must be at least {{min}} characters",
-    "passwordConfirmRequired": "Please confirm your password",
+    "passwordRepeatRequired": "Please confirm your password",
     "passwordNotMatch": "Passwords do not match"
   }
 }

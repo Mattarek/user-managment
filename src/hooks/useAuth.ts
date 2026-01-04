@@ -19,13 +19,12 @@ interface RegisterPayload {
     name: string;
     surname: string;
     password: string;
-    confirmPassword: string
+    repeatedPassword: string
 }
 
 interface RecoveryPayload {
     email: string;
 }
-
 
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);
@@ -54,7 +53,7 @@ export function useAuth() {
     const login = async (payload: LoginPayload) => {
         try {
             const {data} = await api.post("/login", payload);
-
+            console.log(data);
             if (!data?.accessToken) {
                 throw new Error("Missing access token");
             }
@@ -79,20 +78,11 @@ export function useAuth() {
     const register = async (payload: RegisterPayload) => {
         try {
             const {data} = await api.post("/register", payload);
-
-            if (!data?.accessToken) {
-                throw new Error("Missing access token");
-            }
-
             localStorage.setItem("accessToken", data.accessToken);
-
-            await getMe();
 
             return {ok: true, data};
         } catch (e: unknown) {
             const err = e as AxiosError<{ message?: string }>;
-
-            console.error("Register failed", err);
 
             return {
                 ok: false,

@@ -30,8 +30,8 @@ export const getRegisterSchema = (t: TFunction) =>
             .required(t("validation.passwordRequired"))
             .min(minPasswordLength, t("validation.passwordMin", {min: minPasswordLength})),
 
-        confirmPassword: Yup.string()
-            .required(t("validation.passwordConfirmRequired"))
+        repeatedPassword: Yup.string()
+            .required(t("validation.passwordRepeatRequired"))
             .oneOf([Yup.ref("password")], t("validation.passwordNotMatch")),
     });
 
