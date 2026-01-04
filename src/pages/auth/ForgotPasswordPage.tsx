@@ -1,26 +1,32 @@
 import {BasePageLayout} from '../../layouts/BaseAuthLayout';
 import {Field, Form, Formik} from 'formik';
-import * as Yup from 'yup';
 import {TextField} from 'formik-mui';
 import {Button, Link, Stack} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import {AuthBackground} from '../../layouts/AuthBackground';
+import {useMemo} from "react";
+import {getForgotSchema} from "../../i18n/authSchema.ts";
+import i18n from "i18next";
+import {useAuth} from "../../hooks/useAuth.ts";
 
-const ForgotSchema = Yup.object({
-    email: Yup.string().email('Invalid email').required('Required'),
-});
-
-export default function ForgotPasswordPage() {
+export function ForgotPasswordPage() {
     const {t} = useTranslation();
+    const validationSchema = useMemo(() => getForgotSchema(t), [t]);
+    const {recovery} = useAuth();
 
     return (
         <AuthBackground>
             <BasePageLayout title={t('auth.forgot')}
                             subtitle={t('auth.enterYourCredentialsEmail')}>
                 <Formik
+                    key={i18n.language}
                     initialValues={{email: ''}}
-                    validationSchema={ForgotSchema}
-                    onSubmit={async (values) => console.log('FORGOT', values)}
+                    validationSchema={validationSchema}
+                    onSubmit={async (values) => {
+                        recovery({
+                            email: values.email
+                        })
+                    }}
                 >
                     {({isSubmitting}) => (
                         <Form>

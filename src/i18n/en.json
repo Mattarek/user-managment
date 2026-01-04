@@ -20,10 +20,13 @@
     "list": "List"
   },
   "auth": {
+    "registerSuccess": "Account has been created",
+    "registerFailed": "Registration failed",
     "login_title": "Log in",
     "login_subtitle": "Enter your credentials",
     "email": "Email",
     "password": "Password",
+    "repeatPassword": "Repeat Password",
     "login_btn": "Log in",
     "forgotPassword": "Forgot password",
     "createAccount": "Create account",
@@ -33,7 +36,9 @@
     "lang_en": "English",
     "login": "Login",
     "enterYourCredentials": "Enter your login details",
-    "enterYourCredentialsEmail": "Enter your e-mail address"
+    "enterYourCredentialsEmail": "Enter your e-mail address",
+    "name": "Name",
+    "surname": "Surname"
   },
   "error": {
     "oops": "Oops!",
@@ -41,5 +46,18 @@
     "hint": "Please try refreshing the page or return to the dashboard.",
     "goToDashboard": "Go to Dashboard",
     "backToLogin": "Back to Login"
+  },
+  "validation": {
+    "invalidNameFormat": "The first name should contain one capital letter and lowercase letters",
+    "invalidSurnameFormat": "The surname should contain one capital letter and lowercase letters",
+    "required": "This field is required",
+    "emailInvalid": "Invalid email address",
+    "emailRequired": "Email is required",
+    "nameRequired": "Name is required",
+    "surnameRequired": "Surname is required",
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least {{min}} characters",
+    "passwordRepeatRequired": "Please confirm your password",
+    "passwordNotMatch": "Passwords do not match"
   }
 }
