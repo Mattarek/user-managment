@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {api} from "../api/axios";
 import type {AxiosError} from "axios";
+import {useNavigate} from "react-router-dom";
 
 export interface User {
     id: string;
@@ -29,7 +30,7 @@ interface RecoveryPayload {
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const navigate = useNavigate();
     const getMe = useCallback(async () => {
         try {
             const {data} = await api.get("/users/me");
@@ -53,12 +54,13 @@ export function useAuth() {
     const login = async (payload: LoginPayload) => {
         try {
             const {data} = await api.post("/login", payload);
-            console.log(data);
+
             if (!data?.accessToken) {
                 throw new Error("Missing access token");
             }
 
             localStorage.setItem("accessToken", data.accessToken);
+            localStorage.setItem("refreshToken", data.refreshToken);
 
             await getMe();
 
@@ -91,7 +93,6 @@ export function useAuth() {
         }
     };
 
-
     const logout = async () => {
         try {
             await api.post("/logout");
@@ -100,7 +101,9 @@ export function useAuth() {
         }
 
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         setUser(null);
+        return navigate('/login', {replace: true});
     };
 
     const recovery = async (payload: RecoveryPayload) => {

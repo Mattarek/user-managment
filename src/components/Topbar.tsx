@@ -16,11 +16,12 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import logo from '../assets/logo.svg';
 import {ThemeSwitcher} from "./ThemeSwitcher.tsx";
+import {useAuth} from "../hooks/useAuth.ts";
 
 export function Topbar() {
     const [anchor, setAnchor] = useState<null | HTMLElement>(null);
     const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
-
+    const {logout} = useAuth();
     const {i18n, t} = useTranslation();
 
     return (
@@ -44,7 +45,9 @@ export function Topbar() {
                             <ListItemText>{t('topbar.language')}</ListItemText>
                         </MenuItem>
                         <MenuItem
-                            onClick={() => console.log('logout')}>{t('topbar.logout')}</MenuItem>
+                            onClick={() => {
+                                logout()
+                            }}>{t('topbar.logout')}</MenuItem>
                     </Menu>
 
                     <Popover

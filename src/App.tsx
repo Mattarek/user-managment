@@ -4,35 +4,51 @@ import {ForgotPasswordPage, LoginPage, RegisterPage} from "./pages/auth";
 import {DashboardLayout} from "./layouts/DasbhoardLayout.tsx";
 import {ErrorPage} from "./pages";
 import {appPaths} from "./routes.tsx";
+import {RequireAuth} from "./components/RequireAuth.tsx";
+import {PublicOnly} from "./components/PublicOnly.tsx";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path={appPaths.login} element={<LoginPage/>}/>
-                <Route path={appPaths.register} element={<RegisterPage/>}/>
-                <Route path={appPaths.forgotPassword}
-                       element={<ForgotPasswordPage/>}/>
+                <Route path={"/"}/>
+                <Route element={<PublicOnly/>}>
+                    <Route path={appPaths.login} element={<LoginPage/>}/>
+                    <Route path={appPaths.register} element={<RegisterPage/>}/>
+                    <Route path={appPaths.forgotPassword}
+                           element={<ForgotPasswordPage/>}/>
+                </Route>
 
-                {/*<Route element={<RequireAuth/>}>*/}
-                <Route path={appPaths.dashboard.root}
-                       element={<DashboardLayout/>}/>
 
-                <Route index element={<h1>Dashboard Home</h1>}/>
+                <Route element={<RequireAuth/>}>
+                    <Route path={appPaths.dashboard.root}
+                           element={<DashboardLayout/>}>
 
-                <Route path={appPaths.dashboard.patients}
-                       element={<h1>Patients</h1>}/>
+                        <Route index element={<h1>Dashboard Home</h1>}/>
 
-                <Route path={appPaths.dashboard.patientsAdd}
-                       element={<h1>Add patient</h1>}/>
+                        <Route
+                            path={appPaths.dashboard.patients}
+                            element={<h1>Patients</h1>}
+                        />
 
-                <Route path={appPaths.dashboard.doctors}
-                       element={<h1>Doctors</h1>}/>
+                        <Route
+                            path={appPaths.dashboard.patientsAdd}
+                            element={<h1>Add patient</h1>}
+                        />
 
-                <Route path={appPaths.dashboard.doctorsAdd}
-                       element={<h1>Add doctor</h1>}/>
+                        <Route
+                            path={appPaths.dashboard.doctors}
+                            element={<h1>Doctors</h1>}
+                        />
 
-                {/*</Route>*/}
+                        <Route
+                            path={appPaths.dashboard.doctorsAdd}
+                            element={<h1>Add doctor</h1>}
+                        />
+
+                    </Route>
+                </Route>
+
                 <Route path={appPaths.notFound} element={<ErrorPage/>}/>
             </Routes>
         </BrowserRouter>

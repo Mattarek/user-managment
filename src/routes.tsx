@@ -5,11 +5,11 @@ export const appPaths = {
 
     dashboard: {
         root: "/dashboard",
-        patients: "/dashboard/patients",
-        patientsAdd: "/dashboard/patients/add",
+        patients: "patients",
+        patientsAdd: "patients/add",
 
-        doctors: "/dashboard/doctors",
-        doctorsAdd: "/dashboard/doctors/add",
+        doctors: "doctors",
+        doctorsAdd: "doctors/add",
     },
 
     notFound: "*",
