@@ -47,7 +47,6 @@ api.interceptors.response.use(
                     });
                 });
             }
-            console.log("wykonane")
             isRefreshing = true;
 
             try {
