@@ -4,26 +4,36 @@ import {Link as RouterLink, useLocation} from 'react-router-dom';
 
 export function Breadcrumbs() {
     const location = useLocation();
-    const parts = location.pathname.split('/').filter(Boolean);
     const {t} = useTranslation();
 
+    const parts = location.pathname
+        .split("/")
+        .filter(Boolean);
+
+    const base = "/" + parts[0];
 
     return (
         <MUIBreadcrumbs sx={{mb: 2}}>
-            <Link component={RouterLink} to="/dashboard">
-                {t('dashboard')}
+            <Link component={RouterLink} to={base}>
+                {t("breadcrumbs.dashboard")}
             </Link>
 
-            {parts.map((part, id) => {
-                const path = '/' + parts.slice(0, id + 1).join('/');
+            {/* reszta */}
+            {parts.slice(1).map((part, index) => {
+                const isLast = index === parts.slice(1).length - 1;
 
-                const isLast = id === parts.length - 1;
+                const path =
+                    base + "/" + parts.slice(1, index + 1).join("/");
+
+                const label = t(`breadcrumbs.${part}`, part);
 
                 return isLast ? (
-                    <Typography key={path}>{part}</Typography>
+                    <Typography key={path} color="text.primary">
+                        {label}
+                    </Typography>
                 ) : (
                     <Link key={path} component={RouterLink} to={path}>
-                        {part}
+                        {label}
                     </Link>
                 );
             })}

@@ -32,13 +32,6 @@ api.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
-        const publicPaths = ["/login", "/register", "/forgot-password"];
-        const currentPath = window.location.pathname;
-
-        if (publicPaths.includes(currentPath)) {
-            return Promise.reject(error);
-        }
-
         if (
             error?.response?.status === 401 &&
             originalRequest?.url !== "/refresh-token"
@@ -54,7 +47,7 @@ api.interceptors.response.use(
                     });
                 });
             }
-
+            console.log("wykonane")
             isRefreshing = true;
 
             try {
