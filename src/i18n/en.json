@@ -17,7 +17,8 @@
     "dashboard": "Dashboard",
     "patients": "Patients",
     "add": "Add",
-    "list": "List"
+    "list": "List",
+    "doctors": "Doctors"
   },
   "auth": {
     "registerSuccess": "Account has been created",

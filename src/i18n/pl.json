@@ -17,7 +17,8 @@
     "dashboard": "Panel",
     "patients": "Pacjenci",
     "add": "Dodaj",
-    "list": "Lista"
+    "list": "Lista",
+    "doctors": "Lekarze"
   },
   "auth": {
     "registerSuccess": "Konto zostało utworzone",
