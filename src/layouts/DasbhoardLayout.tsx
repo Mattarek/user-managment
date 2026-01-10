@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 export function DashboardLayout() {
   const { t } = useTranslation();
-  // const auth = useAppSelector((state) => state.auth);
   const sidebarItems: SidebarItem[] = [
     { type: 'link', label: t('sidebar.home'), path: '/dashboard' },
     {

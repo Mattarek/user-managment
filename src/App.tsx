@@ -6,8 +6,17 @@ import { ErrorPage } from './pages';
 import { appPaths } from './routes.tsx';
 import { RequireAuth } from './components/RequireAuth.tsx';
 import { PublicOnly } from './components/PublicOnly.tsx';
+import { useEffect } from 'react';
+import { useAppDispatch } from './app/hooks.ts';
+import { getMeThunk } from './features/auth/auth.thunks.ts';
 
 function App() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getMeThunk());
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
