@@ -17,7 +17,13 @@ export const registerApi = async (payload: RegisterPayload) => {
 };
 
 export const logoutApi = async () => {
-  await api.post('/logout');
+  const refreshToken = localStorage.getItem('refreshToken');
+  const accessToken = localStorage.getItem('accessToken');
+
+  await api.post('/logout', {
+    refreshToken,
+    accessToken,
+  });
 };
 
 export const recoveryApi = async (email: string) => {
