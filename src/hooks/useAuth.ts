@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {api} from "../api/axios";
 import type {AxiosError} from "axios";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
 export interface User {
     id: string;
@@ -26,10 +27,27 @@ interface RecoveryPayload {
     email: string;
 }
 
+export const getMeThunk = createAsyncThunk<
+    User,
+    void,
+    { rejectValue: string }
+>(
+    'auth/getMe',
+    async (_, {rejectWithValue}) => {
+        try {
+            const {data} = await api.get('/users/me');
+            return data;
+        } catch {
+            return rejectWithValue('Unauthorized');
+        }
+    }
+);
+
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // Will be deleted
     const getMe = useCallback(async () => {
         try {
             const {data} = await api.get("/users/me");
@@ -40,6 +58,7 @@ export function useAuth() {
             setLoading(false);
         }
     }, []);
+
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");

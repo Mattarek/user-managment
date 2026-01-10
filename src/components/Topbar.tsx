@@ -11,7 +11,7 @@ import {
     Typography,
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'; // 👈 tu zmiana
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import logo from '../assets/logo.svg';
@@ -22,6 +22,11 @@ export function Topbar() {
     const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
 
     const {i18n, t} = useTranslation();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(getMe());
+    }, [dispatch]);
 
     return (
         <AppBar position="fixed"
