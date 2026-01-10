@@ -4,10 +4,11 @@ import {Breadcrumbs} from '../components/Breadcrumbs';
 import {Outlet} from 'react-router-dom';
 import type {SidebarItem} from '../types/types';
 import {useTranslation} from 'react-i18next';
+import {useAppSelector} from "../app/hooks.ts";
 
 export function DashboardLayout() {
     const {t} = useTranslation();
-
+    const auth = useAppSelector(state => state.auth);
     const sidebarItems: SidebarItem[] = [
         {type: 'link', label: t('sidebar.home'), path: '/dashboard'},
         {
@@ -42,6 +43,7 @@ export function DashboardLayout() {
             <Topbar/>
             <Sidebar items={sidebarItems}/>
             <main style={{marginLeft: 260, marginTop: 80, padding: 24}}>
+                
                 <Breadcrumbs/>
                 <Outlet/>
             </main>
