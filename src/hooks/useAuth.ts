@@ -1,7 +1,9 @@
+
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/axios';
 import type { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
 export interface User {
   id: string;
@@ -26,6 +28,22 @@ interface RegisterPayload {
 interface RecoveryPayload {
   email: string;
 }
+
+export const getMeThunk = createAsyncThunk<
+    User,
+    void,
+    { rejectValue: string }
+>(
+    'auth/getMe',
+    async (_, {rejectWithValue}) => {
+        try {
+            const {data} = await api.get('/users/me');
+            return data;
+        } catch {
+            return rejectWithValue('Unauthorized');
+        }
+    }
+);
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -117,6 +135,62 @@ export function useAuth() {
         if (err.response.status === 404) {
           return { ok: false, message: 'User not found' };
         }
+
+    // Will be deleted
+    const getMe = useCallback(async () => {
+        try {
+            const {data} = await api.get("/users/me");
+            setUser(data);
+        } catch {
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            getMe();
+        } else {
+            setLoading(false);
+        }
+    }, [getMe]);
+
+    const login = async (payload: LoginPayload) => {
+        try {
+            const {data} = await api.post("/login", payload);
+            console.log(data);
+            if (!data?.accessToken) {
+                throw new Error("Missing access token");
+            }
+
+            localStorage.setItem("accessToken", data.accessToken);
+
+            await getMe();
+
+            return {ok: true, data};
+        } catch (e: unknown) {
+            const err = e as AxiosError<{ message?: string }>;
+
+            console.error("Login failed", err);
+
+            return {
+                ok: false,
+                message: err.response?.data?.message || "Login failed",
+            };
+        }
+    };
+
+    const register = async (payload: RegisterPayload) => {
+        try {
+            const {data} = await api.post("/register", payload);
+            localStorage.setItem("accessToken", data.accessToken);
+
+            return {ok: true, data};
+        } catch (e: unknown) {
+            const err = e as AxiosError<{ message?: string }>;
 
         if (err.response.status === 422) {
           return { ok: false, message: 'Invalid email' };

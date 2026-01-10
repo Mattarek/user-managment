@@ -11,9 +11,11 @@ import {
   Typography,
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft'; // 👈 tu zmiana
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+
 import logo from '../assets/logo.svg';
 import { ThemeSwitcher } from './ThemeSwitcher.tsx';
 import { useAuth } from '../hooks/useAuth.ts';
@@ -23,7 +25,13 @@ export function Topbar() {
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
   const { logout } = useAuth();
   const { i18n, t } = useTranslation();
+  const {i18n, t} = useTranslation();
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+      dispatch(getMe());
+  }, [dispatch]);
+  
   return (
     <AppBar
       position="fixed"
@@ -43,6 +51,7 @@ export function Topbar() {
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
             <SettingsIcon sx={{ color: '#fff' }} />
           </IconButton>
+
 
           <Menu
             anchorEl={anchor}
