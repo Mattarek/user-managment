@@ -5,16 +5,17 @@ import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AuthBackground } from '../../layouts/AuthBackground';
 import { useMemo, useState } from 'react';
-import { getLoginSchema } from '../../i18n/authSchema.ts';
+import { getLoginSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
-import { useAuth } from '../../hooks/useAuth.ts';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
+import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
 
 export function LoginPage() {
   const { t } = useTranslation();
-  const { login } = useAuth();
   const validationSchema = useMemo(() => getLoginSchema(t), [t]);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -35,27 +36,24 @@ export function LoginPage() {
           initialValues={{ email: '', password: '' }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            try {
-              const result = await login({
+            const action = await dispatch(
+              loginThunk({
                 email: values.email,
                 password: values.password,
-              });
+              }),
+            );
 
-              if (result.ok) {
-                showSnackbar('success', t('auth.loginSuccess'));
-                navigate('/dashboard');
-              } else {
-                showSnackbar('error', result.message || t('auth.loginFailed'));
-              }
-            } catch (e: unknown) {
-              if (e instanceof Error) {
-                showSnackbar('error', e.message);
-              } else {
-                showSnackbar('error', t('auth.loginFailed'));
-              }
-            } finally {
-              setSubmitting(false);
+            if (loginThunk.fulfilled.match(action)) {
+              // pobierz dane usera po zalogowaniu
+              await dispatch(getMeThunk());
+
+              showSnackbar('success', t('auth.loginSuccess'));
+              navigate('/dashboard');
+            } else {
+              showSnackbar('error', action.payload || t('auth.loginFailed'));
             }
+
+            setSubmitting(false);
           }}
         >
           {({ isSubmitting }) => (
@@ -86,10 +84,7 @@ export function LoginPage() {
 
                 <Stack
                   spacing={1}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                  alignItems="center"
                 >
                   <Link
                     href="/register"
@@ -109,6 +104,7 @@ export function LoginPage() {
             </Form>
           )}
         </Formik>
+
         <Snackbar
           open={snackbar.open}
           autoHideDuration={4000}

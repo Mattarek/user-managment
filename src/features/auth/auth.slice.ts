@@ -1,50 +1,49 @@
-import type {AuthState} from "./auth.types.ts";
-import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import {getMeThunk} from "../../hooks/useAuth.ts";
+import { createSlice } from '@reduxjs/toolkit';
+import type { AuthState } from './auth.types';
+import { getMeThunk, loginThunk, logoutThunk } from './auth.thunks';
 
 const initialState: AuthState = {
-    email: null,
-    name: null,
-    surname: null,
-}
+  user: null,
+  isAuthenticated: false,
+  loading: false,
+  error: null,
+};
 
 const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {
-        setCredentials(state, action: PayloadAction<{
-            email: string,
-            name: string,
-            surname: string,
-        }>) {
-            state.email = action.payload.email;
-            state.name = action.payload.name;
-            state.surname = action.payload.surname;
-        },
-
-        logout(state) {
-            state.email = null;
-            state.name = null;
-            state.surname = null;
-        }
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(getMeThunk.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(getMeThunk.fulfilled, (state, action) => {
-                state.loading = false;
-                state.user = action.payload;
-            })
-            .addCase(getMeThunk.rejected, (state, action) => {
-                state.loading = false;
-                state.user = null;
-                state.error = action.payload ?? 'Failed';
-            });
-    }
+  name: 'auth',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(loginThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? 'Login failed';
+      })
+      .addCase(getMeThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(getMeThunk.rejected, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logoutThunk.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.user = null;
+        state.isAuthenticated = false;
+      });
+  },
 });
 
-export const {setCredentials, logout} = authSlice.actions;
 export default authSlice.reducer;
