@@ -6,6 +6,7 @@ const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   loading: false,
+  initialized: false,
   error: null,
 };
 
@@ -28,12 +29,17 @@ const authSlice = createSlice({
       })
       .addCase(getMeThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.initialized = true;
         state.user = action.payload;
         state.isAuthenticated = true;
       })
+      .addCase(getMeThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(getMeThunk.rejected, (state) => {
         state.loading = false;
+        state.initialized = true;
         state.user = null;
         state.isAuthenticated = false;
       })

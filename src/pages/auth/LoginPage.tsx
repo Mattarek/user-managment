@@ -1,7 +1,7 @@
 import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
+import { Alert, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AuthBackground } from '../../layouts/AuthBackground';
 import { useMemo, useState } from 'react';
@@ -10,6 +10,7 @@ import i18n from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
+import { AsyncButton } from '../../components/AsyncButton.tsx';
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -23,7 +24,12 @@ export function LoginPage() {
     message: string;
   }>({ open: false, type: 'success', message: '' });
 
-  const showSnackbar = (type: 'success' | 'error', message: string) => setSnackbar({ open: true, type, message });
+  const showSnackbar = (type: 'success' | 'error', message: string) =>
+    setSnackbar({
+      open: true,
+      type,
+      message,
+    });
 
   return (
     <AuthBackground>
@@ -44,7 +50,6 @@ export function LoginPage() {
             );
 
             if (loginThunk.fulfilled.match(action)) {
-              // pobierz dane usera po zalogowaniu
               await dispatch(getMeThunk());
 
               showSnackbar('success', t('auth.loginSuccess'));
@@ -74,13 +79,14 @@ export function LoginPage() {
                   fullWidth
                 />
 
-                <Button
+                <AsyncButton
+                  fullWidth
                   type="submit"
                   variant="contained"
-                  disabled={isSubmitting}
+                  loading={isSubmitting}
                 >
                   {t('auth.login')}
-                </Button>
+                </AsyncButton>
 
                 <Stack
                   spacing={1}

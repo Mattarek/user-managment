@@ -1,10 +1,26 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 import { isTokenValid } from '../utils/isTokenValid';
+import { Box, CircularProgress } from '@mui/material';
 
 export function RequireAuth() {
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const { isAuthenticated, initialized } = useAppSelector((state) => state.auth);
   const token = localStorage.getItem('accessToken');
+
+  if (!initialized) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!token) {
     return (
