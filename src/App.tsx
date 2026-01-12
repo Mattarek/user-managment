@@ -1,4 +1,5 @@
 import 'normalize.css';
+import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ForgotPasswordPage, LoginPage, RegisterPage } from './pages/auth';
 import { DashboardLayout } from './layouts/DasbhoardLayout.tsx';
@@ -6,14 +7,9 @@ import { ErrorPage } from './pages';
 import { appPaths } from './routes.tsx';
 import { RequireAuth } from './components/RequireAuth.tsx';
 import { PublicOnly } from './components/PublicOnly.tsx';
-import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './app/hooks.ts';
 import { getMeThunk } from './features/auth/auth.thunks.ts';
-import { AddDoctor } from './pages/dashboard/doctors/AddDoctor.tsx';
-import { AddPatient } from './pages/dashboard/patients/AddPatient.tsx';
-import { Doctors } from './pages/dashboard/doctors/Doctors.tsx';
-import { Patients } from './pages/dashboard/patients/Patients.tsx';
-import { DashboardHome } from './pages/dashboard';
+import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
 import { AppLoader } from './components/AppLoader.tsx';
 
 function App() {
@@ -64,7 +60,7 @@ function App() {
 
         <Route element={<RequireAuth />}>
           <Route
-            path="/dashboard"
+            path={appPaths.dashboard.root}
             element={<DashboardLayout />}
           >
             <Route
@@ -72,19 +68,19 @@ function App() {
               element={<DashboardHome />}
             />
             <Route
-              path="patients"
+              path={appPaths.dashboard.patients}
               element={<Patients />}
             />
             <Route
-              path="patients/add"
+              path={appPaths.dashboard.patientsAdd}
               element={<AddPatient />}
             />
             <Route
-              path="doctors"
+              path={appPaths.dashboard.doctors}
               element={<Doctors />}
             />
             <Route
-              path="doctors/add"
+              path={appPaths.dashboard.doctorsAdd}
               element={<AddDoctor />}
             />
           </Route>
