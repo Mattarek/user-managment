@@ -3,7 +3,6 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { type SidebarItem } from '../types/types';
-import { useAppSelector } from '../app/hooks';
 
 type Props = {
   items: SidebarItem[];
@@ -14,7 +13,6 @@ type Props = {
 export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const user = useAppSelector((state) => state.auth.user);
 
   return (
     <Drawer
@@ -39,20 +37,17 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
           borderBottom: '1px solid rgba(255,255,255,0.12)',
         }}
       >
-        <Avatar>{user?.name?.[0]?.toUpperCase()}</Avatar>
-
+        <Avatar />
         <Box>
-          <Typography fontWeight={600}>{user ? `${user.name ?? ''} ${user.surname ?? ''}`.trim() : '—'}</Typography>
-
+          <Typography fontWeight={600}>Marcin Kowalski</Typography>
           <Typography
             variant="body2"
             color="text.secondary"
           >
-            {user?.role ?? ''}
+            Administrator
           </Typography>
         </Box>
       </Box>
-
       <List>
         {items.map((item) => {
           if (item.type === 'link') {
@@ -71,7 +66,7 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
           }
 
           const isActiveDropdown = item.children.some((c) => location.pathname === c.path);
-          const isOpen = openDropdown === item.label || isActiveDropdown;
+          const isOpen = !!(openDropdown === item.label || isActiveDropdown);
 
           return (
             <div key={item.label}>

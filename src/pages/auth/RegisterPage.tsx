@@ -5,17 +5,16 @@ import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AuthBackground } from '../../layouts/AuthBackground';
 import { useMemo, useState } from 'react';
-import { getRegisterSchema } from '../../i18n/authSchema';
+import { getRegisterSchema } from '../../i18n/authSchema.ts';
 import i18n from 'i18next';
+import { useAuth } from '../../hooks/useAuth.ts';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
-import { registerThunk } from '../../features/auth/auth.thunks';
 
 export function RegisterPage() {
   const { t } = useTranslation();
+  const { register } = useAuth();
   const validationSchema = useMemo(() => getRegisterSchema(t), [t]);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -28,7 +27,6 @@ export function RegisterPage() {
   });
 
   const showSnackbar = (type: 'success' | 'error', message: string) => setSnackbar({ open: true, type, message });
-
   return (
     <AuthBackground>
       <BasePageLayout
@@ -46,24 +44,24 @@ export function RegisterPage() {
           }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            const action = await dispatch(
-              registerThunk({
+            try {
+              const result = await register({
                 email: values.email,
                 name: values.name,
                 surname: values.surname,
                 password: values.password,
                 repeatedPassword: values.repeatedPassword,
-              }),
-            );
+              });
 
-            if (registerThunk.fulfilled.match(action)) {
-              showSnackbar('success', t('auth.registerSuccess'));
-              navigate('/login');
-            } else {
-              showSnackbar('error', action.payload || t('auth.registerFailed'));
+              if (result.ok) {
+                showSnackbar('success', t('auth.registerSuccess'));
+                navigate('/login');
+              } else {
+                showSnackbar('error', result.message || t('auth.registerFailed'));
+              }
+            } finally {
+              setSubmitting(false);
             }
-
-            setSubmitting(false);
           }}
         >
           {({ isSubmitting }) => (
@@ -87,6 +85,7 @@ export function RegisterPage() {
                   label={t('auth.email')}
                   fullWidth
                 />
+
                 <Field
                   component={TextField}
                   name="password"
@@ -94,6 +93,7 @@ export function RegisterPage() {
                   label={t('auth.password')}
                   fullWidth
                 />
+
                 <Field
                   component={TextField}
                   name="repeatedPassword"
@@ -112,7 +112,10 @@ export function RegisterPage() {
 
                 <Stack
                   spacing={1}
-                  alignItems="center"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                 >
                   <Link
                     href="/login"
@@ -125,7 +128,6 @@ export function RegisterPage() {
             </Form>
           )}
         </Formik>
-
         <Snackbar
           open={snackbar.open}
           autoHideDuration={4000}

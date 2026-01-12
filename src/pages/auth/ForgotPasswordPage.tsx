@@ -1,31 +1,18 @@
 import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
+import { Button, Link, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AuthBackground } from '../../layouts/AuthBackground';
-import { useMemo, useState } from 'react';
-import { getForgotSchema } from '../../i18n/authSchema';
+import { useMemo } from 'react';
+import { getForgotSchema } from '../../i18n/authSchema.ts';
 import i18n from 'i18next';
-import { useAppDispatch } from '../../app/hooks';
-import { recoveryThunk } from '../../features/auth/auth.thunks';
+import { useAuth } from '../../hooks/useAuth.ts';
 
 export function ForgotPasswordPage() {
   const { t } = useTranslation();
   const validationSchema = useMemo(() => getForgotSchema(t), [t]);
-  const dispatch = useAppDispatch();
-
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({
-    open: false,
-    type: 'success',
-    message: '',
-  });
-
-  const showSnackbar = (type: 'success' | 'error', message: string) => setSnackbar({ open: true, type, message });
+  const { recovery } = useAuth();
 
   return (
     <AuthBackground>
@@ -37,16 +24,10 @@ export function ForgotPasswordPage() {
           key={i18n.language}
           initialValues={{ email: '' }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            const action = await dispatch(recoveryThunk(values.email));
-
-            if (recoveryThunk.fulfilled.match(action)) {
-              showSnackbar('success', t('auth.recoverySuccess'));
-            } else {
-              showSnackbar('error', action.payload || t('auth.recoveryFailed'));
-            }
-
-            setSubmitting(false);
+          onSubmit={async (values) => {
+            recovery({
+              email: values.email,
+            });
           }}
         >
           {({ isSubmitting }) => (
@@ -69,7 +50,10 @@ export function ForgotPasswordPage() {
 
                 <Stack
                   spacing={1}
-                  alignItems="center"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                 >
                   <Link
                     href="/login"
@@ -82,21 +66,6 @@ export function ForgotPasswordPage() {
             </Form>
           )}
         </Formik>
-
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={4000}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            severity={snackbar.type}
-            variant="filled"
-            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
       </BasePageLayout>
     </AuthBackground>
   );
