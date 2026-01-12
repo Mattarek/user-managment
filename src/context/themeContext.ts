@@ -1,5 +1,5 @@
-import { createContext } from 'react';
-import type { Mode } from '../types/types.ts';
+import { createContext } from "react";
+import type { Mode } from "../types/types.ts";
 
 type ThemeCtx = {
   mode: Mode;
@@ -7,6 +7,6 @@ type ThemeCtx = {
 };
 
 export const ThemeContext = createContext<ThemeCtx>({
-  mode: 'light',
+  mode: "light",
   toggleTheme: () => {},
 });

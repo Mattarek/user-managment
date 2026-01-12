@@ -1,9 +1,25 @@
-import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typography } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
-import { type SidebarItem } from '../types/types';
-import { useAppSelector } from '../app/hooks';
+import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typography } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useAppSelector } from "../app/hooks";
+
+type SidebarLink = {
+  type: "link";
+  label: string;
+  path: string;
+};
+
+type SidebarDropdown = {
+  type: "dropdown";
+  label: string;
+  children: {
+    label: string;
+    path: string;
+  }[];
+};
+
+type SidebarItem = SidebarLink | SidebarDropdown;
 
 type Props = {
   items: SidebarItem[];
@@ -24,7 +40,7 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
           width,
-          boxSizing: 'border-box',
+          boxSizing: "border-box",
           top: height,
           height: `calc(100% - ${height}px)`,
         },
@@ -32,39 +48,31 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
     >
       <Box
         sx={{
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
           gap: 2,
           p: 2,
-          borderBottom: '1px solid rgba(255,255,255,0.12)',
+          borderBottom: "1px solid rgba(255,255,255,0.12)",
         }}
       >
         <Avatar>{user?.name?.[0]?.toUpperCase()}</Avatar>
 
         <Box>
-          <Typography fontWeight={600}>{user ? `${user.name ?? ''} ${user.surname ?? ''}`.trim() : '—'}</Typography>
+          <Typography fontWeight={600}>{user ? `${user.name ?? ""} ${user.surname ?? ""}`.trim() : "—"}</Typography>
 
-          <Typography
-            variant="body2"
-            color="text.secondary"
-          >
-            {user?.role ?? ''}
+          <Typography variant="body2" color="text.secondary">
+            {user?.role ?? ""}
           </Typography>
         </Box>
       </Box>
 
       <List>
         {items.map((item) => {
-          if (item.type === 'link') {
+          if (item.type === "link") {
             const active = location.pathname === item.path;
 
             return (
-              <ListItemButton
-                key={item.path}
-                component={Link}
-                to={item.path}
-                selected={active}
-              >
+              <ListItemButton key={item.path} component={Link} to={item.path} selected={active}>
                 <ListItemText primary={item.label} />
               </ListItemButton>
             );
@@ -86,12 +94,7 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
                     const active = location.pathname === child.path;
 
                     return (
-                      <ListItemButton
-                        key={child.path}
-                        component={Link}
-                        to={child.path}
-                        selected={active}
-                      >
+                      <ListItemButton key={child.path} component={Link} to={child.path} selected={active}>
                         <ListItemText primary={child.label} />
                       </ListItemButton>
                     );

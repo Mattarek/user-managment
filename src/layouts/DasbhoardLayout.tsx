@@ -1,36 +1,36 @@
-import { Sidebar } from '../components/Sidebar';
-import { Topbar } from '../components/Topbar';
-import { Breadcrumbs } from '../components/Breadcrumbs';
-import { Outlet } from 'react-router-dom';
-import type { SidebarItem } from '../types/types';
-import { useTranslation } from 'react-i18next';
+import { Sidebar } from "../components/Sidebar";
+import { Topbar } from "../components/Topbar";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { Outlet } from "react-router-dom";
+import type { SidebarItem } from "../types/types";
+import { useTranslation } from "react-i18next";
 
 export function DashboardLayout() {
   const { t } = useTranslation();
   const sidebarItems: SidebarItem[] = [
-    { type: 'link', label: t('sidebar.home'), path: '/dashboard' },
+    { type: "link", label: t("sidebar.home"), path: "/dashboard" },
     {
-      type: 'dropdown',
-      label: t('sidebar.patients'),
+      type: "dropdown",
+      label: t("sidebar.patients"),
       children: [
         {
-          label: t('sidebar.patients_list'),
-          path: '/dashboard/patients',
+          label: t("sidebar.patients_list"),
+          path: "/dashboard/patients",
         },
         {
-          label: t('sidebar.patients_add'),
-          path: '/dashboard/patients/add',
+          label: t("sidebar.patients_add"),
+          path: "/dashboard/patients/add",
         },
       ],
     },
     {
-      type: 'dropdown',
-      label: t('sidebar.doctors'),
+      type: "dropdown",
+      label: t("sidebar.doctors"),
       children: [
-        { label: t('sidebar.doctors_list'), path: '/dashboard/doctors' },
+        { label: t("sidebar.doctors_list"), path: "/dashboard/doctors" },
         {
-          label: t('sidebar.doctors_add'),
-          path: '/dashboard/doctors/add',
+          label: t("sidebar.doctors_add"),
+          path: "/dashboard/doctors/add",
         },
       ],
     },

@@ -1,16 +1,16 @@
-import { BasePageLayout } from '../../layouts/BaseAuthLayout';
-import { Field, Form, Formik } from 'formik';
-import { TextField } from 'formik-mui';
-import { Alert, Link, Snackbar, Stack } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { AuthBackground } from '../../layouts/AuthBackground';
-import { useMemo, useState } from 'react';
-import { getLoginSchema } from '../../i18n/authSchema';
-import i18n from 'i18next';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../app/hooks';
-import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
-import { AsyncButton } from '../../components/AsyncButton.tsx';
+import { BasePageLayout } from "../../layouts/BaseAuthLayout";
+import { Field, Form, Formik } from "formik";
+import { TextField } from "formik-mui";
+import { Alert, Link, Snackbar, Stack } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { AuthBackground } from "../../layouts/AuthBackground";
+import { useMemo, useState } from "react";
+import { getLoginSchema } from "../../i18n/authSchema";
+import i18n from "i18next";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../app/hooks";
+import { getMeThunk, loginThunk } from "../../features/auth/auth.thunks";
+import { AsyncButton } from "../../components/AsyncButton.tsx";
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -20,11 +20,11 @@ export function LoginPage() {
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
-    type: 'success' | 'error';
+    type: "success" | "error";
     message: string;
-  }>({ open: false, type: 'success', message: '' });
+  }>({ open: false, type: "success", message: "" });
 
-  const showSnackbar = (type: 'success' | 'error', message: string) =>
+  const showSnackbar = (type: "success" | "error", message: string) =>
     setSnackbar({
       open: true,
       type,
@@ -34,12 +34,12 @@ export function LoginPage() {
   return (
     <AuthBackground>
       <BasePageLayout
-        title={t('auth.login')}
-        subtitle={t('auth.enterYourCredentials')}
+        title={t("auth.login")}
+        subtitle={t("auth.enterYourCredentials")}
       >
         <Formik
           key={i18n.language}
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ email: "", password: "" }}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             const action = await dispatch(
@@ -52,10 +52,10 @@ export function LoginPage() {
             if (loginThunk.fulfilled.match(action)) {
               await dispatch(getMeThunk());
 
-              showSnackbar('success', t('auth.loginSuccess'));
-              navigate('/dashboard');
+              showSnackbar("success", t("auth.loginSuccess"));
+              navigate("/dashboard");
             } else {
-              showSnackbar('error', action.payload || t('auth.loginFailed'));
+              showSnackbar("error", action.payload || t("auth.loginFailed"));
             }
 
             setSubmitting(false);
@@ -67,7 +67,7 @@ export function LoginPage() {
                 <Field
                   component={TextField}
                   name="email"
-                  label={t('auth.email')}
+                  label={t("auth.email")}
                   fullWidth
                 />
 
@@ -75,7 +75,7 @@ export function LoginPage() {
                   component={TextField}
                   name="password"
                   type="password"
-                  label={t('auth.password')}
+                  label={t("auth.password")}
                   fullWidth
                 />
 
@@ -85,7 +85,7 @@ export function LoginPage() {
                   variant="contained"
                   loading={isSubmitting}
                 >
-                  {t('auth.login')}
+                  {t("auth.login")}
                 </AsyncButton>
 
                 <Stack
@@ -96,14 +96,14 @@ export function LoginPage() {
                     href="/register"
                     underline="hover"
                   >
-                    {t('auth.createAccount')}
+                    {t("auth.createAccount")}
                   </Link>
 
                   <Link
                     href="/forgot-password"
                     underline="hover"
                   >
-                    {t('auth.forgotPassword')}
+                    {t("auth.forgotPassword")}
                   </Link>
                 </Stack>
               </Stack>
@@ -115,7 +115,7 @@ export function LoginPage() {
           open={snackbar.open}
           autoHideDuration={4000}
           onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             severity={snackbar.type}

@@ -1,31 +1,31 @@
-import { api } from './axios';
-import type { LoginPayload, RegisterPayload, User } from '../features/auth/auth.types';
+import { api } from "./axios";
+import type { LoginPayload, RegisterPayload, User } from "../features/auth/auth.types";
 
 export const loginApi = async (payload: LoginPayload) => {
-  const { data } = await api.post('/login', payload);
+  const { data } = await api.post("/login", payload);
   return data;
 };
 
 export const getMeApi = async (): Promise<User> => {
-  const { data } = await api.get<User>('/users/me');
+  const { data } = await api.get<User>("/users/me");
   return data;
 };
 
 export const registerApi = async (payload: RegisterPayload) => {
-  const { data } = await api.post('/register', payload);
+  const { data } = await api.post("/register", payload);
   return data;
 };
 
 export const logoutApi = async () => {
-  const refreshToken = localStorage.getItem('refreshToken');
-  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem("refreshToken");
+  const accessToken = localStorage.getItem("accessToken");
 
-  await api.post('/logout', {
+  await api.post("/logout", {
     refreshToken,
     accessToken,
   });
 };
 
 export const recoveryApi = async (email: string) => {
-  await api.post('/users/remind-password', { email });
+  await api.post("/users/remind-password", { email });
 };

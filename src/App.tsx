@@ -1,16 +1,16 @@
-import 'normalize.css';
-import { useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { ForgotPasswordPage, LoginPage, RegisterPage } from './pages/auth';
-import { DashboardLayout } from './layouts/DasbhoardLayout.tsx';
-import { ErrorPage } from './pages';
-import { appPaths } from './routes.tsx';
-import { RequireAuth } from './components/RequireAuth.tsx';
-import { PublicOnly } from './components/PublicOnly.tsx';
-import { useAppDispatch, useAppSelector } from './app/hooks.ts';
-import { getMeThunk } from './features/auth/auth.thunks.ts';
-import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
-import { AppLoader } from './components/AppLoader.tsx';
+import "normalize.css";
+import { useEffect } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ForgotPasswordPage, LoginPage, RegisterPage } from "./pages/auth";
+import { DashboardLayout } from "./layouts/DasbhoardLayout.tsx";
+import { ErrorPage } from "./pages";
+import { appPaths } from "./routes.tsx";
+import { RequireAuth } from "./components/RequireAuth.tsx";
+import { PublicOnly } from "./components/PublicOnly.tsx";
+import { useAppDispatch, useAppSelector } from "./app/hooks.ts";
+import { getMeThunk } from "./features/auth/auth.thunks.ts";
+import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from "./pages/dashboard";
+import { AppLoader } from "./components/AppLoader.tsx";
 
 function App() {
   const dispatch = useAppDispatch();
