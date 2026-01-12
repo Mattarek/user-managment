@@ -16,7 +16,6 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // LOGIN
       .addCase(loginThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -29,7 +28,6 @@ const authSlice = createSlice({
         state.error = action.payload ?? 'Login failed';
       })
 
-      // GET ME
       .addCase(getMeThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -37,15 +35,16 @@ const authSlice = createSlice({
       .addCase(getMeThunk.fulfilled, (state, action) => {
         state.initialized = true;
         state.isAuthenticated = true;
+        state.loading = false;
         state.user = action.payload;
       })
       .addCase(getMeThunk.rejected, (state) => {
         state.initialized = true;
         state.isAuthenticated = false;
         state.user = null;
+        state.loading = false;
       })
 
-      // LOGOUT
       .addCase(logoutThunk.pending, (state) => {
         state.loading = true;
       })

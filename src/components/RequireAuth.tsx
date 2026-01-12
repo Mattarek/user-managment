@@ -1,23 +1,14 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks.ts';
-import { Box, CircularProgress } from '@mui/material';
+import { AppLoader } from './AppLoader.tsx';
 
 export function RequireAuth() {
-  const { initialized, isAuthenticated } = useAppSelector((s) => s.auth);
+  const { initialized, isAuthenticated, loading } = useAppSelector((s) => s.auth);
+
+  if (loading) return null;
 
   if (!initialized) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <AppLoader />;
   }
 
   if (!isAuthenticated) {

@@ -1,2 +1,1 @@
-export * from './AddPatientPage.tsx';
-export * from './PatientsPage.tsx';
+export * from './DashboardHome.tsx';
