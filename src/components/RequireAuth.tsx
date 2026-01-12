@@ -1,16 +1,30 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAppSelector } from '../app/hooks.ts';
+import { Box, CircularProgress } from '@mui/material';
 
 export function RequireAuth() {
-  const location = useLocation();
+  const { initialized, isAuthenticated } = useAppSelector((s) => s.auth);
 
-  const isAuthenticated = !!localStorage.getItem('accessToken');
+  if (!initialized) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
       <Navigate
         to="/login"
         replace
-        state={{ from: location }}
       />
     );
   }

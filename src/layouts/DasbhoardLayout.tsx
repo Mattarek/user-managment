@@ -1,16 +1,18 @@
-import {Sidebar} from '../components/Sidebar';
-import {Topbar} from '../components/Topbar';
-import {Breadcrumbs} from '../components/Breadcrumbs';
-import {Outlet} from 'react-router-dom';
-import type {SidebarItem} from '../types/types';
-import {useTranslation} from 'react-i18next';
-import {useAppSelector} from "../app/hooks.ts";
+import { Sidebar } from '../components/Sidebar';
+import { Topbar } from '../components/Topbar';
+import { Breadcrumbs } from '../components/Breadcrumbs';
+import { Outlet } from 'react-router-dom';
+import type { SidebarItem } from '../types/types';
+import { useTranslation } from 'react-i18next';
 
 export function DashboardLayout() {
-    const {t} = useTranslation();
-    const auth = useAppSelector(state => state.auth);
-    const sidebarItems: SidebarItem[] = [
-        {type: 'link', label: t('sidebar.home'), path: '/dashboard'},
+  const { t } = useTranslation();
+  const sidebarItems: SidebarItem[] = [
+    { type: 'link', label: t('sidebar.home'), path: '/dashboard' },
+    {
+      type: 'dropdown',
+      label: t('sidebar.patients'),
+      children: [
         {
           label: t('sidebar.patients_list'),
           path: '/dashboard/patients',

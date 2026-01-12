@@ -11,27 +11,27 @@ import {
   Typography,
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import {useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import logo from '../assets/logo.svg';
-import { ThemeSwitcher } from './ThemeSwitcher.tsx';
-import { useAuth } from '../hooks/useAuth.ts';
+import { ThemeSwitcher } from './ThemeSwitcher';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { logoutThunk } from '../features/auth/auth.thunks';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
-  const { logout } = useAuth();
-  const { i18n, t } = useTranslation();
-  const {i18n, t} = useTranslation();
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-      dispatch(getMe());
-  }, [dispatch]);
-  
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const { i18n, t } = useTranslation();
+
+  const handleLogout = () => {
+    dispatch(logoutThunk());
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -44,14 +44,17 @@ export function Topbar() {
           width={80}
           height={80}
         />
+
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Typography>przyklad@testowy.pl</Typography>
-          <Avatar />
+          {user && <Typography>{user.email}</Typography>}
+
+          <Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>
+
           <ThemeSwitcher />
+
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
             <SettingsIcon sx={{ color: '#fff' }} />
           </IconButton>
-
 
           <Menu
             anchorEl={anchor}
@@ -62,9 +65,11 @@ export function Topbar() {
               <ArrowLeftIcon style={{ marginRight: 8 }} />
               <ListItemText>{t('topbar.language')}</ListItemText>
             </MenuItem>
+
             <MenuItem
               onClick={() => {
-                logout();
+                handleLogout();
+                setAnchor(null);
               }}
             >
               {t('topbar.logout')}
@@ -75,14 +80,8 @@ export function Topbar() {
             open={!!langAnchor}
             anchorEl={langAnchor}
             onClose={() => setLangAnchor(null)}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             sx={{ mt: -1 }}
           >
             <MenuItem

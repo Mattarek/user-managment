@@ -1,9 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAppSelector } from '../app/hooks.ts';
 
 export function PublicOnly() {
-  const isAuthenticated = !!localStorage.getItem('accessToken');
+  const { initialized, isAuthenticated } = useAppSelector((s) => s.auth);
 
-  if (isAuthenticated) {
+  if (initialized && isAuthenticated) {
     return (
       <Navigate
         to="/dashboard"
