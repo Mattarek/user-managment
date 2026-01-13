@@ -1,7 +1,7 @@
-import { createTheme } from "@mui/material/styles";
-import { palette } from "./palette";
+import { createTheme } from '@mui/material/styles';
+import { palette } from './palette';
 
-export function buildTheme(mode: "light" | "dark") {
+export function buildTheme(mode: 'light' | 'dark') {
   return createTheme({
     palette: {
       mode,

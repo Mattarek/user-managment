@@ -1,4 +1,4 @@
-import { Button, type ButtonProps, CircularProgress } from "@mui/material";
+import { Button, type ButtonProps, CircularProgress } from '@mui/material';
 
 type AsyncButtonProps = ButtonProps & {
   loading?: boolean;
@@ -10,7 +10,7 @@ export function AsyncButton({ loading = false, children, disabled, ...props }: A
       <Button
         {...props}
         disabled={disabled || loading}
-        className={`${props.className ?? ""} ${loading ? "opacity-70 pointer-events-none" : ""}`}
+        className={`${props.className ?? ''} ${loading ? 'opacity-70 pointer-events-none' : ''}`}
       >
         {children}
       </Button>

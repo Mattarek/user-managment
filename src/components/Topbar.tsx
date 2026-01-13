@@ -9,16 +9,16 @@ import {
   Popover,
   Toolbar,
   Typography,
-} from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+} from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import logo from "../assets/logo.svg";
-import { ThemeSwitcher } from "./ThemeSwitcher";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { logoutThunk } from "../features/auth/auth.thunks";
+import logo from '../assets/logo.svg';
+import { ThemeSwitcher } from './ThemeSwitcher';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { logoutThunk } from '../features/auth/auth.thunks';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -33,19 +33,11 @@ export function Topbar() {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{ ml: 260, zIndex: (theme) => theme.zIndex.drawer + 1 }}
-    >
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <img
-          src={logo}
-          alt="Logo"
-          width={80}
-          height={80}
-        />
+    <AppBar position="fixed" sx={{ ml: 260, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <img src={logo} alt="Logo" width={80} height={80} />
 
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {user && <Typography>{user.email}</Typography>}
 
           <Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>
@@ -53,17 +45,13 @@ export function Topbar() {
           <ThemeSwitcher />
 
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
-            <SettingsIcon sx={{ color: "#fff" }} />
+            <SettingsIcon sx={{ color: '#fff' }} />
           </IconButton>
 
-          <Menu
-            anchorEl={anchor}
-            open={!!anchor}
-            onClose={() => setAnchor(null)}
-          >
+          <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>
             <MenuItem onClick={(e) => setLangAnchor(e.currentTarget)}>
               <ArrowLeftIcon style={{ marginRight: 8 }} />
-              <ListItemText>{t("topbar.language")}</ListItemText>
+              <ListItemText>{t('topbar.language')}</ListItemText>
             </MenuItem>
 
             <MenuItem
@@ -72,7 +60,7 @@ export function Topbar() {
                 setAnchor(null);
               }}
             >
-              {t("topbar.logout")}
+              {t('topbar.logout')}
             </MenuItem>
           </Menu>
 
@@ -80,13 +68,13 @@ export function Topbar() {
             open={!!langAnchor}
             anchorEl={langAnchor}
             onClose={() => setLangAnchor(null)}
-            anchorOrigin={{ vertical: "top", horizontal: "left" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             sx={{ mt: -1 }}
           >
             <MenuItem
               onClick={() => {
-                i18n.changeLanguage("pl");
+                i18n.changeLanguage('pl');
                 setLangAnchor(null);
                 setAnchor(null);
               }}
@@ -97,7 +85,7 @@ export function Topbar() {
 
             <MenuItem
               onClick={() => {
-                i18n.changeLanguage("en");
+                i18n.changeLanguage('en');
                 setLangAnchor(null);
                 setAnchor(null);
               }}

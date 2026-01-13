@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -19,7 +19,7 @@ const onRefreshed = (token: string) => {
 };
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -31,7 +31,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error?.response?.status === 401 && originalRequest?.url !== "/refresh-token") {
+    if (error?.response?.status === 401 && originalRequest?.url !== '/refresh-token') {
       if (originalRequest._retry) return Promise.reject(error);
       originalRequest._retry = true;
 
@@ -46,13 +46,13 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = localStorage.getItem('refreshToken');
 
-        const { data } = await api.post("/refresh-token", {
+        const { data } = await api.post('/refresh-token', {
           refreshToken,
         });
 
-        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem('accessToken', data.accessToken);
 
         isRefreshing = false;
         onRefreshed(data.accessToken);
@@ -63,9 +63,9 @@ api.interceptors.response.use(
       } catch (err) {
         isRefreshing = false;
         refreshSubscribers = [];
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        window.location.href = '/login';
         return Promise.reject(err);
       }
     }

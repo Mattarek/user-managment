@@ -1,5 +1,5 @@
-import { jwtDecode } from "jwt-decode";
-import type { JwtPayload } from "./jwt.types.ts";
+import { jwtDecode } from 'jwt-decode';
+import type { JwtPayload } from './jwt.types.ts';
 
 export function isTokenExpired(token: string): boolean {
   const decodedToken = jwtDecode<JwtPayload>(token);

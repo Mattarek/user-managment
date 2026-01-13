@@ -1,6 +1,6 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAppSelector } from "../app/hooks.ts";
-import { AppLoader } from "./AppLoader.tsx";
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAppSelector } from '../app/hooks.ts';
+import { AppLoader } from './AppLoader.tsx';
 
 export function RequireAuth() {
   const { initialized, isAuthenticated, loading } = useAppSelector((s) => s.auth);
@@ -12,12 +12,7 @@ export function RequireAuth() {
   }
 
   if (!isAuthenticated) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-      />
-    );
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

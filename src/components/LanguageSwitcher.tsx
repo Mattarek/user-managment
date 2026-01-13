@@ -1,7 +1,7 @@
-import { useState } from "react";
-import LanguageIcon from "@mui/icons-material/Language";
-import { useTranslation } from "react-i18next";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { useState } from 'react';
+import LanguageIcon from '@mui/icons-material/Language';
+import { useTranslation } from 'react-i18next';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 
 export default function LanguageSwitcher() {
   const { i18n, t } = useTranslation();
@@ -10,10 +10,7 @@ export default function LanguageSwitcher() {
 
   return (
     <>
-      <IconButton
-        sx={{ color: "white" }}
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-      >
+      <IconButton sx={{ color: 'white' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
         <LanguageIcon />
       </IconButton>
 
@@ -21,25 +18,25 @@ export default function LanguageSwitcher() {
         anchorEl={anchorEl}
         open={open}
         onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem
           onClick={() => {
-            i18n.changeLanguage("pl");
+            i18n.changeLanguage('pl');
             setAnchorEl(null);
           }}
         >
-          🇵🇱 {t("auth.lang_pl")}
+          🇵🇱 {t('auth.lang_pl')}
         </MenuItem>
 
         <MenuItem
           onClick={() => {
-            i18n.changeLanguage("en");
+            i18n.changeLanguage('en');
             setAnchorEl(null);
           }}
         >
-          🇬🇧 {t("auth.lang_en")}
+          🇬🇧 {t('auth.lang_en')}
         </MenuItem>
       </Menu>
     </>
