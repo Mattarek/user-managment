@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks.ts';
-import { AppLoader } from './AppLoader.tsx';
+import { AppLoader } from '../components/AppLoader.tsx';
 
-export function RequireAuth() {
+export function ProtectedRoute() {
   const { initialized, isAuthenticated, loading } = useAppSelector((s) => s.auth);
 
   if (loading) return null;

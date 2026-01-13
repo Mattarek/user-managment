@@ -3,7 +3,6 @@ import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { AuthBackground } from '../../layouts/AuthBackground';
 import { useMemo, useState } from 'react';
 import { getRegisterSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
@@ -27,82 +26,85 @@ export function RegisterPage() {
     message: '',
   });
 
-  const showSnackbar = (type: 'success' | 'error', message: string) => setSnackbar({ open: true, type, message });
+  const showSnackbar = (type: 'success' | 'error', message: string) =>
+    setSnackbar({
+      open: true,
+      type,
+      message,
+    });
 
   return (
-    <AuthBackground>
-      <BasePageLayout title={t('auth.register')} subtitle={t('auth.enterYourCredentials')}>
-        <Formik
-          key={i18n.language}
-          initialValues={{
-            email: '',
-            name: '',
-            surname: '',
-            password: '',
-            repeatedPassword: '',
-          }}
-          validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            const action = await dispatch(
-              registerThunk({
-                email: values.email,
-                name: values.name,
-                surname: values.surname,
-                password: values.password,
-                repeatedPassword: values.repeatedPassword,
-              }),
-            );
+    <BasePageLayout title={t('auth.register')} subtitle={t('auth.enterYourCredentials')}>
+      <Formik
+        key={i18n.language}
+        initialValues={{
+          email: '',
+          name: '',
+          surname: '',
+          password: '',
+          repeatedPassword: '',
+        }}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting }) => {
+          const action = await dispatch(
+            registerThunk({
+              email: values.email,
+              name: values.name,
+              surname: values.surname,
+              password: values.password,
+              repeatedPassword: values.repeatedPassword,
+            }),
+          );
 
-            if (registerThunk.fulfilled.match(action)) {
-              showSnackbar('success', t('auth.registerSuccess'));
-              navigate('/login');
-            } else {
-              showSnackbar('error', action.payload || t('auth.registerFailed'));
-            }
+          if (registerThunk.fulfilled.match(action)) {
+            showSnackbar('success', t('auth.registerSuccess'));
+            navigate('/login');
+          } else {
+            showSnackbar('error', action.payload || t('auth.registerFailed'));
+          }
 
-            setSubmitting(false);
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <Stack spacing={2}>
-                <Field component={TextField} name="name" label={t('auth.name')} fullWidth />
-                <Field component={TextField} name="surname" label={t('auth.surname')} fullWidth />
-                <Field component={TextField} name="email" label={t('auth.email')} fullWidth />
-                <Field component={TextField} name="password" type="password" label={t('auth.password')} fullWidth />
-                <Field
-                  component={TextField}
-                  name="repeatedPassword"
-                  type="password"
-                  label={t('auth.repeatPassword')}
-                  fullWidth
-                />
+          setSubmitting(false);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Stack spacing={2}>
+              <Field component={TextField} name="name" label={t('auth.name')} fullWidth />
+              <Field component={TextField} name="surname" label={t('auth.surname')} fullWidth />
+              <Field component={TextField} name="email" label={t('auth.email')} fullWidth />
+              <Field component={TextField} name="password" type="password" label={t('auth.password')} fullWidth />
+              <Field
+                component={TextField}
+                name="repeatedPassword"
+                type="password"
+                label={t('auth.repeatPassword')}
+                fullWidth
+              />
 
-                <Button type="submit" variant="contained" disabled={isSubmitting}>
-                  {t('auth.register')}
-                </Button>
+              <Button type="submit" variant="contained" disabled={isSubmitting}>
+                {t('auth.register')}
+              </Button>
 
-                <Stack spacing={1} alignItems="center">
-                  <Link href="/login" underline="hover">
-                    {t('auth.login')}
-                  </Link>
-                </Stack>
+              <Stack spacing={1} alignItems="center">
+                <Link href="/login" underline="hover">
+                  {t('auth.login')}
+                </Link>
               </Stack>
-            </Form>
-          )}
-        </Formik>
+            </Stack>
+          </Form>
+        )}
+      </Formik>
 
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={4000}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert severity={snackbar.type} variant="filled" onClose={() => setSnackbar((s) => ({ ...s, open: false }))}>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </BasePageLayout>
-    </AuthBackground>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity={snackbar.type} variant="filled" onClose={() => setSnackbar((s) => ({ ...s, open: false }))}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </BasePageLayout>
   );
 }

@@ -1,13 +1,8 @@
 import { api } from './axios';
-import type { LoginPayload, RegisterPayload, User } from '../features/auth/auth.types';
+import type { LoginPayload, RegisterPayload } from '../features/auth/auth.types';
 
 export const loginApi = async (payload: LoginPayload) => {
   const { data } = await api.post('/login', payload);
-  return data;
-};
-
-export const getMeApi = async (): Promise<User> => {
-  const { data } = await api.get<User>('/users/me');
   return data;
 };
 

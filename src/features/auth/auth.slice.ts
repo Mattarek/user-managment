@@ -20,8 +20,10 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginThunk.fulfilled, (state) => {
+      .addCase(loginThunk.fulfilled, (state, action) => {
         state.loading = false;
+        localStorage.setItem('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;

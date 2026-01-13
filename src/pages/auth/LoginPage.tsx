@@ -3,7 +3,6 @@ import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { Alert, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { AuthBackground } from '../../layouts/AuthBackground';
 import { useMemo, useState } from 'react';
 import { getLoginSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
@@ -32,68 +31,65 @@ export function LoginPage() {
     });
 
   return (
-    <AuthBackground>
-      <BasePageLayout title={t('auth.login')} subtitle={t('auth.enterYourCredentials')}>
-        <Formik
-          key={i18n.language}
-          initialValues={{ email: '', password: '' }}
-          validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            const action = await dispatch(
-              loginThunk({
-                email: values.email,
-                password: values.password,
-              }),
-            );
+    <BasePageLayout title={t('auth.login')} subtitle={t('auth.enterYourCredentials')}>
+      <Formik
+        key={i18n.language}
+        initialValues={{ email: '', password: '' }}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting }) => {
+          const action = await dispatch(
+            loginThunk({
+              email: values.email,
+              password: values.password,
+            }),
+          );
 
-            if (loginThunk.fulfilled.match(action)) {
-              await dispatch(getMeThunk());
+          if (loginThunk.fulfilled.match(action)) {
+            await dispatch(getMeThunk());
 
-              showSnackbar('success', t('auth.loginSuccess'));
-              navigate('/dashboard');
-            } else {
-              showSnackbar('error', action.payload || t('auth.loginFailed'));
-            }
+            showSnackbar('success', t('auth.loginSuccess'));
+            navigate('/dashboard');
+          } else {
+            showSnackbar('error', action.payload || t('auth.loginFailed'));
+          }
 
-            setSubmitting(false);
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <Stack spacing={2}>
-                <Field component={TextField} name="email" label={t('auth.email')} fullWidth />
+          setSubmitting(false);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <Stack spacing={2}>
+              <Field component={TextField} name="email" label={t('auth.email')} fullWidth />
+              <Field component={TextField} name="password" type="password" label={t('auth.password')} fullWidth />
 
-                <Field component={TextField} name="password" type="password" label={t('auth.password')} fullWidth />
+              <AsyncButton fullWidth type="submit" variant="contained" loading={isSubmitting}>
+                {t('auth.login')}
+              </AsyncButton>
 
-                <AsyncButton fullWidth type="submit" variant="contained" loading={isSubmitting}>
-                  {t('auth.login')}
-                </AsyncButton>
+              <Stack spacing={1} alignItems="center">
+                <Link href="/register" underline="hover">
+                  {t('auth.createAccount')}
+                </Link>
 
-                <Stack spacing={1} alignItems="center">
-                  <Link href="/register" underline="hover">
-                    {t('auth.createAccount')}
-                  </Link>
-
-                  <Link href="/forgot-password" underline="hover">
-                    {t('auth.forgotPassword')}
-                  </Link>
-                </Stack>
+                <Link href="/forgot-password" underline="hover">
+                  {t('auth.forgotPassword')}
+                </Link>
               </Stack>
-            </Form>
-          )}
-        </Formik>
+            </Stack>
+          </Form>
+        )}
+      </Formik>
 
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={4000}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <Alert severity={snackbar.type} onClose={() => setSnackbar((s) => ({ ...s, open: false }))} variant="filled">
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </BasePageLayout>
-    </AuthBackground>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity={snackbar.type} onClose={() => setSnackbar((s) => ({ ...s, open: false }))} variant="filled">
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </BasePageLayout>
   );
 }

@@ -5,23 +5,17 @@ import { isTokenExpired } from '../../utils/isTokenExpired.ts';
 import { api } from '../../api/axios.ts';
 
 export const loginThunk = createAsyncThunk<
-  void,
+  { accessToken: string; refreshToken: string },
   LoginPayload,
-  {
-    rejectValue: string;
-  }
+  { rejectValue: string }
 >('auth/login', async (payload, { rejectWithValue }) => {
   try {
     const data = await loginApi(payload);
 
-    if (!data.accessToken) {
-      throw new Error('Missing token');
-    }
-
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-
-    return;
+    return {
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+    };
   } catch {
     return rejectWithValue('Login failed');
   }
@@ -34,7 +28,7 @@ export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { rejectWithV
     return rejectWithValue('NO_TOKEN');
   }
 
-  if (!isTokenExpired(token)) {
+  if (isTokenExpired(token)) {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     return rejectWithValue('TOKEN_INVALID');
