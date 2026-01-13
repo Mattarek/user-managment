@@ -3,6 +3,7 @@ import { loginApi, logoutApi, recoveryApi, registerApi } from '../../api/auth.ap
 import type { LoginPayload, RegisterPayload } from './auth.types';
 import { isTokenExpired } from '../../utils/isTokenExpired.ts';
 import { api } from '../../api/axios.ts';
+import { refreshApi } from '../../api/refreshApi.ts';
 
 export const loginThunk = createAsyncThunk<
   { accessToken: string; refreshToken: string },
@@ -21,7 +22,32 @@ export const loginThunk = createAsyncThunk<
   }
 });
 
-export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
+export const refreshTokenThunk = createAsyncThunk<
+  { accessToken: string; refreshToken: string },
+  void,
+  { rejectValue: string }
+>('auth/refresh', async (_, { rejectWithValue }) => {
+  const refreshToken = localStorage.getItem('refreshToken');
+
+  if (!refreshToken) {
+    return rejectWithValue('NO_REFRESH_TOKEN');
+  }
+
+  try {
+    const res = await refreshApi.post('/refresh-token', {
+      refreshToken,
+    });
+
+    return {
+      accessToken: res.data.accessToken,
+      refreshToken: res.data.refreshToken,
+    };
+  } catch {
+    return rejectWithValue('REFRESH_FAILED');
+  }
+});
+
+export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { dispatch, rejectWithValue }) => {
   const token = localStorage.getItem('accessToken');
 
   if (!token) {
@@ -29,9 +55,11 @@ export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { rejectWithV
   }
 
   if (isTokenExpired(token)) {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    return rejectWithValue('TOKEN_INVALID');
+    const refreshResult = await dispatch(refreshTokenThunk());
+
+    if (!refreshTokenThunk.fulfilled.match(refreshResult)) {
+      return rejectWithValue('REFRESH_FAILED');
+    }
   }
 
   try {

@@ -1,6 +1,4 @@
 import 'normalize.css';
-
-import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ForgotPasswordPage, LoginPage, RegisterPage } from './pages/auth';
 import { DashboardLayout } from './layouts/DasbhoardLayout.tsx';
@@ -9,21 +7,24 @@ import { appPaths } from './routes.tsx';
 import { ProtectedRoute } from './auth/ProtectedRoute.tsx';
 import { PublicRoute } from './auth/PublicRoute.tsx';
 import { useAppDispatch, useAppSelector } from './app/hooks.ts';
-import { getMeThunk } from './features/auth/auth.thunks.ts';
 import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
-import { AppLoader } from './components/AppLoader.tsx';
+import { useEffect } from 'react';
+import { getMeThunk } from './features/auth/auth.thunks.ts';
+import { initDone } from './features/auth/auth.slice';
 
 function App() {
+  const { isAuthenticated } = useAppSelector((s) => s.auth);
   const dispatch = useAppDispatch();
-  const { isAuthenticated, initialized } = useAppSelector((s) => s.auth);
 
   useEffect(() => {
-    dispatch(getMeThunk());
-  }, [dispatch]);
+    const token = localStorage.getItem('accessToken');
 
-  if (!initialized) {
-    return <AppLoader />;
-  }
+    if (token) {
+      dispatch(getMeThunk());
+    } else {
+      dispatch(initDone());
+    }
+  }, [dispatch]);
 
   return (
     <BrowserRouter>

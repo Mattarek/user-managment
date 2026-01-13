@@ -3,10 +3,9 @@ import { useAppSelector } from '../app/hooks.ts';
 import { AppLoader } from '../components/AppLoader.tsx';
 
 export function ProtectedRoute() {
-  const { initialized, isAuthenticated, loading } = useAppSelector((s) => s.auth);
+  const { isAuthenticated, initialized } = useAppSelector((s) => s.auth);
 
-  if (loading) return null;
-
+  console.log('initialized: ' + initialized);
   if (!initialized) {
     return <AppLoader />;
   }

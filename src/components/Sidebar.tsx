@@ -19,7 +19,7 @@ type SidebarDropdown = {
   }[];
 };
 
-type SidebarItem = SidebarLink | SidebarDropdown;
+export type SidebarItem = SidebarLink | SidebarDropdown;
 
 type Props = {
   items: SidebarItem[];

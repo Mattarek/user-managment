@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './auth.types';
-import { getMeThunk, loginThunk, logoutThunk } from './auth.thunks';
+import { getMeThunk, loginThunk, logoutThunk, refreshTokenThunk } from './auth.thunks';
 
 const initialState: AuthState = {
   user: null,
@@ -13,7 +13,11 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    initDone(state) {
+      state.initialized = true;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginThunk.pending, (state) => {
@@ -35,18 +39,19 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(getMeThunk.fulfilled, (state, action) => {
-        state.initialized = true;
-        state.isAuthenticated = true;
-        state.loading = false;
         state.user = action.payload;
-      })
-      .addCase(getMeThunk.rejected, (state) => {
+        state.isAuthenticated = true;
         state.initialized = true;
-        state.isAuthenticated = false;
-        state.user = null;
-        state.loading = false;
       })
 
+      .addCase(getMeThunk.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+        state.initialized = true;
+      })
+      .addCase(refreshTokenThunk.fulfilled, (_, action) => {
+        localStorage.setItem('accessToken', action.payload.accessToken);
+      })
       .addCase(logoutThunk.pending, (state) => {
         state.loading = true;
       })
@@ -58,5 +63,5 @@ const authSlice = createSlice({
       });
   },
 });
-
+export const { initDone } = authSlice.actions;
 export default authSlice.reducer;
