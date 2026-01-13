@@ -6,25 +6,11 @@ import { ErrorPage } from './pages';
 import { appPaths } from './routes.tsx';
 import { ProtectedRoute } from './auth/ProtectedRoute.tsx';
 import { PublicRoute } from './auth/PublicRoute.tsx';
-import { useAppDispatch, useAppSelector } from './app/hooks.ts';
+import { useAppSelector } from './app/hooks.ts';
 import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
-import { useEffect } from 'react';
-import { getMeThunk } from './features/auth/auth.thunks.ts';
-import { initDone } from './features/auth/auth.slice';
 
 function App() {
   const { isAuthenticated } = useAppSelector((s) => s.auth);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-
-    if (token) {
-      dispatch(getMeThunk());
-    } else {
-      dispatch(initDone());
-    }
-  }, [dispatch]);
 
   return (
     <BrowserRouter>

@@ -21,6 +21,7 @@
     "doctors": "Lekarze"
   },
   "auth": {
+    "activeSessionLeft": "⏳ Sesja",
     "registerSuccess": "Konto zostało utworzone",
     "registerFailed": "Rejestracja nie powiodła się",
     "login_title": "Zaloguj się",

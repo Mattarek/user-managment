@@ -1,13 +1,22 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAppSelector } from '../app/hooks.ts';
-import { AppLoader } from '../components/AppLoader.tsx';
+import { useAppDispatch, useAppSelector } from '../app/hooks.ts';
+import { useEffect } from 'react';
+import { getMeThunk } from '../features/auth/auth.thunks.ts';
 
 export function ProtectedRoute() {
   const { isAuthenticated, initialized } = useAppSelector((s) => s.auth);
+  const dispatch = useAppDispatch();
 
-  console.log('initialized: ' + initialized);
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+
+    if (token) {
+      dispatch(getMeThunk());
+    }
+  }, [dispatch]);
+
   if (!initialized) {
-    return <AppLoader />;
+    return null;
   }
 
   if (!isAuthenticated) {

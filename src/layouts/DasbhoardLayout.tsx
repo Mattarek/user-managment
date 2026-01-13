@@ -3,17 +3,9 @@ import { Topbar } from '../components/Topbar';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '../app/hooks';
-import { AppLoader } from '../components/AppLoader.tsx';
 
 export function DashboardLayout() {
   const { t } = useTranslation();
-
-  const { initialized } = useAppSelector((s) => s.auth);
-
-  if (!initialized) {
-    return <AppLoader />;
-  }
 
   const sidebarItems: SidebarItem[] = [
     { type: 'link', label: t('sidebar.home'), path: '/dashboard' },

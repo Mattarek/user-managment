@@ -19,7 +19,7 @@ import logo from '../assets/logo.svg';
 import { ThemeSwitcher } from './ThemeSwitcher';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { logoutThunk } from '../features/auth/auth.thunks';
-import { TokenTimer } from './tokenTimer/TokenTimer.tsx';
+import { SessionStatusButton } from './tokenTimer/SessionStatusButton.tsx';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -39,7 +39,7 @@ export function Topbar() {
         <img src={logo} alt="Logo" width={80} height={80} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <TokenTimer />
+          <SessionStatusButton />
           {user && <Typography>{user.email}</Typography>}
 
           <Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>

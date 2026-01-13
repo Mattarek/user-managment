@@ -21,6 +21,7 @@
     "doctors": "Doctors"
   },
   "auth": {
+    "activeSessionLeft": "⏳ Session",
     "registerSuccess": "Account has been created",
     "registerFailed": "Registration failed",
     "login_title": "Log in",
