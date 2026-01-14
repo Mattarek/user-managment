@@ -57,6 +57,7 @@ export function Topbar() {
             </MenuItem>
 
             <MenuItem
+              sx={{ justifyContent: 'flex-end' }}
               onClick={() => {
                 handleLogout();
                 setAnchor(null);
