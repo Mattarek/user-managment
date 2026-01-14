@@ -4,6 +4,12 @@ import type { LoginPayload, RegisterPayload } from './auth.types';
 import { isTokenExpired } from '../../utils/isTokenExpired.ts';
 import { api } from '../../api/axios.ts';
 import { refreshApi } from '../../api/refreshApi.ts';
+import axios from 'axios';
+
+export type ApiErrorResponse = {
+  message?: string;
+  errors?: Record<string, string[]>;
+};
 
 export const loginThunk = createAsyncThunk<
   { accessToken: string; refreshToken: string },
@@ -81,7 +87,19 @@ export const registerThunk = createAsyncThunk<
     const data = await registerApi(payload);
     localStorage.setItem('accessToken', data.accessToken);
     return;
-  } catch {
+  } catch (error) {
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
+      const status = error.response?.status;
+
+      if (status === 422) {
+        return rejectWithValue('EMAIL_ALREADY_EXISTS');
+      }
+
+      if (status === 400) {
+        return rejectWithValue('VALIDATION_ERROR');
+      }
+    }
+
     return rejectWithValue('Register failed');
   }
 });

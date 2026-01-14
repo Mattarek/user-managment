@@ -1,7 +1,7 @@
 import { BasePageLayout } from '../../layouts/BaseAuthLayout';
-import { Field, Form, Formik } from 'formik';
-import { TextField } from 'formik-mui';
-import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { CheckboxWithLabel, TextField } from 'formik-mui';
+import { Alert, Button, FormHelperText, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { getRegisterSchema } from '../../i18n/authSchema';
@@ -43,9 +43,10 @@ export function RegisterPage() {
           surname: '',
           password: '',
           repeatedPassword: '',
+          terms: false,
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting, setFieldError }) => {
           const action = await dispatch(
             registerThunk({
               email: values.email,
@@ -60,7 +61,11 @@ export function RegisterPage() {
             showSnackbar('success', t('auth.registerSuccess'));
             navigate('/login');
           } else {
-            showSnackbar('error', action.payload || t('auth.registerFailed'));
+            if (action.payload === 'EMAIL_ALREADY_EXISTS') {
+              setFieldError('email', t('validation.emailAlreadyExists'));
+            } else {
+              showSnackbar('error', action.payload || t('auth.registerFailed'));
+            }
           }
 
           setSubmitting(false);
@@ -80,6 +85,22 @@ export function RegisterPage() {
                 label={t('auth.repeatPassword')}
                 fullWidth
               />
+              <Field
+                component={CheckboxWithLabel}
+                name="terms"
+                Label={{
+                  label: (
+                    <>
+                      {t('auth.IAgreeToThe')}{' '}
+                      <Link href="/terms" target="_blank" underline="hover" color="primary">
+                        {t('auth.terms')}
+                      </Link>{' '}
+                      {t('auth.ofUse')}
+                    </>
+                  ),
+                }}
+              />
+              <ErrorMessage name="terms">{(msg) => <FormHelperText error>{msg}</FormHelperText>}</ErrorMessage>
 
               <Button type="submit" variant="contained" disabled={isSubmitting}>
                 {t('auth.register')}

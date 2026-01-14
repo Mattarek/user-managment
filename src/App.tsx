@@ -8,6 +8,7 @@ import { ProtectedRoute } from './auth/ProtectedRoute.tsx';
 import { PublicRoute } from './auth/PublicRoute.tsx';
 import { useAppSelector } from './app/hooks.ts';
 import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
+import { Terms } from './pages/auth/Terms.tsx';
 
 function App() {
   const { isAuthenticated } = useAppSelector((s) => s.auth);
@@ -29,6 +30,7 @@ function App() {
           <Route path={appPaths.login} element={<LoginPage />} />
           <Route path={appPaths.register} element={<RegisterPage />} />
           <Route path={appPaths.forgotPassword} element={<ForgotPasswordPage />} />
+          <Route path={appPaths.terms} element={<Terms />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>

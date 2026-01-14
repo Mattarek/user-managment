@@ -28,6 +28,8 @@ export const getRegisterSchema = (t: TFunction) =>
     repeatedPassword: Yup.string()
       .required(t('validation.passwordRepeatRequired'))
       .oneOf([Yup.ref('password')], t('validation.passwordNotMatch')),
+
+    terms: Yup.boolean().oneOf([true], t('validation.acceptTermsRequired')),
   });
 
 export const getForgotSchema = (t: TFunction) =>
