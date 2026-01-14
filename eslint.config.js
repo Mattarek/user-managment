@@ -21,7 +21,6 @@ export default defineConfig([
       reactRefresh.configs.vite,
       eslintConfigPrettier,
     ],
-
     languageOptions: {
       ecmaVersion: 2025,
       globals: globals.browser,
