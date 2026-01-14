@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { getLoginSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
 import { AsyncButton } from '../../components/AsyncButton.tsx';
@@ -16,6 +16,12 @@ export function LoginPage() {
   const validationSchema = useMemo(() => getLoginSchema(t), [t]);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const location = useLocation();
+  const from =
+    location.state?.from?.pathname && location.state.from.pathname !== '/login'
+      ? location.state.from.pathname
+      : '/dashboard';
 
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -48,7 +54,7 @@ export function LoginPage() {
             await dispatch(getMeThunk());
 
             showSnackbar('success', t('auth.loginSuccess'));
-            navigate('/dashboard');
+            navigate(from, { replace: true });
           } else {
             showSnackbar('error', action.payload || t('auth.loginFailed'));
           }
