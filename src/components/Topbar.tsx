@@ -35,7 +35,12 @@ export function Topbar() {
 
   return (
     <AppBar position="fixed" sx={{ ml: 260, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Toolbar
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
         <img src={logo} alt="Logo" width={80} height={80} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -50,14 +55,14 @@ export function Topbar() {
             <SettingsIcon sx={{ color: '#fff' }} />
           </IconButton>
 
-          <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>
+          <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)} sx={{ minWidth: 200 }}>
             <MenuItem onClick={(e) => setLangAnchor(e.currentTarget)}>
               <ArrowLeftIcon style={{ marginRight: 8 }} />
               <ListItemText>{t('topbar.language')}</ListItemText>
             </MenuItem>
 
             <MenuItem
-              sx={{ justifyContent: 'flex-end' }}
+              sx={{ justifyContent: 'center' }}
               onClick={() => {
                 handleLogout();
                 setAnchor(null);
