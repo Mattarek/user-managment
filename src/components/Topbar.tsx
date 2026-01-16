@@ -55,7 +55,7 @@ export function Topbar() {
             <SettingsIcon sx={{ color: '#fff' }} />
           </IconButton>
 
-          <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)} sx={{ minWidth: 200 }}>
+          <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>
             <MenuItem onClick={(e) => setLangAnchor(e.currentTarget)}>
               <ArrowLeftIcon style={{ marginRight: 8 }} />
               <ListItemText>{t('topbar.language')}</ListItemText>
@@ -78,7 +78,7 @@ export function Topbar() {
             onClose={() => setLangAnchor(null)}
             anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            sx={{ mt: -1 }}
+            sx={{ mt: -1, minWidth: '8.75rem' }}
           >
             <MenuItem
               onClick={() => {
