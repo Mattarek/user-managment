@@ -1,13 +1,21 @@
 import 'normalize.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { ForgotPasswordPage, LoginPage, RegisterPage } from './pages/auth';
+import {
+  AddDoctor,
+  AddPatient,
+  DashboardHome,
+  Doctors,
+  ErrorPage,
+  ForgotPasswordPage,
+  LoginPage,
+  Patients,
+  RegisterPage,
+  Terms,
+} from './pages';
 import { DashboardLayout } from './layouts/DasbhoardLayout.tsx';
-import { ErrorPage } from './pages';
 import { appPaths } from './routes.tsx';
 import { ProtectedRoute } from './auth/ProtectedRoute.tsx';
 import { PublicRoute } from './auth/PublicRoute.tsx';
-import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
-import { Terms } from './pages/auth/Terms.tsx';
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { refreshApi } from './refreshApi.ts';
+import { axiosSecuredInstance } from './axiosSecuredInstance.ts';
 
 const API_URL = import.meta.env.VITE_API_URL;
 export const api = axios.create({
@@ -31,7 +31,7 @@ api.interceptors.response.use(
     originalRequest._retry = true;
 
     try {
-      const res = await refreshApi.post('/refresh-token', {
+      const res = await axiosSecuredInstance.post('/refresh-token', {
         refreshToken,
       });
 

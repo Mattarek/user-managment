@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { LoginPayload, RegisterPayload } from './auth.types';
 import { isTokenExpired } from '../../utils/isTokenExpired.ts';
-import { api } from '../../api/axios.ts';
-import { refreshApi } from '../../api/refreshApi.ts';
+import { api } from '../../api/axiosInstance.ts';
+import { axiosSecuredInstance } from '../../api/axiosSecuredInstance.ts';
 import axios from 'axios';
 
 export type ApiErrorResponse = {
@@ -39,7 +39,7 @@ export const refreshTokenThunk = createAsyncThunk<
   }
 
   try {
-    const res = await refreshApi.post('/refresh-token', {
+    const res = await axiosSecuredInstance.post('/refresh-token', {
       refreshToken,
     });
 

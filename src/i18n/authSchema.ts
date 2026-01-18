@@ -1,12 +1,14 @@
 import * as Yup from 'yup';
 import { type TFunction } from 'i18next';
-
-export const minPasswordLength = 10;
+import { MIN_PASSWORD_LENGTH } from '../constants.ts';
 
 export const getLoginSchema = (t: TFunction) =>
   Yup.object({
     email: Yup.string().email(t('validation.emailRequired')).required(t('validation.emailRequired')),
-    password: Yup.string().required(t('validation.passwordRequired')),
+
+    password: Yup.string()
+      .required(t('validation.passwordRequired'))
+      .min(MIN_PASSWORD_LENGTH, t('validation.passwordMin', { min: MIN_PASSWORD_LENGTH })),
   });
 
 export const getRegisterSchema = (t: TFunction) =>
@@ -23,7 +25,7 @@ export const getRegisterSchema = (t: TFunction) =>
 
     password: Yup.string()
       .required(t('validation.passwordRequired'))
-      .min(minPasswordLength, t('validation.passwordMin', { min: minPasswordLength })),
+      .min(MIN_PASSWORD_LENGTH, t('validation.passwordMin', { min: MIN_PASSWORD_LENGTH })),
 
     repeatedPassword: Yup.string()
       .required(t('validation.passwordRepeatRequired'))
