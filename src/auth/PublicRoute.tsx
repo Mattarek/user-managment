@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAppSelector } from '../app/hooks.ts';
 
 export function PublicRoute() {
-  const { initialized, isAuthenticated } = useAppSelector((s) => s.auth);
-  if (initialized && isAuthenticated) {
+  const token = localStorage.getItem('accessToken');
+
+  if (token) {
     return <Navigate to="/dashboard" replace />;
   }
 

@@ -85,7 +85,6 @@ export function LoginPage() {
           </Form>
         )}
       </Formik>
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}

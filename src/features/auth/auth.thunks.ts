@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { loginApi, logoutApi, recoveryApi, registerApi } from '../../api/auth.api';
 import type { LoginPayload, RegisterPayload } from './auth.types';
 import { isTokenExpired } from '../../utils/isTokenExpired.ts';
 import { api } from '../../api/axios.ts';
@@ -17,7 +16,7 @@ export const loginThunk = createAsyncThunk<
   { rejectValue: string }
 >('auth/login', async (payload, { rejectWithValue }) => {
   try {
-    const data = await loginApi(payload);
+    const { data } = await api.post('/login', payload);
 
     return {
       accessToken: data.accessToken,
@@ -84,7 +83,7 @@ export const registerThunk = createAsyncThunk<
   }
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
-    const data = await registerApi(payload);
+    const { data } = await api.post('/register', payload);
     localStorage.setItem('accessToken', data.accessToken);
     return;
   } catch (error) {
@@ -106,7 +105,13 @@ export const registerThunk = createAsyncThunk<
 
 export const logoutThunk = createAsyncThunk('auth/logout', async () => {
   try {
-    await logoutApi();
+    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = localStorage.getItem('accessToken');
+
+    await api.post('/logout', {
+      refreshToken,
+      accessToken,
+    });
   } finally {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
@@ -121,7 +126,7 @@ export const recoveryThunk = createAsyncThunk<
   }
 >('auth/recovery', async (email, { rejectWithValue }) => {
   try {
-    await recoveryApi(email);
+    await api.post('/users/remind-password', { email });
   } catch {
     return rejectWithValue('User not found');
   }

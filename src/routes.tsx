@@ -1,4 +1,5 @@
 export const appPaths = {
+  root: '/',
   login: '/login',
   register: '/register',
   forgotPassword: '/forgot-password',

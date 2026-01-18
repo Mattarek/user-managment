@@ -6,27 +6,15 @@ import { ErrorPage } from './pages';
 import { appPaths } from './routes.tsx';
 import { ProtectedRoute } from './auth/ProtectedRoute.tsx';
 import { PublicRoute } from './auth/PublicRoute.tsx';
-import { useAppSelector } from './app/hooks.ts';
 import { AddDoctor, AddPatient, DashboardHome, Doctors, Patients } from './pages/dashboard';
 import { Terms } from './pages/auth/Terms.tsx';
 
 function App() {
-  const { isAuthenticated } = useAppSelector((s) => s.auth);
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? (
-              <Navigate to={appPaths.dashboard.root} replace />
-            ) : (
-              <Navigate to={appPaths.login} replace />
-            )
-          }
-        />
         <Route element={<PublicRoute />}>
+          <Route index element={<Navigate to={appPaths.login} replace />} />
           <Route path={appPaths.login} element={<LoginPage />} />
           <Route path={appPaths.register} element={<RegisterPage />} />
           <Route path={appPaths.forgotPassword} element={<ForgotPasswordPage />} />

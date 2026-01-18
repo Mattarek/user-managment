@@ -7,7 +7,6 @@ export function ProtectedRoute() {
   const { isAuthenticated, initialized } = useAppSelector((s) => s.auth);
   const dispatch = useAppDispatch();
   const location = useLocation();
-
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
 
