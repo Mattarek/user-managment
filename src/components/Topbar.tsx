@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import logo from '../assets/logo.svg';
 import { ThemeSwitcher } from './ThemeSwitcher';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
 import { logoutThunk } from '../features/auth/auth.thunks';
 import { SessionStatusButton } from './tokenTimer/SessionStatusButton.tsx';
 

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { LoginPayload, RegisterPayload } from './auth.types';
 import { isTokenExpired } from '../../utils/isTokenExpired.ts';
-import { api } from '../../api/axiosInstance.ts';
-import { axiosSecuredInstance } from '../../api/axiosSecuredInstance.ts';
+import { axiosSecureInstance } from '../../libs/axiosSecureInstance.ts';
+import { axiosInstance } from '../../libs/axiosInstance.ts';
 import axios from 'axios';
 import { PATIENT_ACCESS_TOKEN, PATIENT_REFRESH_TOKEN } from '../../constants.ts';
 
@@ -17,7 +17,7 @@ export const loginThunk = createAsyncThunk<
   { rejectValue: string }
 >('auth/login', async (payload, { rejectWithValue }) => {
   try {
-    const { data } = await api.post('/login', payload);
+    const { data } = await axiosSecureInstance.post('/login', payload);
 
     return {
       accessToken: data.accessToken,
@@ -40,7 +40,7 @@ export const refreshTokenThunk = createAsyncThunk<
   }
 
   try {
-    const res = await axiosSecuredInstance.post('/refresh-token', {
+    const res = await axiosInstance.post('/refresh-token', {
       refreshToken,
     });
 
@@ -69,7 +69,7 @@ export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { dispatch, r
   }
 
   try {
-    const res = await api.get('/users/me');
+    const res = await axiosSecureInstance.get('/users/me');
     return res.data;
   } catch {
     return rejectWithValue('UNAUTHORIZED');
@@ -84,7 +84,7 @@ export const registerThunk = createAsyncThunk<
   }
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
-    const { data } = await api.post('/register', payload);
+    const { data } = await axiosSecureInstance.post('/register', payload);
     localStorage.setItem(PATIENT_ACCESS_TOKEN, data.accessToken);
     return;
   } catch (error) {
@@ -109,7 +109,7 @@ export const logoutThunk = createAsyncThunk('auth/logout', async () => {
     const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
     const accessToken = localStorage.getItem(PATIENT_ACCESS_TOKEN);
 
-    await api.post('/logout', {
+    await axiosSecureInstance.post('/logout', {
       refreshToken,
       accessToken,
     });
@@ -127,7 +127,7 @@ export const recoveryThunk = createAsyncThunk<
   }
 >('auth/recovery', async (email, { rejectWithValue }) => {
   try {
-    await api.post('/users/remind-password', { email });
+    await axiosSecureInstance.post('/users/remind-password', { email });
   } catch {
     return rejectWithValue('User not found');
   }

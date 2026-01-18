@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks.ts';
+import { useAppDispatch } from '../store/hooks.ts';
 import { useEffect } from 'react';
 import { getMeThunk } from '../features/auth/auth.thunks.ts';
 import { PATIENT_ACCESS_TOKEN } from '../constants.ts';
