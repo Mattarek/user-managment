@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './auth.types';
 import { getMeThunk, loginThunk, logoutThunk, refreshTokenThunk } from './auth.thunks';
+import { PATIENT_ACCESS_TOKEN, PATIENT_REFRESH_TOKEN } from '../../constants.ts';
 
 const initialState: AuthState = {
   user: null,
@@ -22,8 +23,8 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.loading = false;
-        localStorage.setItem('accessToken', action.payload.accessToken);
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem(PATIENT_ACCESS_TOKEN, action.payload.accessToken);
+        localStorage.setItem(PATIENT_REFRESH_TOKEN, action.payload.refreshToken);
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;
@@ -46,7 +47,7 @@ const authSlice = createSlice({
         state.initialized = true;
       })
       .addCase(refreshTokenThunk.fulfilled, (_, action) => {
-        localStorage.setItem('accessToken', action.payload.accessToken);
+        localStorage.setItem(PATIENT_ACCESS_TOKEN, action.payload.accessToken);
       })
       .addCase(logoutThunk.pending, (state) => {
         state.loading = true;

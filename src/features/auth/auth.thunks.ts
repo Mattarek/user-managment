@@ -4,6 +4,7 @@ import { isTokenExpired } from '../../utils/isTokenExpired.ts';
 import { api } from '../../api/axiosInstance.ts';
 import { axiosSecuredInstance } from '../../api/axiosSecuredInstance.ts';
 import axios from 'axios';
+import { PATIENT_ACCESS_TOKEN, PATIENT_REFRESH_TOKEN } from '../../constants.ts';
 
 export type ApiErrorResponse = {
   message?: string;
@@ -32,7 +33,7 @@ export const refreshTokenThunk = createAsyncThunk<
   void,
   { rejectValue: string }
 >('auth/refresh', async (_, { rejectWithValue }) => {
-  const refreshToken = localStorage.getItem('refreshToken');
+  const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
 
   if (!refreshToken) {
     return rejectWithValue('NO_REFRESH_TOKEN');
@@ -53,7 +54,7 @@ export const refreshTokenThunk = createAsyncThunk<
 });
 
 export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { dispatch, rejectWithValue }) => {
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem(PATIENT_ACCESS_TOKEN);
 
   if (!token) {
     return rejectWithValue('NO_TOKEN');
@@ -84,7 +85,7 @@ export const registerThunk = createAsyncThunk<
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
     const { data } = await api.post('/register', payload);
-    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem(PATIENT_ACCESS_TOKEN, data.accessToken);
     return;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -105,16 +106,16 @@ export const registerThunk = createAsyncThunk<
 
 export const logoutThunk = createAsyncThunk('auth/logout', async () => {
   try {
-    const refreshToken = localStorage.getItem('refreshToken');
-    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
+    const accessToken = localStorage.getItem(PATIENT_ACCESS_TOKEN);
 
     await api.post('/logout', {
       refreshToken,
       accessToken,
     });
   } finally {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(PATIENT_ACCESS_TOKEN);
+    localStorage.removeItem(PATIENT_REFRESH_TOKEN);
   }
 });
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { logoutThunk } from '../../features/auth/auth.thunks.ts';
 import { useAppDispatch } from '../../app/hooks.ts';
+import { PATIENT_REFRESH_TOKEN } from '../../constants.ts';
 
 type JwtPayload = {
   exp: number;
@@ -11,7 +12,7 @@ export function useSessionTimer() {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
     if (!refreshToken) return;
 
     const { exp } = jwtDecode<JwtPayload>(refreshToken);
