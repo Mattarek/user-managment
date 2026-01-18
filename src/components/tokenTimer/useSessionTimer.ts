@@ -31,7 +31,7 @@ export function useSessionTimer() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [dispatch]);
 
   return secondsLeft;
 }

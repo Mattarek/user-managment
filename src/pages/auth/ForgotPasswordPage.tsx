@@ -1,13 +1,14 @@
 import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
+import { Alert, Button, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { getForgotSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
 import { useAppDispatch } from '../../app/hooks';
 import { recoveryThunk } from '../../features/auth/auth.thunks';
+import { Link } from 'react-router-dom';
 
 export function ForgotPasswordPage() {
   const { t } = useTranslation();
@@ -59,9 +60,7 @@ export function ForgotPasswordPage() {
               </Button>
 
               <Stack spacing={1} alignItems="center">
-                <Link href="/login" underline="hover">
-                  {t('auth.login')}
-                </Link>
+                <Link to="/login">{t('auth.login')}</Link>
               </Stack>
             </Stack>
           </Form>

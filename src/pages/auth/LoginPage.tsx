@@ -1,12 +1,12 @@
 import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { Alert, Link, Snackbar, Stack } from '@mui/material';
+import { Alert, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { getLoginSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
 import { AsyncButton } from '../../components/AsyncButton.tsx';
@@ -73,13 +73,8 @@ export function LoginPage() {
               </AsyncButton>
 
               <Stack spacing={1} alignItems="center">
-                <Link href="/register" underline="hover">
-                  {t('auth.createAccount')}
-                </Link>
-
-                <Link href="/forgot-password" underline="hover">
-                  {t('auth.forgotPassword')}
-                </Link>
+                <Link to="/register">{t('auth.createAccount')}</Link>
+                <Link to="/forgot-password">{t('auth.forgotPassword')}</Link>
               </Stack>
             </Stack>
           </Form>

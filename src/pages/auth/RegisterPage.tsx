@@ -1,12 +1,12 @@
 import { BasePageLayout } from '../../layouts/BaseAuthLayout';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { CheckboxWithLabel, TextField } from 'formik-mui';
-import { Alert, Button, FormHelperText, Link, Snackbar, Stack } from '@mui/material';
+import { Alert, Button, FormHelperText, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { getRegisterSchema } from '../../i18n/authSchema';
 import i18n from 'i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { registerThunk } from '../../features/auth/auth.thunks';
 
@@ -92,7 +92,7 @@ export function RegisterPage() {
                   label: (
                     <>
                       {t('auth.IAgreeToThe')}{' '}
-                      <Link href="/terms" target="_blank" underline="hover" color="primary">
+                      <Link to="/terms" target="_blank" color="primary">
                         {t('auth.terms')}
                       </Link>{' '}
                       {t('auth.ofUse')}
@@ -107,9 +107,7 @@ export function RegisterPage() {
               </Button>
 
               <Stack spacing={1} alignItems="center">
-                <Link href="/login" underline="hover">
-                  {t('auth.login')}
-                </Link>
+                <Link to="/login">{t('auth.login')}</Link>
               </Stack>
             </Stack>
           </Form>
