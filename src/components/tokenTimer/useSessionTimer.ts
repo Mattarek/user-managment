@@ -3,10 +3,12 @@ import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import { logoutThunk } from '../../features/auth/auth.thunks.ts';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { PATIENT_REFRESH_TOKEN } from '../../constants.ts';
+import { useNavigate } from 'react-router-dom';
 
 export function useSessionTimer() {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
@@ -21,6 +23,7 @@ export function useSessionTimer() {
       if (diff <= 0) {
         clearInterval(interval);
         dispatch(logoutThunk());
+        navigate('/login', { replace: true });
         return;
       }
 

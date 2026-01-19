@@ -4,7 +4,7 @@ import { TextField } from 'formik-mui';
 import { Alert, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import i18n, { type TFunction } from 'i18next';
+import i18n from 'i18next';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
@@ -13,19 +13,19 @@ import type { SnackbarState } from '../../types/types.ts';
 import * as Yup from 'yup';
 import { MIN_PASSWORD_LENGTH } from '../../constants.ts';
 
-const validationSchema = (t: TFunction) =>
-  Yup.object({
-    email: Yup.string().email(t('validation.emailRequired')).required(t('validation.emailRequired')),
-
-    password: Yup.string()
-      .required(t('validation.passwordRequired'))
-      .min(MIN_PASSWORD_LENGTH, t('validation.passwordMin', { min: MIN_PASSWORD_LENGTH })),
-  });
-
 export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const validationSchema = () =>
+    Yup.object({
+      email: Yup.string().email(t('validation.emailRequired')).required(t('validation.emailRequired')),
+
+      password: Yup.string()
+        .required(t('validation.passwordRequired'))
+        .min(MIN_PASSWORD_LENGTH, t('validation.passwordMin', { min: MIN_PASSWORD_LENGTH })),
+    });
 
   const location = useLocation();
   const from =
