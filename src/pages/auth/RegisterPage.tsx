@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { registerThunk } from '../../features/auth/auth.thunks';
+import { type SnackbarState } from '../../types/types.ts';
 
 export function RegisterPage() {
   const { t } = useTranslation();
@@ -16,22 +17,68 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     type: 'success',
     message: '',
   });
 
-  const showSnackbar = (type: 'success' | 'error', message: string) =>
+  const showSnackbar = (payload: Omit<SnackbarState, 'open'>) =>
     setSnackbar({
       open: true,
-      type,
-      message,
+      ...payload,
     });
+
+  type RegisterForm = {
+    email: string;
+    name: string;
+    surname: string;
+    password: string;
+    repeatedPassword: string;
+  };
+
+  const handleRegister = async (
+    values: RegisterForm,
+    {
+      setSubmitting,
+      setFieldError,
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      setFieldError: (field: string, message: string) => void;
+    },
+  ) => {
+    try {
+      await dispatch(
+        registerThunk({
+          email: values.email,
+          name: values.name,
+          surname: values.surname,
+          password: values.password,
+          repeatedPassword: values.repeatedPassword,
+        }),
+      ).unwrap();
+
+      showSnackbar({
+        type: 'success',
+        message: t('auth.registerSuccess'),
+      });
+
+      navigate('/login');
+    } catch (err) {
+      const error = typeof err === 'string' ? err : undefined;
+
+      if (error === 'EMAIL_ALREADY_EXISTS') {
+        setFieldError('email', t('validation.emailAlreadyExists'));
+      } else {
+        showSnackbar({
+          type: 'error',
+          message: error || t('auth.registerFailed'),
+        });
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <BasePageLayout title={t('auth.register')} subtitle={t('auth.enterYourCredentials')}>
@@ -46,30 +93,7 @@ export function RegisterPage() {
           terms: false,
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, setFieldError }) => {
-          const action = await dispatch(
-            registerThunk({
-              email: values.email,
-              name: values.name,
-              surname: values.surname,
-              password: values.password,
-              repeatedPassword: values.repeatedPassword,
-            }),
-          );
-
-          if (registerThunk.fulfilled.match(action)) {
-            showSnackbar('success', t('auth.registerSuccess'));
-            navigate('/login');
-          } else {
-            if (action.payload === 'EMAIL_ALREADY_EXISTS') {
-              setFieldError('email', t('validation.emailAlreadyExists'));
-            } else {
-              showSnackbar('error', action.payload || t('auth.registerFailed'));
-            }
-          }
-
-          setSubmitting(false);
-        }}
+        onSubmit={handleRegister}
       >
         {({ isSubmitting }) => (
           <Form>

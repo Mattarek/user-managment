@@ -10,6 +10,7 @@ import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
 import { AsyncButton } from '../../components/AsyncButton.tsx';
+import type { SnackbarState } from '../../types/types.ts';
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -23,18 +24,54 @@ export function LoginPage() {
       ? location.state.from.pathname
       : '/dashboard';
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({ open: false, type: 'success', message: '' });
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    open: false,
+    type: 'success',
+    message: '',
+  });
 
-  const showSnackbar = (type: 'success' | 'error', message: string) =>
+  const showSnackbar = (payload: Omit<SnackbarState, 'open'>) =>
     setSnackbar({
       open: true,
-      type,
-      message,
+      ...payload,
     });
+
+  type LoginForm = {
+    email: string;
+    password: string;
+  };
+
+  const handleLogin = async (
+    values: LoginForm,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    try {
+      const action = await dispatch(
+        loginThunk({
+          email: values.email,
+          password: values.password,
+        }),
+      );
+
+      if (loginThunk.fulfilled.match(action)) {
+        await dispatch(getMeThunk());
+
+        showSnackbar({
+          type: 'success',
+          message: t('auth.loginSuccess'),
+        });
+
+        navigate(from, { replace: true });
+      } else {
+        showSnackbar({
+          type: 'error',
+          message: action.payload || t('auth.loginFailed'),
+        });
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <BasePageLayout title={t('auth.login')} subtitle={t('auth.enterYourCredentials')}>
@@ -42,25 +79,7 @@ export function LoginPage() {
         key={i18n.language}
         initialValues={{ email: '', password: '' }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          const action = await dispatch(
-            loginThunk({
-              email: values.email,
-              password: values.password,
-            }),
-          );
-
-          if (loginThunk.fulfilled.match(action)) {
-            await dispatch(getMeThunk());
-
-            showSnackbar('success', t('auth.loginSuccess'));
-            navigate(from, { replace: true });
-          } else {
-            showSnackbar('error', action.payload || t('auth.loginFailed'));
-          }
-
-          setSubmitting(false);
-        }}
+        onSubmit={handleLogin}
       >
         {({ isSubmitting }) => (
           <Form>

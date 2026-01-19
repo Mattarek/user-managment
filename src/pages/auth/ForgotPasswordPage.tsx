@@ -9,28 +9,51 @@ import i18n from 'i18next';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { recoveryThunk } from '../../features/auth/auth.thunks';
 import { Link as RouterLink } from 'react-router-dom';
+import type { SnackbarState } from '../../types/types.ts';
 
 export function ForgotPasswordPage() {
   const { t } = useTranslation();
   const validationSchema = useMemo(() => getForgotSchema(t), [t]);
   const dispatch = useAppDispatch();
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    type: 'success' | 'error';
-    message: string;
-  }>({
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     type: 'success',
     message: '',
   });
 
-  const showSnackbar = (type: 'success' | 'error', message: string) =>
+  const showSnackbar = (payload: Omit<SnackbarState, 'open'>) =>
     setSnackbar({
       open: true,
-      type,
-      message,
+      ...payload,
     });
+
+  type RecoveryForm = {
+    email: string;
+  };
+
+  const handleRecovery = async (
+    values: RecoveryForm,
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
+  ) => {
+    try {
+      await dispatch(recoveryThunk(values.email)).unwrap();
+
+      showSnackbar({
+        type: 'success',
+        message: t('auth.recoverySuccess'),
+      });
+    } catch (err) {
+      const error = typeof err === 'string' ? err : undefined;
+
+      showSnackbar({
+        type: 'error',
+        message: error || t('auth.recoveryFailed'),
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <BasePageLayout title={t('auth.forgot')} subtitle={t('auth.enterYourCredentialsEmail')}>
@@ -38,17 +61,7 @@ export function ForgotPasswordPage() {
         key={i18n.language}
         initialValues={{ email: '' }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          const action = await dispatch(recoveryThunk(values.email));
-
-          if (recoveryThunk.fulfilled.match(action)) {
-            showSnackbar('success', t('auth.recoverySuccess'));
-          } else {
-            showSnackbar('error', action.payload || t('auth.recoveryFailed'));
-          }
-
-          setSubmitting(false);
-        }}
+        onSubmit={handleRecovery}
       >
         {({ isSubmitting }) => (
           <Form>
