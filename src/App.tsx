@@ -12,10 +12,10 @@ import {
   RegisterPage,
   Terms,
 } from './pages';
-import { DashboardLayout } from './layouts/DasbhoardLayout.tsx';
 import { appPaths } from './routes.tsx';
 import { ProtectedRoute } from './auth/ProtectedRoute.tsx';
 import { PublicRoute } from './auth/PublicRoute.tsx';
+import { DashboardLayoutWrapper } from './wrappers/DashboardLayoutWrapper.tsx';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route path={appPaths.dashboard.root} element={<DashboardLayout />}>
+          <Route path={appPaths.dashboard.root} element={<DashboardLayoutWrapper />}>
             <Route index element={<DashboardHome />} />
             <Route path={appPaths.dashboard.patients} element={<Patients />} />
             <Route path={appPaths.dashboard.patientsAdd} element={<AddPatient />} />

@@ -1,15 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { LoginPayload, RegisterPayload } from './auth.types';
-import { isTokenExpired } from '../../utils/isTokenExpired.ts';
 import { axiosSecureInstance } from '../../libs/axiosSecureInstance.ts';
 import { axiosInstance } from '../../libs/axiosInstance.ts';
 import axios from 'axios';
 import { PATIENT_ACCESS_TOKEN, PATIENT_REFRESH_TOKEN } from '../../constants.ts';
-
-export type ApiErrorResponse = {
-  message?: string;
-  errors?: Record<string, string[]>;
-};
+import type { ApiErrorResponse } from '../../types/patientsApi.types.ts';
 
 export const loginThunk = createAsyncThunk<
   { accessToken: string; refreshToken: string },
@@ -17,14 +12,21 @@ export const loginThunk = createAsyncThunk<
   { rejectValue: string }
 >('auth/login', async (payload, { rejectWithValue }) => {
   try {
-    const { data } = await axiosSecureInstance.post('/login', payload);
+    const {
+      data: { accessToken, refreshToken },
+    } = await axiosSecureInstance.post('/login', payload);
 
     return {
-      accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
+      accessToken,
+      refreshToken,
     };
-  } catch {
-    return rejectWithValue('Login failed');
+  } catch (error) {
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
+      const serverMessage = error.response?.data?.message ?? error.message;
+      return rejectWithValue(serverMessage);
+    }
+
+    return rejectWithValue(error instanceof Error ? error.message : 'loginThunk failed');
   }
 });
 
@@ -53,26 +55,17 @@ export const refreshTokenThunk = createAsyncThunk<
   }
 });
 
-export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { dispatch, rejectWithValue }) => {
-  const token = localStorage.getItem(PATIENT_ACCESS_TOKEN);
-
-  if (!token) {
-    return rejectWithValue('NO_TOKEN');
-  }
-
-  if (isTokenExpired(token)) {
-    const refreshResult = await dispatch(refreshTokenThunk());
-
-    if (!refreshTokenThunk.fulfilled.match(refreshResult)) {
-      return rejectWithValue('REFRESH_FAILED');
-    }
-  }
-
+export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
   try {
     const res = await axiosSecureInstance.get('/users/me');
     return res.data;
-  } catch {
-    return rejectWithValue('UNAUTHORIZED');
+  } catch (error) {
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
+      const serverMessage = error.response?.data?.message ?? error.message;
+      return rejectWithValue(serverMessage);
+    }
+
+    return rejectWithValue(error instanceof Error ? error.message : 'GetMe failed');
   }
 });
 
@@ -89,18 +82,11 @@ export const registerThunk = createAsyncThunk<
     return;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
-      const status = error.response?.status;
-
-      if (status === 422) {
-        return rejectWithValue('EMAIL_ALREADY_EXISTS');
-      }
-
-      if (status === 400) {
-        return rejectWithValue('VALIDATION_ERROR');
-      }
+      const serverMessage = error.response?.data?.message ?? error.message;
+      return rejectWithValue(serverMessage);
     }
 
-    return rejectWithValue('Register failed');
+    return rejectWithValue(error instanceof Error ? error.message : 'Register failed');
   }
 });
 

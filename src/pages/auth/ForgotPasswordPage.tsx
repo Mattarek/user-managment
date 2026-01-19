@@ -3,18 +3,41 @@ import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useMemo, useState } from 'react';
-import { getForgotSchema } from '../../i18n/authSchema';
-import i18n from 'i18next';
+import { useState } from 'react';
+import i18n, { type TFunction } from 'i18next';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { recoveryThunk } from '../../features/auth/auth.thunks';
 import { Link as RouterLink } from 'react-router-dom';
 import type { SnackbarState } from '../../types/types.ts';
+import * as Yup from 'yup';
+import { MIN_PASSWORD_LENGTH } from '../../constants.ts';
 
 export function ForgotPasswordPage() {
   const { t } = useTranslation();
-  const validationSchema = useMemo(() => getForgotSchema(t), [t]);
   const dispatch = useAppDispatch();
+
+  const validateSchema = (t: TFunction) =>
+    Yup.object({
+      email: Yup.string().email(t('validation.emailRequired')).required(t('validation.emailRequired')),
+
+      name: Yup.string()
+        .matches(/^[A-Z][a-z]+$/, t('validation.invalidNameFormat'))
+        .required(t('validation.nameRequired')),
+
+      surname: Yup.string()
+        .matches(/^[A-Z][a-z]+$/, t('validation.invalidSurnameFormat'))
+        .required(t('validation.surnameRequired')),
+
+      password: Yup.string()
+        .required(t('validation.passwordRequired'))
+        .min(MIN_PASSWORD_LENGTH, t('validation.passwordMin', { min: MIN_PASSWORD_LENGTH })),
+
+      repeatedPassword: Yup.string()
+        .required(t('validation.passwordRepeatRequired'))
+        .oneOf([Yup.ref('password')], t('validation.passwordNotMatch')),
+
+      terms: Yup.boolean().oneOf([true], t('validation.acceptTermsRequired')),
+    });
 
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
@@ -60,7 +83,7 @@ export function ForgotPasswordPage() {
       <Formik
         key={i18n.language}
         initialValues={{ email: '' }}
-        validationSchema={validationSchema}
+        validationSchema={validateSchema}
         onSubmit={handleRecovery}
       >
         {({ isSubmitting }) => (

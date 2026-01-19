@@ -1,26 +1,20 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { PATIENT_ACCESS_TOKEN } from '../constants.ts';
-import { jwtDecode, type JwtPayload } from 'jwt-decode';
-
-const timeStamp = Date.now();
+import { PATIENT_ACCESS_TOKEN } from '../constants';
+import { useEffect } from 'react';
+import { isTokenExpired } from '../utils/isTokenExpired.ts';
 
 export function PublicRoute() {
   const token = localStorage.getItem(PATIENT_ACCESS_TOKEN);
+  const expired = isTokenExpired(token);
 
-  if (token) {
-    try {
-      const decoded = jwtDecode<JwtPayload>(token);
-
-      const isExpired = decoded.exp ? decoded.exp * 1000 < timeStamp : true;
-
-      if (!isExpired) {
-        return <Navigate to="/dashboard" replace />;
-      }
-
-      localStorage.removeItem(PATIENT_ACCESS_TOKEN);
-    } catch (e) {
+  useEffect(() => {
+    if (token && expired) {
       localStorage.removeItem(PATIENT_ACCESS_TOKEN);
     }
+  }, [token, expired]);
+
+  if (token && !expired) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Outlet />;

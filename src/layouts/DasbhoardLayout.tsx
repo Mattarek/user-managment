@@ -2,40 +2,12 @@ import { Sidebar, type SidebarItem } from '../components/Sidebar';
 import { Topbar } from '../components/Topbar';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Outlet } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
-export function DashboardLayout() {
-  const { t } = useTranslation();
+interface Props {
+  sidebarItems: SidebarItem[];
+}
 
-  const sidebarItems: SidebarItem[] = [
-    { type: 'link', label: t('sidebar.home'), path: '/dashboard' },
-    {
-      type: 'dropdown',
-      label: t('sidebar.patients'),
-      children: [
-        {
-          label: t('sidebar.patients_list'),
-          path: '/dashboard/patients',
-        },
-        {
-          label: t('sidebar.patients_add'),
-          path: '/dashboard/patients/add',
-        },
-      ],
-    },
-    {
-      type: 'dropdown',
-      label: t('sidebar.doctors'),
-      children: [
-        { label: t('sidebar.doctors_list'), path: '/dashboard/doctors' },
-        {
-          label: t('sidebar.doctors_add'),
-          path: '/dashboard/doctors/add',
-        },
-      ],
-    },
-  ];
-
+export function DashboardLayout({ sidebarItems }: Readonly<Props>) {
   return (
     <>
       <Topbar />
