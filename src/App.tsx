@@ -19,7 +19,7 @@ import { isTokenExpired } from './utils/isTokenExpired.ts';
 import { useEffect } from 'react';
 import { useAppDispatch } from './store/hooks.ts';
 import { jwtDecode } from 'jwt-decode';
-import { getMeThunk, refreshTokenThunk } from './features/auth/auth.thunks.ts';
+import { refreshTokenThunk } from './features/auth/auth.thunks.ts';
 
 function PublicRoute() {
   const token = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
@@ -60,11 +60,7 @@ function ProtectedRoute() {
     }
 
     if (isAccessExpired) {
-      dispatch(refreshTokenThunk()).then(() => {
-        dispatch(getMeThunk());
-      });
-    } else {
-      // dispatch(getMeThunk());
+      dispatch(refreshTokenThunk());
     }
   }, [dispatch]);
 

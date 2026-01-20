@@ -25,7 +25,7 @@ export function useSessionTimer() {
         const now = Date.now() / 1000;
         const diff = Math.floor(exp - now);
 
-        if (diff <= 0) {
+        if (diff < 1) {
           clearInterval(interval);
           dispatch(logoutThunk());
           navigate('/login', { replace: true });
