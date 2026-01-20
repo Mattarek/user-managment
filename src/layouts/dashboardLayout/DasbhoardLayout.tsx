@@ -1,6 +1,6 @@
-import { Sidebar, type SidebarItem } from './Sidebar.tsx';
-import { Topbar } from './Topbar.tsx';
-import { Breadcrumbs } from '../components/Breadcrumbs';
+import { Sidebar, type SidebarItem } from './components/Sidebar.tsx';
+import { Topbar } from './components/Topbar.tsx';
+import { Breadcrumbs } from '../../components/Breadcrumbs.tsx';
 import { Outlet } from 'react-router-dom';
 
 interface Props {
