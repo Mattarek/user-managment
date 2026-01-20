@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './auth.types';
-import { getMeThunk, loginThunk, logoutThunk, refreshTokenThunk } from './auth.thunks';
+import { getMeThunk, loginThunk, logoutThunk } from './auth.thunks';
 
 const initialState: AuthState = {
   user: null,
@@ -51,11 +51,6 @@ const authSlice = createSlice({
         state.error = null;
         state.user = null;
         state.isAuthenticated = false;
-      })
-
-      .addCase(refreshTokenThunk.fulfilled, (state, action) => {
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
       });
   },
 });
