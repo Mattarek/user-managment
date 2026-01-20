@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './auth.types';
-import { getMeThunk, loginThunk, logoutThunk, refreshTokenThunk } from './auth.thunks';
-import { PATIENT_ACCESS_TOKEN, PATIENT_REFRESH_TOKEN } from '../../constants.ts';
+import { getMeThunk, loginThunk, logoutThunk } from './auth.thunks';
 
 const initialState: AuthState = {
   user: null,
@@ -21,10 +20,8 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginThunk.fulfilled, (state, action) => {
+      .addCase(loginThunk.fulfilled, (state) => {
         state.loading = false;
-        localStorage.setItem(PATIENT_ACCESS_TOKEN, action.payload.accessToken);
-        localStorage.setItem(PATIENT_REFRESH_TOKEN, action.payload.refreshToken);
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;
@@ -40,15 +37,12 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.initialized = true;
       })
-
       .addCase(getMeThunk.rejected, (state) => {
         state.user = null;
         state.isAuthenticated = false;
         state.initialized = true;
       })
-      .addCase(refreshTokenThunk.fulfilled, (_, action) => {
-        localStorage.setItem(PATIENT_ACCESS_TOKEN, action.payload.accessToken);
-      })
+
       .addCase(logoutThunk.pending, (state) => {
         state.loading = true;
       })

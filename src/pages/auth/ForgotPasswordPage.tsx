@@ -4,7 +4,7 @@ import { TextField } from 'formik-mui';
 import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import i18n, { type TFunction } from 'i18next';
+import i18n from 'i18next';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { recoveryThunk } from '../../features/auth/auth.thunks';
 import { Link as RouterLink } from 'react-router-dom';
@@ -16,7 +16,7 @@ export function ForgotPasswordPage() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const validateSchema = (t: TFunction) =>
+  const validateSchema = () =>
     Yup.object({
       email: Yup.string().email(t('validation.emailRequired')).required(t('validation.emailRequired')),
 

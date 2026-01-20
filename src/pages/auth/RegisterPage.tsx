@@ -4,22 +4,30 @@ import { CheckboxWithLabel, TextField } from 'formik-mui';
 import { Alert, Button, FormHelperText, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import i18n, { type TFunction } from 'i18next';
+import i18n from 'i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { registerThunk } from '../../features/auth/auth.thunks';
 import { type SnackbarState } from '../../types/types.ts';
 import * as Yup from 'yup';
 
-const validationSchema = (t: TFunction) =>
-  Yup.object({
-    email: Yup.string().email(t('validation.emailRequired')).required(t('validation.required')),
-  });
+type RegisterForm = {
+  email: string;
+  name: string;
+  surname: string;
+  password: string;
+  repeatedPassword: string;
+};
 
 export function RegisterPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const validationSchema = () =>
+    Yup.object({
+      email: Yup.string().email(t('validation.emailRequired')).required(t('validation.required')),
+    });
 
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
@@ -32,14 +40,6 @@ export function RegisterPage() {
       open: true,
       ...payload,
     });
-
-  type RegisterForm = {
-    email: string;
-    name: string;
-    surname: string;
-    password: string;
-    repeatedPassword: string;
-  };
 
   const handleRegister = async (
     values: RegisterForm,

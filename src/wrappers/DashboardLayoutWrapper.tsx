@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { SidebarItem } from '../components/Sidebar.tsx';
+import type { SidebarItem } from '../pages/dashboard/Sidebar.tsx';
 import { DashboardLayout } from '../layouts/DasbhoardLayout.tsx';
 
 export const DashboardLayoutWrapper = () => {

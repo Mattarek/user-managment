@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import { useSessionTimer } from './useSessionTimer';
 
@@ -13,10 +13,11 @@ export function SessionStatusButton() {
   if (secondsLeft === null) return null;
 
   return (
-    <Button size="small" variant="outlined" color="inherit" startIcon={<HourglassBottomIcon />}>
-      <Stack direction="row" spacing={0.5} alignItems="center">
-        <Typography variant="caption">{formatTime(secondsLeft)}</Typography>
-      </Stack>
-    </Button>
+    <Chip
+      variant="outlined"
+      size="small"
+      icon={<HourglassBottomIcon />}
+      label={<Typography variant="caption">{formatTime(secondsLeft)}</Typography>}
+    />
   );
 }

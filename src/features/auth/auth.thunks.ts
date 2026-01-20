@@ -3,7 +3,7 @@ import type { LoginPayload, RegisterPayload } from './auth.types';
 import { axiosSecureInstance } from '../../libs/axiosSecureInstance.ts';
 import { axiosInstance } from '../../libs/axiosInstance.ts';
 import axios from 'axios';
-import { PATIENT_ACCESS_TOKEN, PATIENT_REFRESH_TOKEN } from '../../constants.ts';
+import { PATIENTS_ACCESS_TOKENS, PATIENTS_REFRESH_TOKEN } from '../../constants.ts';
 import type { ApiErrorResponse } from '../../types/patientsApi.types.ts';
 
 export const loginThunk = createAsyncThunk<
@@ -15,6 +15,10 @@ export const loginThunk = createAsyncThunk<
     const {
       data: { accessToken, refreshToken },
     } = await axiosSecureInstance.post('/login', payload);
+
+    console.log('Thunk: refreshToken', refreshToken);
+    localStorage.setItem(PATIENTS_ACCESS_TOKENS, accessToken);
+    localStorage.setItem(PATIENTS_REFRESH_TOKEN, refreshToken);
 
     return {
       accessToken,
@@ -35,7 +39,7 @@ export const refreshTokenThunk = createAsyncThunk<
   void,
   { rejectValue: string }
 >('auth/refresh', async (_, { rejectWithValue }) => {
-  const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
+  const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
 
   if (!refreshToken) {
     return rejectWithValue('NO_REFRESH_TOKEN');
@@ -45,6 +49,8 @@ export const refreshTokenThunk = createAsyncThunk<
     const res = await axiosInstance.post('/refresh-token', {
       refreshToken,
     });
+
+    localStorage.setItem(PATIENTS_REFRESH_TOKEN, res.data.accessToken);
 
     return {
       accessToken: res.data.accessToken,
@@ -77,8 +83,7 @@ export const registerThunk = createAsyncThunk<
   }
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
-    const { data } = await axiosSecureInstance.post('/register', payload);
-    localStorage.setItem(PATIENT_ACCESS_TOKEN, data.accessToken);
+    await axiosSecureInstance.post('/register', payload);
     return;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -92,16 +97,16 @@ export const registerThunk = createAsyncThunk<
 
 export const logoutThunk = createAsyncThunk('auth/logout', async () => {
   try {
-    const refreshToken = localStorage.getItem(PATIENT_REFRESH_TOKEN);
-    const accessToken = localStorage.getItem(PATIENT_ACCESS_TOKEN);
+    const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
+    const accessToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
 
     await axiosSecureInstance.post('/logout', {
       refreshToken,
       accessToken,
     });
   } finally {
-    localStorage.removeItem(PATIENT_ACCESS_TOKEN);
-    localStorage.removeItem(PATIENT_REFRESH_TOKEN);
+    localStorage.removeItem(PATIENTS_REFRESH_TOKEN);
+    localStorage.removeItem(PATIENTS_REFRESH_TOKEN);
   }
 });
 

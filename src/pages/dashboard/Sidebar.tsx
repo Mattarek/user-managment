@@ -2,7 +2,7 @@ import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typo
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { useAppSelector } from '../store/hooks.ts';
+import { useAppSelector } from '../../store/hooks.ts';
 
 type SidebarLink = {
   type: 'link';

@@ -15,11 +15,11 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import logo from '../assets/logo.svg';
-import { ThemeSwitcher } from './ThemeSwitcher';
-import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
-import { logoutThunk } from '../features/auth/auth.thunks';
-import { SessionStatusButton } from './tokenTimer/SessionStatusButton.tsx';
+import logo from '../../assets/logo.svg';
+import { ThemeSwitcher } from '../../components/ThemeSwitcher.tsx';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { logoutThunk } from '../../features/auth/auth.thunks.ts';
+import { SessionStatusButton } from '../../components/tokenTimer/SessionStatusButton.tsx';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
