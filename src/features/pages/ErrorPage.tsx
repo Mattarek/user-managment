@@ -1,6 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { AuthBackground } from '../layouts/AuthBackground';
+import { AuthBackground } from '../../layouts/AuthBackground';
 import { useTranslation } from 'react-i18next';
 
 export function ErrorPage() {

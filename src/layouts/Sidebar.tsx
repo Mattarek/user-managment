@@ -2,7 +2,7 @@ import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typo
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import { useAppSelector } from '../../store/hooks.ts';
+import { useAppSelector } from '../store/hooks.ts';
 
 type SidebarLink = {
   type: 'link';
@@ -31,6 +31,8 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
   const location = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const user = useAppSelector((state) => state.auth.user);
+
+  // console.log('user: ' + JSON.stringify(user));
 
   return (
     <Drawer

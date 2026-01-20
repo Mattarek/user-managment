@@ -11,7 +11,7 @@ import {
   Patients,
   RegisterPage,
   Terms,
-} from './pages';
+} from './features/pages';
 import { appPaths } from './routes.tsx';
 import { DashboardLayoutWrapper } from './wrappers/DashboardLayoutWrapper.tsx';
 import { PATIENTS_ACCESS_TOKENS, PATIENTS_REFRESH_TOKEN } from './constants.ts';

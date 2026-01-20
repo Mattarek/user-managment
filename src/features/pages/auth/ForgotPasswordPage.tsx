@@ -1,16 +1,16 @@
-import { BasePageLayout } from '../../layouts/BaseAuthLayout';
+import { BasePageLayout } from '../../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { Alert, Button, Link, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import i18n from 'i18next';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { recoveryThunk } from '../../features/auth/auth.thunks';
+import { useAppDispatch } from '../../../store/hooks.ts';
+import { recoveryThunk } from '../../auth/auth.thunks.ts';
 import { Link as RouterLink } from 'react-router-dom';
-import type { SnackbarState } from '../../types/types.ts';
+import type { SnackbarState } from '../../../types/types.ts';
 import * as Yup from 'yup';
-import { MIN_PASSWORD_LENGTH } from '../../constants.ts';
+import { MIN_PASSWORD_LENGTH } from '../../../constants.ts';
 
 export function ForgotPasswordPage() {
   const { t } = useTranslation();

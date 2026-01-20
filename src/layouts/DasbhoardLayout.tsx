@@ -1,5 +1,5 @@
-import { Sidebar, type SidebarItem } from '../pages/dashboard/Sidebar.tsx';
-import { Topbar } from '../pages/dashboard/Topbar.tsx';
+import { Sidebar, type SidebarItem } from './Sidebar.tsx';
+import { Topbar } from './Topbar.tsx';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Outlet } from 'react-router-dom';
 

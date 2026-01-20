@@ -1,4 +1,4 @@
-import { BasePageLayout } from '../../layouts/BaseAuthLayout';
+import { BasePageLayout } from '../../../layouts/BaseAuthLayout';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { CheckboxWithLabel, TextField } from 'formik-mui';
 import { Alert, Button, FormHelperText, Link, Snackbar, Stack } from '@mui/material';
@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import i18n from 'i18next';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { registerThunk } from '../../features/auth/auth.thunks';
-import { type SnackbarState } from '../../types/types.ts';
+import { useAppDispatch } from '../../../store/hooks.ts';
+import { registerThunk } from '../../auth/auth.thunks.ts';
+import { type SnackbarState } from '../../../types/types.ts';
 import * as Yup from 'yup';
 
 type RegisterForm = {

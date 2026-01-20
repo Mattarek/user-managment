@@ -1,4 +1,4 @@
-import { BasePageLayout } from '../../layouts/BaseAuthLayout';
+import { BasePageLayout } from '../../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
 import { Alert, Link, Snackbar, Stack } from '@mui/material';
@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import i18n from 'i18next';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { getMeThunk, loginThunk } from '../../features/auth/auth.thunks';
-import { AsyncButton } from '../../components/AsyncButton.tsx';
-import type { SnackbarState } from '../../types/types.ts';
+import { useAppDispatch } from '../../../store/hooks.ts';
+import { getMeThunk, loginThunk } from '../../auth/auth.thunks.ts';
+import { AsyncButton } from '../../../components/AsyncButton.tsx';
+import type { SnackbarState } from '../../../types/types.ts';
 import * as Yup from 'yup';
-import { MIN_PASSWORD_LENGTH } from '../../constants.ts';
+import { MIN_PASSWORD_LENGTH } from '../../../constants.ts';
 
 type LoginForm = {
   email: string;
