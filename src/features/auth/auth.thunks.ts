@@ -80,7 +80,7 @@ export const registerThunk = createAsyncThunk<
   }
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
-    await axiosSecureInstance.post('/register', payload);
+    await axiosSecureInstance.post('auth/register', payload);
     return;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -97,7 +97,7 @@ export const logoutThunk = createAsyncThunk('auth/logout', async () => {
     const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
     const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
 
-    await axiosSecureInstance.post('/logout', {
+    await axiosSecureInstance.post('auth/logout', {
       refreshToken,
       accessToken,
     });
