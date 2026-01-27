@@ -1,0 +1,78 @@
+name: frontend-build-and-deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+concurrency:
+  group: frontend-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Show dist
+        run: ls -lah dist
+
+      - name: Upload dist to server (staging)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: "dist/**"
+          target: "/tmp/user-management-dist"
+          strip_components: 1
+
+      - name: Activate new frontend + reload nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -euo pipefail
+
+            TARGET="/var/www/user-management"
+            STAGING="/tmp/user-management-dist"
+
+            echo "Staging content:"
+            ls -lah "$STAGING" | head -n 50
+
+            sudo mkdir -p "$TARGET"
+
+            sudo rm -rf "$TARGET"/*
+
+            sudo cp -a "$STAGING"/. "$TARGET"/
+
+            sudo chown -R www-data:www-data "$TARGET"
+            sudo find "$TARGET" -type d -exec chmod 755 {} \;
+            sudo find "$TARGET" -type f -exec chmod 644 {} \;
+
+            rm -rf "$STAGING"
+
+            # reload nginx (bez downtime)
+            sudo nginx -t
+            sudo systemctl reload nginx
+
+            echo "Deployed files:"
+            ls -lah "$TARGET" | head -n 50
