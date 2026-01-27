@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { logoutThunk } from '../../../features/auth/auth.thunks.ts';
 import { SessionStatus } from '../../../components/tokenTimer/SessionStatus.tsx';
 import { useNavigate } from 'react-router-dom';
+import { ThemeSwitcher } from '../../../components/ThemeSwitcher.tsx';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -51,7 +52,7 @@ export function Topbar() {
 
           <Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>
 
-          {/*<ThemeSwitcher />*/}
+          <ThemeSwitcher />
 
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
             <SettingsIcon sx={{ color: '#fff' }} />
