@@ -58,14 +58,14 @@ jobs:
             echo "Staging content:"
             ls -lah "$STAGING" | head -n 50
 
-            sudo mkdir -p "$TARGET"
-            sudo rm -rf "$TARGET"/*
+            mkdir -p "$TARGET"
+            rm -rf "$TARGET"/*
 
-            sudo cp -a "$STAGING"/. "$TARGET"/
+            cp -a "$STAGING"/. "$TARGET"/
 
-            sudo chown -R www-data:www-data "$TARGET"
-            sudo find "$TARGET" -type d -exec chmod 755 {} \;
-            sudo find "$TARGET" -type f -exec chmod 644 {} \;
+            # opcjonalnie (jak chcesz wymusić)
+            find "$TARGET" -type d -exec chmod 755 {} \;
+            find "$TARGET" -type f -exec chmod 644 {} \;
 
             rm -rf "$STAGING"
 
