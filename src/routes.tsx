@@ -1,4 +1,5 @@
 export const appPaths = {
+  root: '/',
   login: '/login',
   register: '/register',
   forgotPassword: '/forgot-password',
@@ -11,6 +12,6 @@ export const appPaths = {
     doctors: 'doctors',
     doctorsAdd: 'doctors/add',
   },
-
+  terms: '/terms',
   notFound: '*',
 } as const;

@@ -23,20 +23,13 @@ export function BasePageLayout({ title, subtitle, children, rightSide }: Readonl
         <Container maxWidth="sm">
           <Paper sx={{ p: { xs: 3, md: 5 }, width: '32rem' }}>
             {title && (
-              <Typography
-                variant="h4"
-                fontWeight={700}
-                mb={1}
-              >
+              <Typography variant="h4" fontWeight={700} mb={1}>
                 {title}
               </Typography>
             )}
 
             {subtitle && (
-              <Typography
-                color="text.secondary"
-                mb={3}
-              >
+              <Typography color="text.secondary" mb={3}>
                 {subtitle}
               </Typography>
             )}

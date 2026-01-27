@@ -10,10 +10,7 @@ export default function LanguageSwitcher() {
 
   return (
     <>
-      <IconButton
-        sx={{ color: 'white' }}
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-      >
+      <IconButton sx={{ color: 'white' }} onClick={(e) => setAnchorEl(e.currentTarget)}>
         <LanguageIcon />
       </IconButton>
 

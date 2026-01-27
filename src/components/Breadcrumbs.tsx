@@ -12,34 +12,21 @@ export function Breadcrumbs() {
 
   return (
     <MUIBreadcrumbs sx={{ mb: 2 }}>
-      <Link
-        component={RouterLink}
-        to={base}
-      >
+      <Link component={RouterLink} to={base}>
         {t('breadcrumbs.dashboard')}
       </Link>
 
-      {/* reszta */}
       {parts.slice(1).map((part, index) => {
         const isLast = index === parts.slice(1).length - 1;
-
         const path = base + '/' + parts.slice(1, index + 1).join('/');
-
         const label = t(`breadcrumbs.${part}`, part);
 
         return isLast ? (
-          <Typography
-            key={path}
-            color="text.primary"
-          >
+          <Typography key={path} color="text.primary">
             {label}
           </Typography>
         ) : (
-          <Link
-            key={path}
-            component={RouterLink}
-            to={path}
-          >
+          <Link key={path} component={RouterLink} to={path}>
             {label}
           </Link>
         );
