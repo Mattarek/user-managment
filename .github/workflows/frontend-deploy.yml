@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: npm
 
       - name: Install deps
@@ -29,7 +29,9 @@ jobs:
         run: npm run build
 
       - name: Show dist
-        run: ls -lah dist
+        run: |
+          ls -lah dist
+          test -f dist/index.html
 
       - name: Upload dist to server (staging)
         uses: appleboy/scp-action@v0.1.7
@@ -37,7 +39,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
+          port: ${{ secrets.VPS_PORT }}
           source: "dist/**"
           target: "/tmp/user-management-dist"
           strip_components: 1
@@ -48,31 +50,35 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
+          port: ${{ secrets.VPS_PORT }}
           script: |
             set -euo pipefail
 
             TARGET="/var/www/user-management"
             STAGING="/tmp/user-management-dist"
+            RELEASES="/var/www/user-management-releases"
+            TS="$(date +%Y%m%d%H%M%S)"
+            NEW_RELEASE="${RELEASES}/${TS}"
 
             echo "Staging content:"
-            ls -lah "$STAGING" | head -n 50
+            ls -lah "$STAGING" | head -n 80
 
-            sudo mkdir -p "$TARGET"
+            test -f "$STAGING/index.html"
 
-            sudo rm -rf "$TARGET"/*
+            mkdir -p "$RELEASES"
+            mkdir -p "$NEW_RELEASE"
 
-            sudo cp -a "$STAGING"/. "$TARGET"/
+            cp -a "$STAGING"/. "$NEW_RELEASE"/
 
-            sudo chown -R www-data:www-data "$TARGET"
-            sudo find "$TARGET" -type d -exec chmod 755 {} \;
-            sudo find "$TARGET" -type f -exec chmod 644 {} \;
+            ln -sfn "$NEW_RELEASE" "$TARGET"
 
             rm -rf "$STAGING"
 
-            # reload nginx (bez downtime)
-            sudo nginx -t
-            sudo systemctl reload nginx
+            ls -1dt "$RELEASES"/* | tail -n +6 | xargs -r rm -rf
 
-            echo "Deployed files:"
+            sudo /usr/sbin/nginx -t
+            sudo /bin/systemctl reload nginx
+
+            echo "Current points to:"
+            readlink -f "$TARGET"
             ls -lah "$TARGET" | head -n 50
