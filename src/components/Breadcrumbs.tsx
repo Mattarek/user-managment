@@ -1,32 +1,36 @@
-import {Breadcrumbs as MUIBreadcrumbs, Link, Typography} from '@mui/material';
-import {useTranslation} from 'react-i18next';
-import {Link as RouterLink, useLocation} from 'react-router-dom';
+import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 export function Breadcrumbs() {
-    const location = useLocation();
-    const parts = location.pathname.split('/').filter(Boolean);
-    const {t} = useTranslation();
+  const location = useLocation();
+  const { t } = useTranslation();
 
+  const parts = location.pathname.split('/').filter(Boolean);
 
-    return (
-        <MUIBreadcrumbs sx={{mb: 2}}>
-            <Link component={RouterLink} to="/dashboard">
-                {t('dashboard')}
-            </Link>
+  const base = '/' + parts[0];
 
-            {parts.map((part, id) => {
-                const path = '/' + parts.slice(0, id + 1).join('/');
+  return (
+    <MUIBreadcrumbs sx={{ mb: 2 }}>
+      <Link component={RouterLink} to={base}>
+        {t('breadcrumbs.dashboard')}
+      </Link>
 
-                const isLast = id === parts.length - 1;
+      {parts.slice(1).map((part, index) => {
+        const isLast = index === parts.slice(1).length - 1;
+        const path = base + '/' + parts.slice(1, index + 1).join('/');
+        const label = t(`breadcrumbs.${part}`, part);
 
-                return isLast ? (
-                    <Typography key={path}>{part}</Typography>
-                ) : (
-                    <Link key={path} component={RouterLink} to={path}>
-                        {part}
-                    </Link>
-                );
-            })}
-        </MUIBreadcrumbs>
-    );
+        return isLast ? (
+          <Typography key={path} color="text.primary">
+            {label}
+          </Typography>
+        ) : (
+          <Link key={path} component={RouterLink} to={path}>
+            {label}
+          </Link>
+        );
+      })}
+    </MUIBreadcrumbs>
+  );
 }

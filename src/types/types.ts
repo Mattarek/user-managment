@@ -1,16 +1,7 @@
-export type SidebarLink = {
-    type: 'link';
-    label: string;
-    path: string;
-};
+export type Mode = 'light' | 'dark';
 
-export type SidebarDropdown = {
-    type: 'dropdown';
-    label: string;
-    children: {
-        label: string;
-        path: string;
-    }[];
+export type SnackbarState = {
+  open: boolean;
+  type: 'success' | 'error';
+  message: string;
 };
-
-export type SidebarItem = SidebarLink | SidebarDropdown;

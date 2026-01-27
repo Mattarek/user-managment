@@ -17,9 +17,12 @@
     "dashboard": "Panel",
     "patients": "Pacjenci",
     "add": "Dodaj",
-    "list": "Lista"
+    "list": "Lista",
+    "doctors": "Lekarze"
   },
   "auth": {
+    "message": "User with this email already exists",
+    "activeSessionLeft": "⏳ Sesja",
     "registerSuccess": "Konto zostało utworzone",
     "registerFailed": "Rejestracja nie powiodła się",
     "login_title": "Zaloguj się",
@@ -38,7 +41,10 @@
     "enterYourCredentials": "Podaj dane logowania",
     "enterYourCredentialsEmail": "Podaj adress e-mail",
     "name": "Imie",
-    "surname": "Nazwisko"
+    "surname": "Nazwisko",
+    "IAgreeToThe": "Akceptuję",
+    "terms": "regulamin",
+    "ofUse": "korzystania z serwisu"
   },
   "error": {
     "oops": "Ups!",
@@ -58,6 +64,8 @@
     "passwordRequired": "Hasło jest wymagane",
     "passwordMin": "Hasło musi mieć co najmniej {{min}} znaków",
     "passwordRepeatRequired": "Potwierdź hasło",
-    "passwordNotMatch": "Hasła nie są takie same"
+    "passwordNotMatch": "Hasła nie są takie same",
+    "emailAlreadyExists": "Użytkownik z tym adresem email już istnieje!",
+    "acceptTermsRequired": "Musisz zaakceptować regulamin"
   }
 }
