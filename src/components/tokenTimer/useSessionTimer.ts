@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
+import { PATIENTS_ACCESS_TOKEN } from '../../constants.ts';
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
-import { PATIENTS_REFRESH_TOKEN } from '../../constants.ts';
 import { logoutThunk } from '../../features/auth/auth.thunks.ts';
 
 /**
@@ -15,15 +15,16 @@ export function useSessionTimer() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
-    if (!refreshToken) return;
+    const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
+    console.log('accessToken: ' + accessToken);
+    if (!accessToken) return;
 
-    const { exp } = jwtDecode<Required<JwtPayload>>(refreshToken);
+    const decoded = jwtDecode<Required<JwtPayload>>(accessToken);
 
     const startSessionCountdown = () => {
       const interval = setInterval(() => {
         const now = Date.now() / 1000;
-        const diff = Math.floor(exp - now);
+        const diff = Math.floor(decoded.exp - now);
 
         if (diff < 1) {
           clearInterval(interval);

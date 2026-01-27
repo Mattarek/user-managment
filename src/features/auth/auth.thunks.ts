@@ -3,7 +3,7 @@ import type { LoginPayload, RegisterPayload } from './auth.types';
 import { axiosSecureInstance } from '../../libs/axiosSecureInstance.ts';
 import { axiosInstance } from '../../libs/axiosInstance.ts';
 import axios from 'axios';
-import { PATIENTS_ACCESS_TOKENS, PATIENTS_REFRESH_TOKEN } from '../../constants.ts';
+import { PATIENTS_ACCESS_TOKEN, PATIENTS_REFRESH_TOKEN } from '../../constants.ts';
 import type { ApiErrorResponse } from '../../types/patientsApi.types.ts';
 
 export const loginThunk = createAsyncThunk<
@@ -14,9 +14,9 @@ export const loginThunk = createAsyncThunk<
   try {
     const {
       data: { accessToken, refreshToken },
-    } = await axiosSecureInstance.post('/login', payload);
+    } = await axiosSecureInstance.post('auth/login', payload);
 
-    localStorage.setItem(PATIENTS_ACCESS_TOKENS, accessToken);
+    localStorage.setItem(PATIENTS_ACCESS_TOKEN, accessToken);
     localStorage.setItem(PATIENTS_REFRESH_TOKEN, refreshToken);
 
     return {
@@ -40,29 +40,27 @@ export const refreshTokenThunk = createAsyncThunk<
 >('auth/refresh', async (_, { rejectWithValue }) => {
   const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
 
-  if (!refreshToken) {
-    return rejectWithValue('NO_REFRESH_TOKEN');
-  }
+  if (!refreshToken) return rejectWithValue('NO_REFRESH_TOKEN');
 
   try {
-    const res = await axiosInstance.post('/refresh-token', {
-      refreshToken,
-    });
+    const res = await axiosInstance.post('/refresh-token', { refreshToken });
 
-    localStorage.setItem(PATIENTS_REFRESH_TOKEN, res.data.accessToken);
+    const { accessToken, refreshToken: newRefreshToken } = res.data;
 
-    return {
-      accessToken: res.data.accessToken,
-      refreshToken: res.data.refreshToken,
-    };
+    localStorage.setItem(PATIENTS_ACCESS_TOKEN, accessToken);
+    localStorage.setItem(PATIENTS_REFRESH_TOKEN, newRefreshToken);
+
+    return { accessToken, refreshToken: newRefreshToken };
   } catch {
+    localStorage.removeItem(PATIENTS_ACCESS_TOKEN);
+    localStorage.removeItem(PATIENTS_REFRESH_TOKEN);
     return rejectWithValue('REFRESH_FAILED');
   }
 });
 
 export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { rejectWithValue }) => {
   try {
-    const res = await axiosSecureInstance.get('/users/me');
+    const res = await axiosSecureInstance.get('/users/getMe');
     return res.data;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -97,7 +95,7 @@ export const registerThunk = createAsyncThunk<
 export const logoutThunk = createAsyncThunk('auth/logout', async () => {
   try {
     const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
-    const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKENS);
+    const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
 
     await axiosSecureInstance.post('/logout', {
       refreshToken,
@@ -105,7 +103,7 @@ export const logoutThunk = createAsyncThunk('auth/logout', async () => {
     });
   } finally {
     localStorage.removeItem(PATIENTS_REFRESH_TOKEN);
-    localStorage.removeItem(PATIENTS_ACCESS_TOKENS);
+    localStorage.removeItem(PATIENTS_ACCESS_TOKEN);
   }
 });
 

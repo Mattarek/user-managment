@@ -14,7 +14,7 @@ import {
 } from './features/pages';
 import { appPaths } from './routes.tsx';
 import { DashboardLayoutWrapper } from './wrappers/DashboardLayoutWrapper.tsx';
-import { PATIENTS_ACCESS_TOKENS, PATIENTS_REFRESH_TOKEN } from './constants.ts';
+import { PATIENTS_ACCESS_TOKEN, PATIENTS_REFRESH_TOKEN } from './constants.ts';
 import { isTokenExpired } from './utils/isTokenExpired.ts';
 import { useEffect } from 'react';
 import { useAppDispatch } from './store/hooks.ts';
@@ -43,21 +43,13 @@ function ProtectedRoute() {
   const location = useLocation();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKENS);
+    const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
     const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
 
     if (!accessToken || !refreshToken) return;
-
     const { exp: accessExp } = jwtDecode<{ exp: number }>(accessToken);
-    const { exp: refreshExp } = jwtDecode<{ exp: number }>(refreshToken);
     const now = Date.now() / 1000;
-
     const isAccessExpired = accessExp < now;
-    const isRefreshExpired = refreshExp < now;
-
-    if (isRefreshExpired) {
-      return;
-    }
 
     if (isAccessExpired) {
       dispatch(refreshTokenThunk());

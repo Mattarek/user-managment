@@ -16,10 +16,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import logo from '../../../assets/logo.svg';
-import { ThemeSwitcher } from '../../../components/ThemeSwitcher.tsx';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { logoutThunk } from '../../../features/auth/auth.thunks.ts';
-import { SessionStatusButton } from '../../../components/tokenTimer/SessionStatusButton.tsx';
+import { SessionStatus } from '../../../components/tokenTimer/SessionStatus.tsx';
 import { useNavigate } from 'react-router-dom';
 
 export function Topbar() {
@@ -47,12 +46,12 @@ export function Topbar() {
         <img src={logo} alt="Logo" width={80} height={80} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <SessionStatusButton />
+          <SessionStatus />
           {user && <Typography>{user.email}</Typography>}
 
           <Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>
 
-          <ThemeSwitcher />
+          {/*<ThemeSwitcher />*/}
 
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
             <SettingsIcon sx={{ color: '#fff' }} />

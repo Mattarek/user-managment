@@ -32,8 +32,6 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const user = useAppSelector((state) => state.auth.user);
 
-  // console.log('user: ' + JSON.stringify(user));
-
   return (
     <Drawer
       variant="permanent"

@@ -8,7 +8,7 @@ function formatTime(sec: number) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-export function SessionStatusButton() {
+export function SessionStatus() {
   const secondsLeft = useSessionTimer();
   if (secondsLeft === null) return null;
 
