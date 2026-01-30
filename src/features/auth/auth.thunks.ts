@@ -80,7 +80,7 @@ export const registerThunk = createAsyncThunk<
   }
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
-    await axiosSecureInstance.post('/register', payload);
+    await axiosSecureInstance.post('auth/register', payload);
     return;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
