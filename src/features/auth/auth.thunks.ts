@@ -43,7 +43,7 @@ export const refreshTokenThunk = createAsyncThunk<
   if (!refreshToken) return rejectWithValue('NO_REFRESH_TOKEN');
 
   try {
-    const res = await axiosInstance.post('/refresh-token', { refreshToken });
+    const res = await axiosInstance.post('auth/refresh-token', { refreshToken });
 
     const { accessToken, refreshToken: newRefreshToken } = res.data;
 
