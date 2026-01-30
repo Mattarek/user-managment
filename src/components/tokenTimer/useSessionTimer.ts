@@ -16,7 +16,6 @@ export function useSessionTimer() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
-    console.log('accessToken: ' + accessToken);
     if (!accessToken) return;
 
     const decoded = jwtDecode<Required<JwtPayload>>(accessToken);
