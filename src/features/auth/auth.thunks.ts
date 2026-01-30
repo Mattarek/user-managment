@@ -97,7 +97,7 @@ export const logoutThunk = createAsyncThunk('auth/logout', async () => {
     const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
     const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
 
-    await axiosSecureInstance.post('/logout', {
+    await axiosSecureInstance.post('auth/logout', {
       refreshToken,
       accessToken,
     });
