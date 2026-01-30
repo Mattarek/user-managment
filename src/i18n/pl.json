@@ -44,7 +44,13 @@
     "surname": "Nazwisko",
     "IAgreeToThe": "Akceptuję",
     "terms": "regulamin",
-    "ofUse": "korzystania z serwisu"
+    "ofUse": "korzystania z serwisu",
+    "sessionExpiringTitle": "Sesja zaraz wygaśnie",
+    "sessionTimeLeft": "Pozostało",
+    "sessionExtendInfo": "Kliknij „Przedłuż”, aby odświeżyć sesję i pozostać zalogowanym.",
+    "sessionExtend": "Przedłuż sesję",
+    "sessionExtendLoading": "Przedłużanie...",
+    "sessionExtendCancel": "Nie teraz"
   },
   "error": {
     "oops": "Ups!",

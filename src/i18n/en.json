@@ -44,7 +44,13 @@
     "surname": "Surname",
     "IAgreeToThe": "I agree to the",
     "terms": "terms",
-    "ofUse": "of use"
+    "ofUse": "of use",
+    "sessionExpiringTitle": "Session is about to expire",
+    "sessionTimeLeft": "Time left",
+    "sessionExtendInfo": "Click “Extend” to refresh your session and stay logged in.",
+    "sessionExtend": "Extend session",
+    "sessionExtendLoading": "Extending...",
+    "sessionExtendCancel": "Not now"
   },
   "error": {
     "oops": "Oops!",

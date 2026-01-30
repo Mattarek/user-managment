@@ -1,47 +1,93 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { PATIENTS_ACCESS_TOKEN } from '../../constants.ts';
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
-import { logoutThunk } from '../../features/auth/auth.thunks.ts';
+import { logoutThunk, refreshTokenThunk } from '../../features/auth/auth.thunks.ts';
+
+function safeGetExp(token: string): number | null {
+  try {
+    const decoded = jwtDecode<Required<JwtPayload>>(token);
+    return typeof decoded.exp === 'number' ? decoded.exp : null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Starts a countdown based on the refresh token expiration time.
  * When the timer reaches zero, the user is logged out and redirected to login.
  */
-export function useSessionTimer() {
+export function useSessionTimer(warnAtSeconds = 60) {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [isExtending, setIsExtending] = useState(false);
+
+  const warningShownRef = useRef(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
-    if (!accessToken) return;
+    let intervalId: number | undefined;
 
-    const decoded = jwtDecode<Required<JwtPayload>>(accessToken);
+    const tick = () => {
+      const token = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
+      if (!token) {
+        setSecondsLeft(null);
+        return;
+      }
 
-    const startSessionCountdown = () => {
-      const interval = setInterval(() => {
-        const now = Date.now() / 1000;
-        const diff = Math.floor(decoded.exp - now);
+      const exp = safeGetExp(token);
+      if (!exp) {
+        dispatch(logoutThunk());
+        navigate('/login', { replace: true });
+        return;
+      }
 
-        if (diff < 1) {
-          clearInterval(interval);
-          dispatch(logoutThunk());
-          navigate('/login', { replace: true });
-          return;
-        }
+      const now = Date.now() / 1000;
+      const diff = Math.floor(exp - now);
 
-        setSecondsLeft(diff);
-      }, 1000);
+      if (diff < 1) {
+        window.clearInterval(intervalId);
+        warningShownRef.current = false;
+        setIsWarningOpen(false);
+        setSecondsLeft(0);
+        dispatch(logoutThunk());
+        navigate('/login', { replace: true });
+        return;
+      }
 
-      return interval;
+      setSecondsLeft(diff);
+
+      if (diff <= warnAtSeconds && !warningShownRef.current) {
+        warningShownRef.current = true;
+        setIsWarningOpen(true);
+      }
     };
 
-    const interval = startSessionCountdown();
+    tick();
+    intervalId = window.setInterval(tick, 1000);
 
-    return () => clearInterval(interval);
+    return () => window.clearInterval(intervalId);
+  }, [dispatch, navigate, warnAtSeconds]);
+
+  const extend = useCallback(async () => {
+    setIsExtending(true);
+    try {
+      await dispatch(refreshTokenThunk()).unwrap();
+      setIsWarningOpen(false);
+      warningShownRef.current = false; // pozwól pokazać warning przy następnym razie
+    } catch {
+      setIsWarningOpen(false);
+      warningShownRef.current = false;
+      await dispatch(logoutThunk());
+      navigate('/login', { replace: true });
+    } finally {
+      setIsExtending(false);
+    }
   }, [dispatch, navigate]);
 
-  return secondsLeft;
+  const closeWarning = useCallback(() => setIsWarningOpen(false), []);
+
+  return { secondsLeft, isWarningOpen, isExtending, extend, closeWarning };
 }
