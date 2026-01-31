@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store/hooks.ts';
 import { PATIENTS_ACCESS_TOKEN } from '../../constants.ts';
-import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import { logoutThunk, refreshTokenThunk } from '../../features/auth/auth.thunks.ts';
+import { useTranslation } from 'react-i18next';
 
 function safeGetExp(token: string): number | null {
   try {
@@ -14,20 +15,31 @@ function safeGetExp(token: string): number | null {
   }
 }
 
-/**
- * Starts a countdown based on the refresh token expiration time.
- * When the timer reaches zero, the user is logged out and redirected to login.
- */
 export function useSessionTimer(warnAtSeconds = 60) {
-  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
-  const [isWarningOpen, setIsWarningOpen] = useState(false);
-  const [isExtending, setIsExtending] = useState(false);
-
-  const warningShownRef = useRef(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [isExtending, setIsExtending] = useState(false);
+  const { t } = useTranslation();
+
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const showToast = useCallback((msg: string) => {
+    setToastMessage(msg);
+    setToastOpen(true);
+  }, []);
+  const closeToast = useCallback(() => setToastOpen(false), []);
+
+  const warningShownRef = useRef(false);
+
+  const extendCooldownMs = 30_000;
+  const lastExtendAtRef = useRef<number>(0);
+  const extendInFlightRef = useRef<Promise<void> | null>(null);
+
   useEffect(() => {
+    // eslint-disable-next-line prefer-const
     let intervalId: number | undefined;
 
     const tick = () => {
@@ -67,27 +79,55 @@ export function useSessionTimer(warnAtSeconds = 60) {
 
     tick();
     intervalId = window.setInterval(tick, 1000);
-
     return () => window.clearInterval(intervalId);
   }, [dispatch, navigate, warnAtSeconds]);
 
   const extend = useCallback(async () => {
-    setIsExtending(true);
-    try {
-      await dispatch(refreshTokenThunk()).unwrap();
-      setIsWarningOpen(false);
-      warningShownRef.current = false; // pozwól pokazać warning przy następnym razie
-    } catch {
-      setIsWarningOpen(false);
-      warningShownRef.current = false;
-      await dispatch(logoutThunk());
-      navigate('/login', { replace: true });
-    } finally {
-      setIsExtending(false);
+    const now = Date.now();
+
+    if (now - lastExtendAtRef.current < extendCooldownMs) {
+      showToast(t('auth.sessionNotExtended'));
+      return;
     }
-  }, [dispatch, navigate]);
+
+    if (extendInFlightRef.current) {
+      return extendInFlightRef.current;
+    }
+
+    setIsExtending(true);
+
+    const p = (async () => {
+      try {
+        lastExtendAtRef.current = now;
+        await dispatch(refreshTokenThunk()).unwrap();
+        setIsWarningOpen(false);
+        warningShownRef.current = false;
+        showToast(t('auth.sessionExtended'));
+      } catch {
+        setIsWarningOpen(false);
+        warningShownRef.current = false;
+        await dispatch(logoutThunk());
+        navigate('/login', { replace: true });
+      } finally {
+        setIsExtending(false);
+        extendInFlightRef.current = null;
+      }
+    })();
+
+    extendInFlightRef.current = p;
+    return p;
+  }, [dispatch, navigate, showToast, t]);
 
   const closeWarning = useCallback(() => setIsWarningOpen(false), []);
 
-  return { secondsLeft, isWarningOpen, isExtending, extend, closeWarning };
+  return {
+    secondsLeft,
+    isWarningOpen,
+    isExtending,
+    extend,
+    closeWarning,
+    toastOpen,
+    toastMessage,
+    closeToast,
+  };
 }

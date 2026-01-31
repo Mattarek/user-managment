@@ -21,6 +21,8 @@
     "doctors": "Doctors"
   },
   "auth": {
+    "sessionExtended": "Session has been extended.",
+    "sessionNotExtended": "Session was extended recently. Please try again in a moment.",
     "message": "User with this email already exists",
     "activeSessionLeft": "⏳ Session",
     "registerSuccess": "Account has been created",
