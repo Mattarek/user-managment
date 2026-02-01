@@ -59,7 +59,6 @@ export function ResetPasswordPage() {
 
       showSnackbar({ type: 'success', message: t('auth.resetSuccess') });
 
-      // opcjonalnie: po chwili przerzuć na login
       setTimeout(() => navigate('/login'), 800);
     } catch (err) {
       const error = typeof err === 'string' ? err : undefined;

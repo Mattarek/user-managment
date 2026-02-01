@@ -21,7 +21,10 @@
     "doctors": "Doctors"
   },
   "auth": {
-    "recoverySuccess": "The e-mail has been sent.",
+    "recoverySuccess": "The email has been sent.",
+    "resetTokenMissing": "Reset token is missing or invalid.",
+    "resetSuccess": "Your password has been successfully reset. You can now log in.",
+    "resetFailed": "Failed to reset password.",
     "resetPassword": "Reset password",
     "enterNewPassword": "New password",
     "newPassword": "New password",
