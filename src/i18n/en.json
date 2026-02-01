@@ -21,6 +21,7 @@
     "doctors": "Doctors"
   },
   "auth": {
+    "recoverySuccess": "The e-mail has been sent.",
     "resetPassword": "Reset password",
     "enterNewPassword": "New password",
     "newPassword": "New password",
