@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 function safeGetExp(token: string): number | null {
   try {
     const decoded = jwtDecode<Required<JwtPayload>>(token);
-    return typeof decoded.exp === 'number' ? decoded.exp : null;
+    return decoded.exp;
   } catch {
     return null;
   }
@@ -30,6 +30,7 @@ export function useSessionTimer(warnAtSeconds = 60) {
     setToastMessage(msg);
     setToastOpen(true);
   }, []);
+
   const closeToast = useCallback(() => setToastOpen(false), []);
 
   const warningShownRef = useRef(false);

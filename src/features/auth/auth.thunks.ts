@@ -33,6 +33,32 @@ export const loginThunk = createAsyncThunk<
   }
 });
 
+type ResetPasswordPayload = {
+  token: string;
+  password: string;
+};
+
+export const resetPasswordThunk = createAsyncThunk<void, ResetPasswordPayload, { rejectValue: string }>(
+  'auth/resetPassword',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        // jeśli backend zwraca tekst / JSON z błędem, możesz to rozwinąć
+        const msg = await res.text().catch(() => '');
+        return rejectWithValue(msg || 'Reset password failed');
+      }
+    } catch {
+      return rejectWithValue('Network error');
+    }
+  },
+);
+
 export const refreshTokenThunk = createAsyncThunk<
   { accessToken: string; refreshToken: string },
   void,
