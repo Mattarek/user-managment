@@ -19,19 +19,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
-          cache: npm
+          node-version: "20"
+          cache: yarn
 
-      - name: Install deps
-        run: npm ci
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: yarn build
 
       - name: Show dist
-        run: |
-          ls -lah dist
-          test -f dist/index.html
+        run: ls -lah dist
 
       - name: Upload dist to server (staging)
         uses: appleboy/scp-action@v0.1.7
@@ -39,7 +37,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT }}
+          port: ${{ secrets.VPS_PORT || 22 }}
           source: "dist/**"
           target: "/tmp/user-management-dist"
           strip_components: 1
@@ -50,35 +48,29 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT }}
+          port: ${{ secrets.VPS_PORT || 22 }}
           script: |
             set -euo pipefail
 
             TARGET="/var/www/user-management"
             STAGING="/tmp/user-management-dist"
-            RELEASES="/var/www/user-management-releases"
-            TS="$(date +%Y%m%d%H%M%S)"
-            NEW_RELEASE="${RELEASES}/${TS}"
 
             echo "Staging content:"
-            ls -lah "$STAGING" | head -n 80
+            ls -lah "$STAGING" | head -n 50
 
-            test -f "$STAGING/index.html"
+            mkdir -p "$TARGET"
+            rm -rf "$TARGET"/*
 
-            mkdir -p "$RELEASES"
-            mkdir -p "$NEW_RELEASE"
+            cp -a "$STAGING"/. "$TARGET"/
 
-            cp -a "$STAGING"/. "$NEW_RELEASE"/
-
-            ln -sfn "$NEW_RELEASE" "$TARGET"
+            # opcjonalnie (jak chcesz wymusić)
+            find "$TARGET" -type d -exec chmod 755 {} \;
+            find "$TARGET" -type f -exec chmod 644 {} \;
 
             rm -rf "$STAGING"
 
-            ls -1dt "$RELEASES"/* | tail -n +6 | xargs -r rm -rf
+            sudo nginx -t
+            sudo systemctl reload nginx
 
-            sudo /usr/sbin/nginx -t
-            sudo /bin/systemctl reload nginx
-
-            echo "Current points to:"
-            readlink -f "$TARGET"
+            echo "Deployed files:"
             ls -lah "$TARGET" | head -n 50

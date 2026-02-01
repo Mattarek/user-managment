@@ -33,6 +33,32 @@ export const loginThunk = createAsyncThunk<
   }
 });
 
+type ResetPasswordPayload = {
+  token: string;
+  password: string;
+};
+
+export const resetPasswordThunk = createAsyncThunk<void, ResetPasswordPayload, { rejectValue: string }>(
+  'auth/resetPassword',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        // jeśli backend zwraca tekst / JSON z błędem, możesz to rozwinąć
+        const msg = await res.text().catch(() => '');
+        return rejectWithValue(msg || 'Reset password failed');
+      }
+    } catch {
+      return rejectWithValue('Network error');
+    }
+  },
+);
+
 export const refreshTokenThunk = createAsyncThunk<
   { accessToken: string; refreshToken: string },
   void,
@@ -43,7 +69,7 @@ export const refreshTokenThunk = createAsyncThunk<
   if (!refreshToken) return rejectWithValue('NO_REFRESH_TOKEN');
 
   try {
-    const res = await axiosInstance.post('/refresh-token', { refreshToken });
+    const res = await axiosInstance.post('auth/refresh-token', { refreshToken });
 
     const { accessToken, refreshToken: newRefreshToken } = res.data;
 
@@ -80,7 +106,7 @@ export const registerThunk = createAsyncThunk<
   }
 >('auth/register', async (payload, { rejectWithValue }) => {
   try {
-    await axiosSecureInstance.post('/register', payload);
+    await axiosSecureInstance.post('auth/register', payload);
     return;
   } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -97,7 +123,7 @@ export const logoutThunk = createAsyncThunk('auth/logout', async () => {
     const refreshToken = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
     const accessToken = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
 
-    await axiosSecureInstance.post('/logout', {
+    await axiosSecureInstance.post('auth/logout', {
       refreshToken,
       accessToken,
     });

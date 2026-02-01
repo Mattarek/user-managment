@@ -15,6 +15,7 @@ axiosSecureInstance.interceptors.request.use((config) => {
   return config;
 });
 
+// autoRefresh for learning but I prefer to use button to renew session
 axiosSecureInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -32,7 +33,7 @@ axiosSecureInstance.interceptors.response.use(
     originalRequest._retry = true;
 
     try {
-      const res = await axiosInstance.post('/refresh-token', {
+      const res = await axiosInstance.post('auth/refresh-token', {
         refreshToken,
       });
 

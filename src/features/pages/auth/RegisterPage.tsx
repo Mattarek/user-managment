@@ -10,6 +10,7 @@ import { useAppDispatch } from '../../../store/hooks.ts';
 import { registerThunk } from '../../auth/auth.thunks.ts';
 import { type SnackbarState } from '../../../types/types.ts';
 import * as Yup from 'yup';
+import { MIN_PASSWORD_LENGTH } from '../../../constants.ts';
 
 type RegisterForm = {
   email: string;
@@ -26,9 +27,26 @@ export function RegisterPage() {
 
   const validationSchema = () =>
     Yup.object({
-      email: Yup.string().email(t('validation.emailRequired')).required(t('validation.required')),
-    });
+      email: Yup.string().email(t('validation.emailRequired')).required(t('validation.emailRequired')),
 
+      name: Yup.string()
+        .matches(/^[A-Z][a-z]+$/, t('validation.invalidNameFormat'))
+        .required(t('validation.nameRequired')),
+
+      surname: Yup.string()
+        .matches(/^[A-Z][a-z]+$/, t('validation.invalidSurnameFormat'))
+        .required(t('validation.surnameRequired')),
+
+      password: Yup.string()
+        .required(t('validation.passwordRequired'))
+        .min(MIN_PASSWORD_LENGTH, t('validation.passwordMin', { min: MIN_PASSWORD_LENGTH })),
+
+      repeatedPassword: Yup.string()
+        .required(t('validation.passwordRepeatRequired'))
+        .oneOf([Yup.ref('password')], t('validation.passwordNotMatch')),
+
+      terms: Yup.boolean().oneOf([true], t('validation.acceptTermsRequired')),
+    });
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     type: 'success',

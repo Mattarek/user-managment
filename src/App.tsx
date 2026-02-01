@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 import { useAppDispatch } from './store/hooks.ts';
 import { jwtDecode } from 'jwt-decode';
 import { refreshTokenThunk } from './features/auth/auth.thunks.ts';
+import { ResetPasswordPage } from './features/pages/auth/ResetPasswordPage.tsx';
 
 function PublicRoute() {
   const token = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
@@ -75,6 +76,7 @@ function App() {
           <Route path={appPaths.register} element={<RegisterPage />} />
           <Route path={appPaths.forgotPassword} element={<ForgotPasswordPage />} />
           <Route path={appPaths.terms} element={<Terms />} />
+          <Route path={appPaths.resetPassword} element={<ResetPasswordPage />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
