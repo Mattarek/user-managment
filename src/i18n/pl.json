@@ -22,6 +22,9 @@
   },
   "auth": {
     "recoverySuccess": "Wiadomość e-mail została wysłana.",
+    "resetTokenMissing": "Brak tokenu resetu hasła w linku.",
+    "resetSuccess": "Hasło zostało zmienione. Możesz się zalogować.",
+    "resetFailed": "Nie udało się zmienić hasła.",
     "resetPassword": "Reset hasła",
     "enterNewPassword": "Podaj nowe hasło",
     "newPassword": "Nowe hasło",
