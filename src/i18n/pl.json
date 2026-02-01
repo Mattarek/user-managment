@@ -21,6 +21,7 @@
     "doctors": "Lekarze"
   },
   "auth": {
+    "recoverySuccess": "Wiadomość e-mail została wysłana.",
     "resetPassword": "Reset hasła",
     "enterNewPassword": "Podaj nowe hasło",
     "newPassword": "Nowe hasło",
