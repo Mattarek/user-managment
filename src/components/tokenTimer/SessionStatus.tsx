@@ -3,6 +3,7 @@ import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import { useSessionTimer } from './useSessionTimer';
 import { useAppTheme } from '../../theme/useAppTheme.ts';
 import { SessionExtendDialog } from './SessionExtendDialog.tsx';
+import { Toast } from '../Toast.tsx';
 
 function formatTime(sec: number) {
   const m = Math.floor(sec / 60);
@@ -12,7 +13,8 @@ function formatTime(sec: number) {
 
 export function SessionStatus() {
   const { mode } = useAppTheme();
-  const { secondsLeft, isWarningOpen, isExtending, extend, closeWarning } = useSessionTimer(60);
+  const { secondsLeft, isWarningOpen, isExtending, extend, closeWarning, toastOpen, toastMessage, closeToast } =
+    useSessionTimer(60);
 
   if (secondsLeft === null) return null;
 
@@ -26,8 +28,9 @@ export function SessionStatus() {
         sx={{ color: iconColor, backgroundColor: 'transparent' }}
         icon={<HourglassBottomIcon color={iconColor} />}
         label={<Typography variant="caption">{formatTime(secondsLeft)}</Typography>}
+        onClick={extend}
       />
-
+      <Toast open={toastOpen} message={toastMessage} onClose={closeToast} />
       <SessionExtendDialog
         open={isWarningOpen}
         secondsLeft={secondsLeft}

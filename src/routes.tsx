@@ -3,7 +3,7 @@ export const appPaths = {
   login: '/login',
   register: '/register',
   forgotPassword: '/forgot-password',
-
+  resetPassword: '/reset-password/:token',
   dashboard: {
     root: '/dashboard',
     patients: 'patients',

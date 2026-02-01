@@ -21,7 +21,12 @@
     "doctors": "Lekarze"
   },
   "auth": {
-    "message": "User with this email already exists",
+    "resetPassword": "Reset hasła",
+    "enterNewPassword": "Podaj nowe hasło",
+    "newPassword": "Nowe hasło",
+    "sessionExtended": "Sesja została przedłużona.",
+    "sessionNotExtended": "Sesja została niedawno przedłużona. Spróbuj za chwilę.",
+    "message": "User z tym adresem e-mail już istnieje.",
     "activeSessionLeft": "⏳ Sesja",
     "registerSuccess": "Konto zostało utworzone",
     "registerFailed": "Rejestracja nie powiodła się",
