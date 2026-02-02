@@ -69,6 +69,16 @@ export function Topbar() {
             <MenuItem
               sx={{ justifyContent: 'center' }}
               onClick={() => {
+                navigate(appPaths.dashboard.settings);
+                setAnchor(null);
+              }}
+            >
+              {t('topbar.settings')}
+            </MenuItem>
+
+            <MenuItem
+              sx={{ justifyContent: 'center' }}
+              onClick={() => {
                 handleLogout();
                 setAnchor(null);
               }}
@@ -93,7 +103,7 @@ export function Topbar() {
               }}
             >
               <ListItemIcon>🇵🇱</ListItemIcon>
-              <ListItemText>Polski</ListItemText>
+              <ListItemText>{t('auth.lang_pl')}</ListItemText>
             </MenuItem>
 
             <MenuItem
@@ -104,7 +114,7 @@ export function Topbar() {
               }}
             >
               <ListItemIcon>🇬🇧</ListItemIcon>
-              <ListItemText>English</ListItemText>
+              <ListItemText>{t('auth.lang_en')}</ListItemText>
             </MenuItem>
           </Popover>
         </div>
