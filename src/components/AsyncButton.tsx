@@ -4,7 +4,7 @@ type AsyncButtonProps = ButtonProps & {
   loading?: boolean;
 };
 
-export function AsyncButton({ loading = false, children, disabled, ...props }: AsyncButtonProps) {
+export function AsyncButton({ loading = false, children, disabled, ...props }: Readonly<AsyncButtonProps>) {
   return (
     <div className="relative inline-block">
       <Button

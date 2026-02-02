@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from '@mui/material';
 
-export function Toast({ open, message, onClose }: { open: boolean; message: string; onClose: () => void }) {
+export function Toast({ open, message, onClose }: Readonly<{ open: boolean; message: string; onClose: () => void }>) {
   return (
     <Snackbar
       open={open}
