@@ -14,13 +14,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import logo from '../../../assets/logo.svg';
+import doctorsApp from '../../../../public/doctorsApp.png';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { logoutThunk } from '../../../features/auth/auth.thunks.ts';
 import { SessionStatus } from '../../../components/tokenTimer/SessionStatus.tsx';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ThemeSwitcher } from '../../../components/ThemeSwitcher.tsx';
+import { appPaths } from '../../../routes.tsx';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -44,7 +44,9 @@ export function Topbar() {
           justifyContent: 'space-between',
         }}
       >
-        <img src={logo} alt="Logo" width={80} height={80} />
+        <Link to={appPaths.dashboard.root}>
+          <img src={doctorsApp} alt="DoctorsApp Logo" width={180} height={80} />
+        </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <SessionStatus />
