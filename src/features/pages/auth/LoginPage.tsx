@@ -108,7 +108,7 @@ export function LoginPage() {
               />
 
               <AsyncButton fullWidth type="submit" variant="contained" loading={isSubmitting}>
-                {t('auth.login')}
+                {t('auth.login_btn')}
               </AsyncButton>
 
               <Stack spacing={1} alignItems="center">

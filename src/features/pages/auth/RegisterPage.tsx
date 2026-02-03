@@ -173,7 +173,7 @@ export function RegisterPage() {
 
               <Stack spacing={1} alignItems="center">
                 <Link component={RouterLink} to="/login" underline="none">
-                  {t('auth.login')}
+                  {t('auth.login_btn')}
                 </Link>
               </Stack>
             </Stack>

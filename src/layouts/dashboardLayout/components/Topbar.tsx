@@ -14,7 +14,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import doctorsApp from '../../../../public/doctorsApp.png';
+import doctorsApp from '../../../assets/doctorsApp.png';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { logoutThunk } from '../../../features/auth/auth.thunks.ts';
 import { SessionStatus } from '../../../components/tokenTimer/SessionStatus.tsx';

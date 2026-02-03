@@ -20,6 +20,10 @@
     "list": "List",
     "doctors": "Doctors"
   },
+  "settings": {
+    "title": "Settings",
+    "account_settings": "Details"
+  },
   "auth": {
     "recoverySuccess": "The email has been sent.",
     "resetTokenMissing": "Reset token is missing or invalid.",
