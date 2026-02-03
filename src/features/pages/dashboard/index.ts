@@ -5,3 +5,5 @@ export * from './doctors/AddDoctor.tsx';
 
 export * from './patients/AddPatient.tsx';
 export * from './patients/Patients.tsx';
+
+export * from './Settings.tsx';

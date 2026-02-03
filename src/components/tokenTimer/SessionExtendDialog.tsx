@@ -13,13 +13,13 @@ export function SessionExtendDialog({
   onExtend,
   onClose,
   isExtending,
-}: {
+}: Readonly<{
   open: boolean;
   secondsLeft: number;
   onExtend: () => void;
   onClose: () => void;
   isExtending: boolean;
-}) {
+}>) {
   const { t } = useTranslation();
 
   return (

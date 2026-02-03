@@ -11,6 +11,8 @@ export const appPaths = {
 
     doctors: 'doctors',
     doctorsAdd: 'doctors/add',
+
+    settings: 'settings',
   },
   terms: '/terms',
   notFound: '*',

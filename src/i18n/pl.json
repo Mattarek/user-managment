@@ -20,6 +20,10 @@
     "list": "Lista",
     "doctors": "Lekarze"
   },
+  "settings": {
+    "title": "Ustawienia",
+    "account_settings": "Dane użytkownika"
+  },
   "auth": {
     "recoverySuccess": "Wiadomość e-mail została wysłana.",
     "resetTokenMissing": "Brak tokenu resetu hasła w linku.",
@@ -40,7 +44,7 @@
     "password": "Hasło",
     "repeatPassword": "Powtórz hasło",
     "login_btn": "Zaloguj",
-    "login": "Zaloguj",
+    "login": "Nazwa użytkownika",
     "forgotPassword": "Zapomniałem hasła",
     "createAccount": "Zarejestruj się",
     "register": "Stwórz konto",

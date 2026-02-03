@@ -10,6 +10,8 @@ import {
   LoginPage,
   Patients,
   RegisterPage,
+  ResetPasswordPage,
+  Settings,
   Terms,
 } from './features/pages';
 import { appPaths } from './routes.tsx';
@@ -20,7 +22,6 @@ import { useEffect } from 'react';
 import { useAppDispatch } from './store/hooks.ts';
 import { jwtDecode } from 'jwt-decode';
 import { refreshTokenThunk } from './features/auth/auth.thunks.ts';
-import { ResetPasswordPage } from './features/pages/auth/ResetPasswordPage.tsx';
 
 function PublicRoute() {
   const token = localStorage.getItem(PATIENTS_REFRESH_TOKEN);
@@ -86,6 +87,7 @@ function App() {
             <Route path={appPaths.dashboard.patientsAdd} element={<AddPatient />} />
             <Route path={appPaths.dashboard.doctors} element={<Doctors />} />
             <Route path={appPaths.dashboard.doctorsAdd} element={<AddDoctor />} />
+            <Route path={appPaths.dashboard.settings} element={<Settings />} />
           </Route>
         </Route>
 

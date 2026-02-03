@@ -12,6 +12,8 @@ import { AsyncButton } from '../../../components/AsyncButton.tsx';
 import type { SnackbarState } from '../../../types/types.ts';
 import * as Yup from 'yup';
 import { MIN_PASSWORD_LENGTH } from '../../../constants.ts';
+import { PasswordAdornment } from '../../../components/PasswordAdornment.tsx';
+import { toggle } from '../../../utils/toggleState.ts';
 
 type LoginForm = {
   email: string;
@@ -22,6 +24,7 @@ export function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [showPassword, setShowPassword] = useState(false);
 
   const validationSchema = () =>
     Yup.object({
@@ -93,10 +96,19 @@ export function LoginPage() {
           <Form>
             <Stack spacing={2}>
               <Field component={TextField} name="email" label={t('auth.email')} fullWidth />
-              <Field component={TextField} name="password" type="password" label={t('auth.password')} fullWidth />
+              <Field
+                component={TextField}
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                label={t('auth.password')}
+                InputProps={{
+                  endAdornment: <PasswordAdornment visible={showPassword} onToggle={() => toggle(setShowPassword)} />,
+                }}
+                fullWidth
+              />
 
               <AsyncButton fullWidth type="submit" variant="contained" loading={isSubmitting}>
-                {t('auth.login')}
+                {t('auth.login_btn')}
               </AsyncButton>
 
               <Stack spacing={1} alignItems="center">

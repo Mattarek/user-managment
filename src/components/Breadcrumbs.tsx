@@ -19,7 +19,8 @@ export function Breadcrumbs() {
       {parts.slice(1).map((part, index) => {
         const isLast = index === parts.slice(1).length - 1;
         const path = base + '/' + parts.slice(1, index + 1).join('/');
-        const label = t(`breadcrumbs.${part}`, part);
+        const capitalizeFirst = (str: string) => (str ? str[0].toUpperCase() + str.slice(1) : str);
+        const label = capitalizeFirst(t(`breadcrumbs.${part}`, part));
 
         return isLast ? (
           <Typography key={path} color="text.primary">
