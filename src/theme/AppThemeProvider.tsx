@@ -3,7 +3,7 @@ import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import type { Mode } from '../types/types.ts';
 import { ThemeContext } from '../context/themeContext.ts';
 
-export default function AppThemeProvider({ children }: { children: React.ReactNode }) {
+export default function AppThemeProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [mode, setMode] = useState<Mode>(
     () =>
       (localStorage.getItem('theme') as Mode) ||

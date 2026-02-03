@@ -28,7 +28,7 @@ export function ResetPasswordPage() {
     message: '',
   });
 
-  const showSnackbar = (payload: Omit<SnackbarState, 'open'>) => setSnackbar({ open: true, ...payload });
+  const showSnackbar = (payload: Readonly<Omit<SnackbarState, 'open'>>) => setSnackbar({ open: true, ...payload });
 
   const validationSchema = useMemo(
     () =>

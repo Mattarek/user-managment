@@ -14,13 +14,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import logo from '../../../assets/logo.svg';
+import doctorsApp from '../../../assets/doctorsApp.png';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { logoutThunk } from '../../../features/auth/auth.thunks.ts';
 import { SessionStatus } from '../../../components/tokenTimer/SessionStatus.tsx';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ThemeSwitcher } from '../../../components/ThemeSwitcher.tsx';
+import { appPaths } from '../../../routes.tsx';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -44,7 +44,9 @@ export function Topbar() {
           justifyContent: 'space-between',
         }}
       >
-        <img src={logo} alt="Logo" width={80} height={80} />
+        <Link to={appPaths.dashboard.root}>
+          <img src={doctorsApp} alt="DoctorsApp Logo" width={180} height={80} />
+        </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <SessionStatus />
@@ -62,6 +64,16 @@ export function Topbar() {
             <MenuItem onClick={(e) => setLangAnchor(e.currentTarget)}>
               <ArrowLeftIcon style={{ marginRight: 8 }} />
               <ListItemText>{t('topbar.language')}</ListItemText>
+            </MenuItem>
+
+            <MenuItem
+              sx={{ justifyContent: 'center' }}
+              onClick={() => {
+                navigate(appPaths.dashboard.settings);
+                setAnchor(null);
+              }}
+            >
+              {t('topbar.settings')}
             </MenuItem>
 
             <MenuItem
@@ -91,7 +103,7 @@ export function Topbar() {
               }}
             >
               <ListItemIcon>🇵🇱</ListItemIcon>
-              <ListItemText>Polski</ListItemText>
+              <ListItemText>{t('auth.lang_pl')}</ListItemText>
             </MenuItem>
 
             <MenuItem
@@ -102,7 +114,7 @@ export function Topbar() {
               }}
             >
               <ListItemIcon>🇬🇧</ListItemIcon>
-              <ListItemText>English</ListItemText>
+              <ListItemText>{t('auth.lang_en')}</ListItemText>
             </MenuItem>
           </Popover>
         </div>

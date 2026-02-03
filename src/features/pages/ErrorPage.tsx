@@ -28,7 +28,12 @@ export function ErrorPage() {
         <Typography variant="body1">{t('error.hint')}</Typography>
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-          <Button variant="contained" component={Link} to="/dashboard" sx={{ bgcolor: 'white', color: '#1e3c72' }}>
+          <Button
+            variant="contained"
+            component={Link}
+            to="/dashboard"
+            sx={{ backgroundColor: 'white', color: '#1e3c72' }}
+          >
             {t('error.goToDashboard')}
           </Button>
 

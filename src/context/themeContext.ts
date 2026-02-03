@@ -6,7 +6,7 @@ type ThemeCtx = {
   toggleTheme: () => void;
 };
 
-export const ThemeContext = createContext<ThemeCtx>({
+export const ThemeContext = createContext<Readonly<ThemeCtx>>({
   mode: 'light',
   toggleTheme: () => {},
 });
