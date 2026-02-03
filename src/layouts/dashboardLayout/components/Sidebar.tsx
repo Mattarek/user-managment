@@ -1,36 +1,47 @@
-import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Collapse,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography
+} from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAppSelector } from '../../../store/hooks.ts';
-
-type SidebarLink = {
-  type: 'link';
-  label: string;
-  path: string;
-};
-
-type SidebarDropdown = {
-  type: 'dropdown';
-  label: string;
-  children: {
-    label: string;
-    path: string;
-  }[];
-};
-
-export type SidebarItem = SidebarLink | SidebarDropdown;
+import { useTranslation } from 'react-i18next';
+import { appPaths } from '../../../routes.tsx';
 
 type Props = {
-  items: SidebarItem[];
   width?: number;
   height?: number;
 };
 
-export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
+export function Sidebar({ width = 260, height = 64 }: Readonly<Props>) {
   const location = useLocation();
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const user = useAppSelector((state) => state.auth.user);
+  const { t } = useTranslation();
+
+  const [patientsOpen, setPatientsOpen] = useState(false);
+  const [doctorsOpen, setDoctorsOpen] = useState(false);
+
+  const isPatientsRoute = useMemo(
+    () => location.pathname === appPaths.dashboard.patients || location.pathname === appPaths.dashboard.patientsAdd,
+    [location.pathname],
+  );
+
+  const isDoctorsRoute = useMemo(
+    () => location.pathname === appPaths.dashboard.doctors || location.pathname === appPaths.dashboard.doctorsAdd,
+    [location.pathname],
+  );
+
+  const isPatientsOpen = patientsOpen || isPatientsRoute;
+  const isDoctorsOpen = doctorsOpen || isDoctorsRoute;
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <Drawer
@@ -52,7 +63,7 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
           alignItems: 'center',
           gap: 2,
           p: 2,
-          borderBottom: '1px solid rgba(255,255,255,0.12)',
+          borderBottom: '0.0625rem solid rgba(255,255,255,0.12)',
         }}
       >
         <Avatar>{user?.name?.[0]?.toUpperCase()}</Avatar>
@@ -66,45 +77,67 @@ export function Sidebar({ items, width = 260, height = 64 }: Readonly<Props>) {
         </Box>
       </Box>
 
-      <List>
-        {items.map((item) => {
-          if (item.type === 'link') {
-            const active = location.pathname === item.path;
+      <Box component="nav" aria-label="Sidebar navigation">
+        <List>
+          <ListItemButton component={Link} to={appPaths.dashboard.root} selected={isActive(appPaths.dashboard.root)}>
+            <ListItemText primary={t('sidebar.home')} />
+          </ListItemButton>
 
-            return (
-              <ListItemButton key={item.path} component={Link} to={item.path} selected={active}>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            );
-          }
+          <Box component="div">
+            <ListItemButton onClick={() => setPatientsOpen((v) => !v)} aria-expanded={isPatientsOpen}>
+              <ListItemText primary={t('sidebar.patients')} />
+              {isPatientsOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
 
-          const isActiveDropdown = item.children.some((c) => location.pathname === c.path);
-          const isOpen = openDropdown === item.label || isActiveDropdown;
+            <Collapse in={isPatientsOpen}>
+              <List sx={{ pl: 3 }}>
+                <ListItemButton
+                  component={Link}
+                  to={appPaths.dashboard.patients}
+                  selected={isActive(appPaths.dashboard.patients)}
+                >
+                  <ListItemText primary={t('sidebar.patients_list')} />
+                </ListItemButton>
 
-          return (
-            <div key={item.label}>
-              <ListItemButton onClick={() => setOpenDropdown((prev) => (prev === item.label ? null : item.label))}>
-                <ListItemText primary={item.label} />
-                {isOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to={appPaths.dashboard.patientsAdd}
+                  selected={isActive(appPaths.dashboard.patientsAdd)}
+                >
+                  <ListItemText primary={t('sidebar.patients_add')} />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </Box>
 
-              <Collapse in={isOpen}>
-                <List sx={{ pl: 3 }}>
-                  {item.children.map((child) => {
-                    const active = location.pathname === child.path;
+          <Box component="div">
+            <ListItemButton onClick={() => setDoctorsOpen((v) => !v)} aria-expanded={isDoctorsOpen}>
+              <ListItemText primary={t('sidebar.doctors')} />
+              {isDoctorsOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
 
-                    return (
-                      <ListItemButton key={child.path} component={Link} to={child.path} selected={active}>
-                        <ListItemText primary={child.label} />
-                      </ListItemButton>
-                    );
-                  })}
-                </List>
-              </Collapse>
-            </div>
-          );
-        })}
-      </List>
+            <Collapse in={isDoctorsOpen}>
+              <List sx={{ pl: 3 }}>
+                <ListItemButton
+                  component={Link}
+                  to={appPaths.dashboard.doctors}
+                  selected={isActive(appPaths.dashboard.doctors)}
+                >
+                  <ListItemText primary={t('sidebar.doctors_list')} />
+                </ListItemButton>
+
+                <ListItemButton
+                  component={Link}
+                  to={appPaths.dashboard.doctorsAdd}
+                  selected={isActive(appPaths.dashboard.doctorsAdd)}
+                >
+                  <ListItemText primary={t('sidebar.doctors_add')} />
+                </ListItemButton>
+              </List>
+            </Collapse>
+          </Box>
+        </List>
+      </Box>
     </Drawer>
   );
 }
