@@ -37,7 +37,14 @@ export function Topbar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ ml: 260, zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar
+      position="fixed"
+      color="transparent"
+      sx={(theme) => ({
+        ml: 260,
+        zIndex: theme.zIndex.drawer + 1,
+      })}
+    >
       <Toolbar
         sx={{
           display: 'flex',
@@ -57,7 +64,11 @@ export function Topbar() {
           <ThemeSwitcher />
 
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
-            <SettingsIcon sx={{ color: '#fff' }} />
+            <SettingsIcon
+              sx={(theme) => ({
+                color: theme.palette.settingsIcon,
+              })}
+            />
           </IconButton>
 
           <Menu anchorEl={anchor} open={!!anchor} onClose={() => setAnchor(null)}>

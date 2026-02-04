@@ -15,7 +15,7 @@ export function AuthBackground({ children }: Readonly<Props>) {
       sx={{
         minHeight: '100vh',
         width: '100%',
-        background: theme.customBackground.auth,
+        background: theme.palette.auth,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

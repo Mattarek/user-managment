@@ -85,7 +85,7 @@ export function LoginPage() {
   };
 
   return (
-    <BasePageLayout title={t('auth.login')} subtitle={t('auth.enterYourCredentials')}>
+    <BasePageLayout title={t('auth.login_title')} subtitle={t('auth.enterYourCredentials')}>
       <Formik
         key={i18n.language}
         initialValues={{ email: '', password: '' }}
