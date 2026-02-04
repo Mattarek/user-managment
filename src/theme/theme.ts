@@ -4,7 +4,7 @@ export function buildTheme(mode: 'light' | 'dark') {
   return createTheme({
     palette: {
       mode,
-      auth: mode === 'dark' ? '#111111' : '#111111',
+      auth: mode === 'dark' ? '#111111' : 'linear-gradient(135deg,#6fb1fc 0%,#4364f7 50%,#1e3c72 100%)',
       settingsIcon: '#ffffff',
       background: {
         default: mode === 'dark' ? '#111111' : '#ffffff',
