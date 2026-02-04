@@ -6,5 +6,9 @@ import { useAppTheme } from '../theme/useAppTheme.ts';
 export function ThemeSwitcher() {
   const { mode, toggleTheme } = useAppTheme();
 
-  return <IconButton onClick={toggleTheme}>{mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}</IconButton>;
+  return (
+    <IconButton onClick={toggleTheme}>
+      {mode === 'light' ? <DarkModeIcon sx={{ color: '#fff' }} /> : <LightModeIcon />}
+    </IconButton>
+  );
 }

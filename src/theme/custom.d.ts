@@ -2,9 +2,17 @@ import '@mui/material/styles';
 
 declare module '@mui/material/styles' {
   interface Theme {
-    customBackground: {
-      auth: string;
-    };
+    settingsIcon: string;
+  }
+
+  interface Palette {
+    settingsIcon: string;
+    auth: string;
+  }
+
+  interface PaletteOptions {
+    settingsIcon?: string;
+    auth: string;
   }
 
   interface ThemeOptions {
