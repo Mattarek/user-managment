@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import type { Mode } from '../types/types.ts';
 import { ThemeContext } from '../context/themeContext.ts';
+import { buildTheme } from './theme.ts';
 
 export default function AppThemeProvider({ children }: Readonly<{ children: React.ReactNode }>) {
   const [mode, setMode] = useState<Mode>(
@@ -10,16 +11,7 @@ export default function AppThemeProvider({ children }: Readonly<{ children: Reac
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
   );
 
-  const theme = createTheme({
-    palette: { mode },
-
-    customBackground: {
-      auth:
-        mode === 'light'
-          ? 'linear-gradient(135deg,#6fb1fc 0%,#4364f7 50%,#1e3c72 100%)'
-          : 'linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)',
-    },
-  });
+  const theme = useMemo(() => buildTheme(mode), [mode]);
 
   useEffect(() => {
     localStorage.setItem('theme', mode);
