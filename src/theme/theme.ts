@@ -10,6 +10,16 @@ export function buildTheme(mode: 'light' | 'dark') {
       },
     },
 
+    components: {
+      MuiAppBar: {
+        styleOverrides: {
+          root: {
+            backgroundColor: palette[mode].primary,
+          },
+        },
+      },
+    },
+
     customBackground: {
       auth: palette[mode].authGradient,
     },
