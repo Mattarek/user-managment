@@ -5,6 +5,7 @@ import { axiosInstance } from '../../libs/axiosInstance.ts';
 import axios from 'axios';
 import { PATIENTS_ACCESS_TOKEN, PATIENTS_REFRESH_TOKEN } from '../../constants.ts';
 import type { ApiErrorResponse } from '../../types/patientsApi.types.ts';
+import type { ChangePasswordPayload, ProfileFormState } from '../../types/types.ts';
 
 export const loginThunk = createAsyncThunk<
   { accessToken: string; refreshToken: string },
@@ -24,12 +25,7 @@ export const loginThunk = createAsyncThunk<
       refreshToken,
     };
   } catch (error) {
-    if (axios.isAxiosError<ApiErrorResponse>(error)) {
-      const serverMessage = error.response?.data?.message ?? error.message;
-      return rejectWithValue(serverMessage);
-    }
-
-    return rejectWithValue(error instanceof Error ? error.message : 'loginThunk failed');
+    return rejectWithValue(extractAxiosError(error, 'loginThunk failed'));
   }
 });
 
@@ -49,12 +45,11 @@ export const resetPasswordThunk = createAsyncThunk<void, ResetPasswordPayload, {
       });
 
       if (!res.ok) {
-        // jeśli backend zwraca tekst / JSON z błędem, możesz to rozwinąć
         const msg = await res.text().catch(() => '');
         return rejectWithValue(msg || 'Reset password failed');
       }
-    } catch {
-      return rejectWithValue('Network error');
+    } catch (error) {
+      return rejectWithValue(extractAxiosError(error, 'Network error'));
     }
   },
 );
@@ -89,12 +84,7 @@ export const getMeThunk = createAsyncThunk('auth/getMe', async (_, { rejectWithV
     const res = await axiosSecureInstance.get('/users/getMe');
     return res.data;
   } catch (error) {
-    if (axios.isAxiosError<ApiErrorResponse>(error)) {
-      const serverMessage = error.response?.data?.message ?? error.message;
-      return rejectWithValue(serverMessage);
-    }
-
-    return rejectWithValue(error instanceof Error ? error.message : 'GetMe failed');
+    return rejectWithValue(extractAxiosError(error, 'GetMe failed'));
   }
 });
 
@@ -109,12 +99,7 @@ export const registerThunk = createAsyncThunk<
     await axiosSecureInstance.post('auth/register', payload);
     return;
   } catch (error) {
-    if (axios.isAxiosError<ApiErrorResponse>(error)) {
-      const serverMessage = error.response?.data?.message ?? error.message;
-      return rejectWithValue(serverMessage);
-    }
-
-    return rejectWithValue(error instanceof Error ? error.message : 'Register failed');
+    return rejectWithValue(extractAxiosError(error, 'Register failed'));
   }
 });
 
@@ -142,7 +127,38 @@ export const recoveryThunk = createAsyncThunk<
 >('auth/recovery', async (email, { rejectWithValue }) => {
   try {
     await axiosSecureInstance.post('auth/remind-password', { email });
-  } catch {
-    return rejectWithValue('User not found');
+  } catch (error) {
+    return rejectWithValue(extractAxiosError(error, 'User not found'));
   }
 });
+
+export const updateProfileThunk = createAsyncThunk<unknown, ProfileFormState, { rejectValue: string }>(
+  'auth/updateProfile',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.put('/api/auth/updateProfile', payload);
+      return data;
+    } catch (error) {
+      return rejectWithValue(extractAxiosError(error, 'Error while updating profile /api/auth/updateProfile.'));
+    }
+  },
+);
+
+export const changePasswordThunk = createAsyncThunk<unknown, ChangePasswordPayload, { rejectValue: string }>(
+  'auth/changePassword',
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.put('/api/auth/changePassword', payload);
+      return data;
+    } catch (error) {
+      return rejectWithValue(extractAxiosError(error, 'Error: /api/auth/changePassword.'));
+    }
+  },
+);
+
+const extractAxiosError = (error: unknown, fallback: string) => {
+  if (axios.isAxiosError<ApiErrorResponse>(error)) {
+    return error.response?.data?.message ?? error.message;
+  }
+  return error instanceof Error ? error.message : fallback;
+};

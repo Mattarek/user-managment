@@ -21,18 +21,21 @@
     "doctors": "Doctors"
   },
   "settings": {
-    "password_title": "Reset password",
-    "current_password": "Current password",
-    "new_password": "New password",
-    "repeat_new_password": "Repeat new password",
     "title": "Settings",
     "password_subtitle": "Change your password regularly to keep your account secure.",
     "account_settings": "Details",
     "change_password": "Change password",
     "clear_fields": "Clear fields",
-    "save": "Save changes"
+    "save": "Save changes",
+    "password_changed": "Password changed successfully",
+    "password_change_failed": "Failed to change password"
   },
   "auth": {
+    "password_mismatch": "Passwords do not match",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "repeat_new_password": "Repeat new password",
+    "password_title": "Reset password",
     "recoverySuccess": "The email has been sent.",
     "resetTokenMissing": "Reset token is missing or invalid.",
     "resetSuccess": "Your password has been successfully reset. You can now log in.",
