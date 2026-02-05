@@ -9,8 +9,13 @@ export const axiosSecureInstance = axios.create({
 
 axiosSecureInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem(PATIENTS_ACCESS_TOKEN);
+
+  // debug
+  console.log('INTERCEPTOR HIT', config.url, { hasToken: !!token });
+
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = config.headers ?? {};
+    (config.headers as any)['Authorization'] = `Bearer ${token}`;
   }
   return config;
 });
