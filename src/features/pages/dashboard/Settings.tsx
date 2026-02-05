@@ -137,8 +137,15 @@ export function Settings() {
 
                 showToast(t('settings.saved', 'Zapisano zmiany.'));
                 helpers.resetForm({ values });
-              } catch {
-                showToast(t('settings.save_error', 'Nie udało się zapisać zmian.'));
+              } catch (err) {
+                const msg = typeof err === 'string' ? err : t('settings.password_change_error');
+
+                // jeśli backend mówi o złym haśle — pokaż pod polem
+                if (msg.toLowerCase().includes('current password')) {
+                  helpers.setFieldError('currentPassword', t('auth.current_password_incorrect', msg));
+                } else {
+                  showToast(msg);
+                }
               } finally {
                 helpers.setSubmitting(false);
               }
@@ -276,11 +283,15 @@ export function Settings() {
                     newPassword: values.newPassword,
                   }),
                 ).unwrap();
-
                 showToast(t('settings.password_changed'));
                 helpers.resetForm();
-              } catch {
-                showToast(t('settings.password_change_error'));
+              } catch (err) {
+                const msg = typeof err === 'string' ? err : t('settings.password_change_error');
+                if (msg.toLowerCase().includes('Current password is incorrect')) {
+                  helpers.setFieldError('currentPassword', t('auth.current_password_incorrect', msg));
+                } else {
+                  showToast(msg);
+                }
               } finally {
                 helpers.setSubmitting(false);
               }
