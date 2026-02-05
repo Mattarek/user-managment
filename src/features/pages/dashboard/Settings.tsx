@@ -1,34 +1,99 @@
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Form, Formik, type FormikHelpers } from 'formik';
+import * as Yup from 'yup';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
   Divider,
   Grid,
   InputAdornment,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { useTranslation } from 'react-i18next';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppSelector } from '../../../store/hooks.ts';
-import { useMemo } from 'react';
+import { Toast } from '../../../components/Toast.tsx';
+import { MIN_PASSWORD_LENGTH } from '../../../constants.ts';
+import { axiosInstance } from '../../../libs/axiosInstance.ts';
+import type { AxiosError } from 'axios';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import IconButton from '@mui/material/IconButton';
 
-type FormState = {
+type ProfileFormState = {
   email: string;
   name: string;
   login: string;
   surname: string;
 };
 
+type PasswordFormState = {
+  currentPassword: string;
+  newPassword: string;
+  repeatNewPassword: string;
+};
+
+const putProfile = async (data: ProfileFormState) => {
+  try {
+    const response = await axiosInstance.put('/api/auth/updateProfile', data);
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message?: string }>;
+    const message = err.response?.data?.message ?? 'Error while updating profile /api/auth/updateProfile.';
+    throw new Error(message);
+  }
+};
+
+const putPassword = async (data: { currentPassword: string; newPassword: string }) => {
+  try {
+    const response = await axiosInstance.put('/api/auth/changePassword', data);
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError<{ message?: string }>;
+    const message = err.response?.data?.message ?? 'Error: /api/auth/changePassword.';
+    throw new Error(message);
+  }
+};
+
 export function Settings() {
+  const [showPass, setShowPass] = useState({
+    current: false,
+    next: false,
+    repeat: false,
+  });
+
+  const toggleShow = (key: keyof typeof showPass) => {
+    setShowPass((s) => ({ ...s, [key]: !s[key] }));
+  };
+  const eyeAdornment = (key: keyof typeof showPass) => (
+    <InputAdornment position="end">
+      <IconButton onClick={() => toggleShow(key)} edge="end" aria-label="toggle password visibility">
+        {showPass[key] ? <VisibilityOffOutlinedIcon fontSize="small" /> : <VisibilityOutlinedIcon fontSize="small" />}
+      </IconButton>
+    </InputAdornment>
+  );
+
   const { t } = useTranslation();
   const me = useAppSelector((s) => s.auth.user);
 
-  const form: FormState = useMemo(
+  const [toast, setToast] = useState<{ open: boolean; message: string }>({
+    open: false,
+    message: '',
+  });
+
+  const showToast = (message: string) => setToast({ open: true, message });
+  const closeToast = () => setToast((x) => ({ ...x, open: false }));
+
+  const profileInitialValues: ProfileFormState = useMemo(
     () => ({
       email: me?.email ?? '',
       login: me?.login ?? '',
@@ -38,9 +103,36 @@ export function Settings() {
     [me],
   );
 
-  const readOnlyFieldProps = {
-    htmlInput: { readOnly: true },
-  } as const;
+  const profileSchema = useMemo(
+    () =>
+      Yup.object({
+        email: Yup.string().email(t('validation.email')).required(t('validation.required')),
+        login: Yup.string().min(3, t('validation.min_3')).required(t('validation.required')),
+        name: Yup.string().min(2, t('validation.min_2')).required(t('validation.required')),
+        surname: Yup.string().min(2, t('validation.min_2')).required(t('validation.required')),
+      }),
+    [t],
+  );
+
+  const passwordInitialValues: PasswordFormState = {
+    currentPassword: '',
+    newPassword: '',
+    repeatNewPassword: '',
+  };
+
+  const passwordSchema = useMemo(
+    () =>
+      Yup.object({
+        currentPassword: Yup.string().required(t('validation.required')),
+        newPassword: Yup.string()
+          .min(MIN_PASSWORD_LENGTH, t('validation.pass_min_10'))
+          .required(t('validation.required')),
+        repeatNewPassword: Yup.string()
+          .oneOf([Yup.ref('newPassword')], t('auth.password_mismatch'))
+          .required(t('validation.required')),
+      }),
+    [t],
+  );
 
   return (
     <Box sx={{ maxWidth: 760, mx: 'auto', p: { xs: 2, md: 3 } }}>
@@ -57,86 +149,256 @@ export function Settings() {
         <Divider />
 
         <CardContent sx={{ pt: 3 }}>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                label={t('auth.email', 'Email')}
-                type="email"
-                value={form.email}
-                fullWidth
-                slotProps={{
-                  ...readOnlyFieldProps,
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <EmailOutlinedIcon fontSize="small" />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                autoComplete="email"
-              />
-            </Grid>
+          <Formik
+            enableReinitialize
+            initialValues={profileInitialValues}
+            validationSchema={profileSchema}
+            onSubmit={async (values, helpers: FormikHelpers<ProfileFormState>) => {
+              try {
+                await putProfile(values);
+                showToast(t('settings.saved', 'Zapisano zmiany.'));
+                helpers.resetForm({ values });
+              } catch {
+                showToast(t('settings.save_error', 'Nie udało się zapisać zmian.'));
+              } finally {
+                helpers.setSubmitting(false);
+              }
+            }}
+          >
+            {({ values, handleChange, handleBlur, errors, touched, isSubmitting, dirty }) => (
+              <Form noValidate>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      name="email"
+                      label={t('auth.email')}
+                      type="email"
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="email"
+                      error={!!touched.email && !!errors.email}
+                      helperText={touched.email ? errors.email : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <EmailOutlinedIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </Grid>
 
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                label={t('auth.login', 'Login')}
-                value={form.login}
-                fullWidth
-                slotProps={{
-                  ...readOnlyFieldProps,
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircleOutlinedIcon fontSize="small" />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                autoComplete="username"
-              />
-            </Grid>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      name="login"
+                      label={t('auth.login')}
+                      value={values.login}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="username"
+                      error={!!touched.login && !!errors.login}
+                      helperText={touched.login ? errors.login : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <AccountCircleOutlinedIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </Grid>
 
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                label={t('auth.name', 'Imię')}
-                value={form.name}
-                fullWidth
-                slotProps={{
-                  ...readOnlyFieldProps,
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonOutlineIcon fontSize="small" />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                autoComplete="given-name"
-              />
-            </Grid>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      name="name"
+                      label={t('auth.name')}
+                      value={values.name}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="given-name"
+                      error={!!touched.name && !!errors.name}
+                      helperText={touched.name ? errors.name : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <PersonOutlineIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </Grid>
 
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                label={t('auth.surname')}
-                value={form.surname}
-                fullWidth
-                slotProps={{
-                  ...readOnlyFieldProps,
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <BadgeOutlinedIcon fontSize="small" />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                autoComplete="family-name"
-              />
-            </Grid>
-          </Grid>
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      name="surname"
+                      label={t('auth.surname')}
+                      value={values.surname}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="family-name"
+                      error={!!touched.surname && !!errors.surname}
+                      helperText={touched.surname ? errors.surname : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <BadgeOutlinedIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 2.5 }}>
+                  <Button type="submit" variant="contained" disabled={!dirty || isSubmitting}>
+                    {t('common.save')}
+                  </Button>
+                </Stack>
+              </Form>
+            )}
+          </Formik>
         </CardContent>
       </Card>
+
+      <Card variant="outlined" sx={{ borderRadius: 3, mt: 2.5 }}>
+        <CardHeader
+          title={
+            <Typography variant="h6" fontWeight={700}>
+              {t('settings.password_title')}
+            </Typography>
+          }
+          subheader={t('settings.password_subtitle')}
+          sx={{ pb: 1.5 }}
+        />
+        <Divider />
+
+        <CardContent sx={{ pt: 3 }}>
+          <Formik
+            initialValues={passwordInitialValues}
+            validationSchema={passwordSchema}
+            onSubmit={async (values, helpers: FormikHelpers<PasswordFormState>) => {
+              try {
+                await putPassword({
+                  currentPassword: values.currentPassword,
+                  newPassword: values.newPassword,
+                });
+                showToast(t('settings.password_changed'));
+                helpers.resetForm();
+              } catch {
+                showToast(t('settings.password_change_error'));
+              } finally {
+                helpers.setSubmitting(false);
+              }
+            }}
+          >
+            {({ values, handleChange, handleBlur, errors, touched, isSubmitting, resetForm }) => (
+              <Form noValidate>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12 }}>
+                    <TextField
+                      name="currentPassword"
+                      label={t('auth.current_password')}
+                      type={showPass.current ? 'text' : 'password'}
+                      value={values.currentPassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="current-password"
+                      error={!!touched.currentPassword && !!errors.currentPassword}
+                      helperText={touched.currentPassword ? errors.currentPassword : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LockOutlinedIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                          endAdornment: eyeAdornment('current'),
+                        },
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      name="newPassword"
+                      label={t('auth.new_password')}
+                      type={showPass.next ? 'text' : 'password'}
+                      value={values.newPassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="new-password"
+                      error={!!touched.newPassword && !!errors.newPassword}
+                      helperText={touched.newPassword ? errors.newPassword : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LockOutlinedIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                          endAdornment: eyeAdornment('next'),
+                        },
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <TextField
+                      name="repeatNewPassword"
+                      label={t('auth.repeat_new_password')}
+                      type={showPass.repeat ? 'text' : 'password'}
+                      value={values.repeatNewPassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      autoComplete="new-password"
+                      error={!!touched.repeatNewPassword && !!errors.repeatNewPassword}
+                      helperText={touched.repeatNewPassword ? errors.repeatNewPassword : undefined}
+                      slotProps={{
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LockOutlinedIcon fontSize="small" />
+                            </InputAdornment>
+                          ),
+                          endAdornment: eyeAdornment('repeat'),
+                        },
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 2.5 }}>
+                  <Button type="submit" variant="contained" disabled={isSubmitting}>
+                    {t('settings.change_password')}
+                  </Button>
+
+                  <Button type="button" variant="outlined" disabled={isSubmitting} onClick={() => resetForm()}>
+                    {t('common.cancel')}
+                  </Button>
+                </Stack>
+              </Form>
+            )}
+          </Formik>
+        </CardContent>
+      </Card>
+
+      <Toast open={toast.open} message={toast.message} onClose={closeToast} />
     </Box>
   );
 }
