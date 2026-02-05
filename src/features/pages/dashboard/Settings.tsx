@@ -264,7 +264,7 @@ export function Settings() {
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 2.5 }}>
                   <Button type="submit" variant="contained" disabled={!dirty || isSubmitting}>
-                    {t('common.save')}
+                    {t('settings.save')}
                   </Button>
                 </Stack>
               </Form>
@@ -389,7 +389,7 @@ export function Settings() {
                   </Button>
 
                   <Button type="button" variant="outlined" disabled={isSubmitting} onClick={() => resetForm()}>
-                    {t('common.cancel')}
+                    {t('settings.clear_fields')}
                   </Button>
                 </Stack>
               </Form>

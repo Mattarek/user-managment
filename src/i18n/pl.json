@@ -21,8 +21,15 @@
     "doctors": "Lekarze"
   },
   "settings": {
+    "password_title": "Reset hasła",
+    "current_password": "Obecne hasło",
+    "new_password": "Nowe hasło",
+    "repeat_new_password": "Powtórz nowe hasło",
     "title": "Ustawienia",
-    "account_settings": "Dane użytkownika"
+    "account_settings": "Dane użytkownika",
+    "change_password": "Zmień hasło",
+    "clear_fields": "Wyczyść pola",
+    "save": "Zapisz zmiany"
   },
   "auth": {
     "recoverySuccess": "Wiadomość e-mail została wysłana.",
