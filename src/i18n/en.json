@@ -21,8 +21,15 @@
     "doctors": "Doctors"
   },
   "settings": {
+    "password_title": "Reset password",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "repeat_new_password": "Repeat new password",
     "title": "Settings",
-    "account_settings": "Details"
+    "account_settings": "Details",
+    "change_password": "Change password",
+    "clear_fields": "Clear fields",
+    "save": "Save changes"
   },
   "auth": {
     "recoverySuccess": "The email has been sent.",

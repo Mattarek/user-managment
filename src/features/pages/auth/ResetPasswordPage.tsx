@@ -1,7 +1,7 @@
 import { BasePageLayout } from '../../../layouts/BaseAuthLayout';
 import { Field, Form, Formik } from 'formik';
 import { TextField } from 'formik-mui';
-import { Alert, Button, Snackbar, Stack } from '@mui/material';
+import { Alert, Button, IconButton, InputAdornment, Snackbar, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import * as Yup from 'yup';
@@ -10,6 +10,8 @@ import type { SnackbarState } from '../../../types/types.ts';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from '../../../store/hooks.ts';
 import { resetPasswordThunk } from '../../auth/auth.thunks.ts';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 type ResetForm = {
   password: string;
@@ -17,6 +19,18 @@ type ResetForm = {
 };
 
 export function ResetPasswordPage() {
+  const [showPassword, setShowPassword] = useState({
+    password: false,
+    repeatPassword: false,
+  });
+
+  const togglePasswordVisibility = (field: keyof typeof showPassword) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -82,14 +96,36 @@ export function ResetPasswordPage() {
         {({ isSubmitting }) => (
           <Form>
             <Stack spacing={2}>
-              <Field component={TextField} name="password" type="password" label={t('auth.newPassword')} fullWidth />
+              <Field
+                component={TextField}
+                name="password"
+                type={showPassword.password ? 'text' : 'password'}
+                label={t('auth.newPassword')}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => togglePasswordVisibility('password')} edge="end">
+                        {showPassword.password ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
               <Field
                 component={TextField}
                 name="repeatedPassword"
-                type="password"
+                type={showPassword.repeatPassword ? 'text' : 'password'}
                 label={t('auth.repeatPassword')}
-                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => togglePasswordVisibility('repeatPassword')} edge="end">
+                        {showPassword.repeatPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
 
               <Button type="submit" variant="contained" disabled={isSubmitting || !token}>
