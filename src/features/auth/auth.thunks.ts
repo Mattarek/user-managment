@@ -136,7 +136,7 @@ export const updateProfileThunk = createAsyncThunk<unknown, ProfileFormState, { 
   'auth/updateProfile',
   async (payload, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.put('auth/updateProfile', payload);
+      const { data } = await axiosSecureInstance.put('auth/updateProfile', payload);
       return data;
     } catch (error) {
       return rejectWithValue(extractAxiosError(error, 'Error while updating profile /api/auth/updateProfile.'));
@@ -148,7 +148,7 @@ export const changePasswordThunk = createAsyncThunk<unknown, ChangePasswordPaylo
   'auth/changePassword',
   async (payload, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.put('auth/changePassword', payload);
+      const { data } = await axiosSecureInstance.put('auth/changePassword', payload);
       return data;
     } catch (error) {
       return rejectWithValue(extractAxiosError(error, 'Error: /api/auth/changePassword.'));
