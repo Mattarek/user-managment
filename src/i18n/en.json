@@ -29,7 +29,8 @@
     "clear_fields": "Clear fields",
     "save": "Save changes",
     "password_changed": "Password changed successfully",
-    "password_change_failed": "Failed to change password"
+    "password_change_failed": "Failed to change password",
+    "password_change_error": "Failed to change password"
   },
   "auth": {
     "password_mismatch": "Passwords do not match",
