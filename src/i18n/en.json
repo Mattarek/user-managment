@@ -26,6 +26,7 @@
     "new_password": "New password",
     "repeat_new_password": "Repeat new password",
     "title": "Settings",
+    "password_subtitle": "Change your password regularly to keep your account secure.",
     "account_settings": "Details",
     "change_password": "Change password",
     "clear_fields": "Clear fields",
