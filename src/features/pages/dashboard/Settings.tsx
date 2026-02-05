@@ -44,11 +44,11 @@ type PasswordFormState = {
 
 const putProfile = async (data: ProfileFormState) => {
   try {
-    const response = await axiosInstance.put('/api/auth/me', data);
+    const response = await axiosInstance.put('/api/auth/updateProfile', data);
     return response.data;
   } catch (error) {
     const err = error as AxiosError<{ message?: string }>;
-    const message = err.response?.data?.message ?? 'Error while updating profile /api/auth/me.';
+    const message = err.response?.data?.message ?? 'Error while updating profile /api/auth/updateProfile.';
     throw new Error(message);
   }
 };

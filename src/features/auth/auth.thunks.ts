@@ -141,7 +141,7 @@ export const recoveryThunk = createAsyncThunk<
   }
 >('auth/recovery', async (email, { rejectWithValue }) => {
   try {
-    await axiosSecureInstance.post('/users/remind-password', { email });
+    await axiosSecureInstance.post('/api/auth/remind-password', { email });
   } catch {
     return rejectWithValue('User not found');
   }
