@@ -21,6 +21,7 @@
     "doctors": "Doctors"
   },
   "settings": {
+    "password_title": "Reset password",
     "title": "Settings",
     "password_subtitle": "Change your password regularly to keep your account secure.",
     "account_settings": "Details",
