@@ -27,13 +27,15 @@
     "account_settings": "Dane użytkownika",
     "change_password": "Zmień hasło",
     "clear_fields": "Wyczyść pola",
-    "save": "Zapisz zmiany"
+    "save": "Zapisz zmiany",
+    "password_changed": "Hasło zostało pomyślnie zmienione",
+    "password_change_error": "Nie udało się zmienić hasła"
   },
   "auth": {
+    "password_mismatch": "Hasła nie są takie same",
     "current_password": "Obecne hasło",
     "new_password": "Nowe hasło",
     "repeat_new_password": "Powtórz nowe hasło",
-
     "recoverySuccess": "Wiadomość e-mail została wysłana.",
     "resetTokenMissing": "Brak tokenu resetu hasła w linku.",
     "resetSuccess": "Hasło zostało zmienione. Możesz się zalogować.",

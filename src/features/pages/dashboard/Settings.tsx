@@ -20,14 +20,13 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useAppSelector } from '../../../store/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
 import { Toast } from '../../../components/Toast.tsx';
 import { MIN_PASSWORD_LENGTH } from '../../../constants.ts';
-import { axiosInstance } from '../../../libs/axiosInstance.ts';
-import type { AxiosError } from 'axios';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import IconButton from '@mui/material/IconButton';
+import { changePasswordThunk, updateProfileThunk } from '../../auth/auth.thunks.ts';
 
 type ProfileFormState = {
   email: string;
@@ -42,34 +41,13 @@ type PasswordFormState = {
   repeatNewPassword: string;
 };
 
-const putProfile = async (data: ProfileFormState) => {
-  try {
-    const response = await axiosInstance.put('/api/auth/updateProfile', data);
-    return response.data;
-  } catch (error) {
-    const err = error as AxiosError<{ message?: string }>;
-    const message = err.response?.data?.message ?? 'Error while updating profile /api/auth/updateProfile.';
-    throw new Error(message);
-  }
-};
-
-const putPassword = async (data: { currentPassword: string; newPassword: string }) => {
-  try {
-    const response = await axiosInstance.put('/api/auth/changePassword', data);
-    return response.data;
-  } catch (error) {
-    const err = error as AxiosError<{ message?: string }>;
-    const message = err.response?.data?.message ?? 'Error: /api/auth/changePassword.';
-    throw new Error(message);
-  }
-};
-
 export function Settings() {
   const [showPass, setShowPass] = useState({
     current: false,
     next: false,
     repeat: false,
   });
+  const dispatch = useAppDispatch();
 
   const toggleShow = (key: keyof typeof showPass) => {
     setShowPass((s) => ({ ...s, [key]: !s[key] }));
@@ -155,7 +133,8 @@ export function Settings() {
             validationSchema={profileSchema}
             onSubmit={async (values, helpers: FormikHelpers<ProfileFormState>) => {
               try {
-                await putProfile(values);
+                await dispatch(updateProfileThunk(values)).unwrap();
+
                 showToast(t('settings.saved', 'Zapisano zmiany.'));
                 helpers.resetForm({ values });
               } catch {
@@ -291,10 +270,13 @@ export function Settings() {
             validationSchema={passwordSchema}
             onSubmit={async (values, helpers: FormikHelpers<PasswordFormState>) => {
               try {
-                await putPassword({
-                  currentPassword: values.currentPassword,
-                  newPassword: values.newPassword,
-                });
+                await dispatch(
+                  changePasswordThunk({
+                    currentPassword: values.currentPassword,
+                    newPassword: values.newPassword,
+                  }),
+                ).unwrap();
+
                 showToast(t('settings.password_changed'));
                 helpers.resetForm();
               } catch {
