@@ -13,6 +13,7 @@ export interface User {
   name: string;
   surname: string;
   role: string;
+  avatarUrl: string | null;
 }
 
 export interface LoginPayload {

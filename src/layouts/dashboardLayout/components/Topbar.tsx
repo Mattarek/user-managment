@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Avatar,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -16,11 +15,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import doctorsApp from '../../../assets/doctorsApp.png';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks.ts';
-import { logoutThunk } from '../../../features/auth/auth.thunks.ts';
+import { logoutThunk, updateAvatarThunk } from '../../../features/auth/auth.thunks.ts';
 import { SessionStatus } from '../../../components/tokenTimer/SessionStatus.tsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { ThemeSwitcher } from '../../../components/ThemeSwitcher.tsx';
 import { appPaths } from '../../../routes.tsx';
+import { ClickableAvatar } from '../../../components/ClickableAvatar.tsx';
+import { myUploadFn } from '../../../utils/myUploadFn.ts';
 
 export function Topbar() {
   const [anchor, setAnchor] = useState<null | HTMLElement>(null);
@@ -59,8 +60,14 @@ export function Topbar() {
           <SessionStatus />
           {user && <Typography>{user.email}</Typography>}
 
-          <Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>
-
+          {/*<Avatar>{user?.email?.[0]?.toUpperCase()}</Avatar>*/}
+          <ClickableAvatar
+            uploadToCdnAndGetUrl={async (file) => {
+              const url = await myUploadFn(file);
+              dispatch(updateAvatarThunk({ avatarUrl: url }));
+              return url;
+            }}
+          />
           <ThemeSwitcher />
 
           <IconButton onClick={(e) => setAnchor(e.currentTarget)}>
