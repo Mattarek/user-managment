@@ -34,6 +34,24 @@ type ResetPasswordPayload = {
   password: string;
 };
 
+type UpdateAvatarPayload = {
+  avatarUrl: string | null;
+};
+
+export const updateAvatarThunk = createAsyncThunk<unknown, UpdateAvatarPayload, { rejectValue: string }>(
+  'auth/updateAvatar',
+  async (payload, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await axiosSecureInstance.patch('auth/avatarUpdate', payload);
+      dispatch(getMeThunk());
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(extractAxiosError(error, 'Error while updating avatar /api/auth/avatarUpdate.'));
+    }
+  },
+);
+
 export const resetPasswordThunk = createAsyncThunk<void, ResetPasswordPayload, { rejectValue: string }>(
   'auth/resetPassword',
   async (payload, { rejectWithValue }) => {

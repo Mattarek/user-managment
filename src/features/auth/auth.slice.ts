@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { AuthState } from './auth.types';
-import { getMeThunk, loginThunk, logoutThunk } from './auth.thunks';
+import { getMeThunk, loginThunk, logoutThunk, updateAvatarThunk } from './auth.thunks';
 
 const initialState: AuthState = {
   user: null,
@@ -43,10 +43,22 @@ const authSlice = createSlice({
         state.initialized = true;
       })
 
+      .addCase(updateAvatarThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateAvatarThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateAvatarThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? 'Avatar update failed';
+      })
+
       .addCase(logoutThunk.pending, (state) => {
         state.loading = true;
       })
-      
+
       .addCase(logoutThunk.fulfilled, (state) => {
         state.loading = false;
         state.error = null;

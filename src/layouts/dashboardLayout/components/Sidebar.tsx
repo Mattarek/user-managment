@@ -1,4 +1,4 @@
-import { Avatar, Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Box, Collapse, Drawer, List, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 import { useMemo, useState } from 'react';
@@ -57,11 +57,10 @@ export function Sidebar({ width = 260, height = 64 }: Readonly<Props>) {
           borderBottom: '0.0625rem solid rgba(255,255,255,0.12)',
         }}
       >
-        <Avatar>{user?.name?.[0]?.toUpperCase()}</Avatar>
+        {/*<Avatar>{user?.name?.[0]?.toUpperCase()}</Avatar>*/}
 
         <Box>
           <Typography fontWeight={600}>{user ? `${user.name ?? ''} ${user.surname ?? ''}`.trim() : '—'}</Typography>
-
           <Typography variant="body2" color="text.secondary">
             {user?.role ?? ''}
           </Typography>
