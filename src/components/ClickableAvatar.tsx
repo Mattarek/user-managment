@@ -1,7 +1,8 @@
-import React, { type ChangeEvent, useRef, useState } from 'react';
-import { AxiosError } from 'axios';
-import { useAppDispatch, useAppSelector } from '../store/hooks.ts';
-import { updateAvatarThunk } from '../features/auth/auth.thunks.ts';
+import React, {type ChangeEvent, useEffect, useRef, useState} from 'react';
+import {AxiosError} from 'axios';
+import {useAppDispatch, useAppSelector} from '../store/hooks.ts';
+import {updateAvatarThunk} from '../features/auth/auth.thunks.ts';
+import {axiosSecureInstance} from '../libs/axiosSecureInstance.ts';
 
 type ClickableAvatarProps = {
   size?: number;
@@ -12,11 +13,21 @@ type ClickableAvatarProps = {
 export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, className, uploadToCdnAndGetUrl }) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
-
   const user = useAppSelector((s) => s.auth.user);
-
   const [isUploading, setIsUploading] = useState(false);
 
+  useEffect(() => {
+    axiosSecureInstance
+      .get('/api/auth/avatar/show', {
+        responseType: 'blob',
+      })
+      .then((response) => {
+        console.log('Avatar blob:', response.data);
+      })
+      .catch((error) => {
+        console.error('Błąd pobierania avatara:', error);
+      });
+  }, []);
   const openPicker = () => {
     if (isUploading) return;
     inputRef.current?.click();
@@ -51,7 +62,6 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
             : err instanceof Error
               ? err.message
               : 'Nie udało się zaktualizować avatara';
-
       alert(message);
     } finally {
       setIsUploading(false);
@@ -66,7 +76,7 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
         type="button"
         onClick={openPicker}
         disabled={isUploading}
-        title="Kliknij, aby zmienić avatar"
+        title="Change avatar"
         style={{
           width: size,
           height: size,
