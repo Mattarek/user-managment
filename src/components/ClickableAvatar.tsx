@@ -3,6 +3,7 @@ import {AxiosError} from 'axios';
 import {useAppDispatch, useAppSelector} from '../store/hooks.ts';
 import {updateAvatarThunk} from '../features/auth/auth.thunks.ts';
 import {axiosSecureInstance} from '../libs/axiosSecureInstance.ts';
+import {Avatar} from '@mui/material';
 
 type ClickableAvatarProps = {
   size?: number;
@@ -10,24 +11,56 @@ type ClickableAvatarProps = {
   uploadToCdnAndGetUrl: (file: File) => Promise<string>;
 };
 
-export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, className, uploadToCdnAndGetUrl }) => {
+export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({
+  size = 44,
+  className,
+  uploadToCdnAndGetUrl: uploadAvatar,
+}) => {
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const user = useAppSelector((s) => s.auth.user);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    axiosSecureInstance
-      .get('/api/auth/avatar/show', {
+  const [backendAvatarUrl, setBackendAvatarUrl] = useState<string | null>(null);
+
+  const fetchBackendAvatar = async () => {
+    try {
+      const res = await axiosSecureInstance.get('/auth/avatar/show', {
         responseType: 'blob',
-      })
-      .then((response) => {
-        console.log('Avatar blob:', response.data);
-      })
-      .catch((error) => {
-        console.error('Błąd pobierania avatara:', error);
+        validateStatus: (s) => (s >= 200 && s < 300) || s === 404,
       });
+
+      if (res.status === 404) {
+        setBackendAvatarUrl(null);
+        return;
+      }
+
+      const blob: Blob = res.data;
+      if (!blob.type.startsWith('image/')) {
+        setBackendAvatarUrl(null);
+        return;
+      }
+
+      setBackendAvatarUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(blob);
+      });
+    } catch (error) {
+      console.error('Błąd pobierania avatara:', error);
+      setBackendAvatarUrl(null);
+    }
+  };
+
+  useEffect(() => {
+    void fetchBackendAvatar();
+    return () => {
+      setBackendAvatarUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return null;
+      });
+    };
   }, []);
+
   const openPicker = () => {
     if (isUploading) return;
     inputRef.current?.click();
@@ -38,21 +71,11 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
     e.target.value = '';
     if (!file) return;
 
-    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!allowed.includes(file.type)) {
-      alert('Dozwolone formaty: JPG/PNG/WebP');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Maksymalny rozmiar pliku: 5MB');
-      return;
-    }
-
     setIsUploading(true);
     try {
-      const avatarUrl = await uploadToCdnAndGetUrl(file);
-
+      const avatarUrl = await uploadAvatar(file);
       await dispatch(updateAvatarThunk({ avatarUrl })).unwrap();
+      await fetchBackendAvatar();
     } catch (err) {
       const message =
         typeof err === 'string'
@@ -69,6 +92,7 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
   }
 
   const letter = user?.email?.[0]?.toUpperCase() ?? '?';
+  const imgSrc = backendAvatarUrl ?? user?.avatarUrl ?? null;
 
   return (
     <div className={className}>
@@ -80,7 +104,7 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
         style={{
           width: size,
           height: size,
-          borderRadius: 9999,
+          borderRadius: 100,
           border: '1px solid rgba(0,0,0,0.12)',
           overflow: 'hidden',
           display: 'grid',
@@ -91,12 +115,8 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
           padding: 0,
         }}
       >
-        {user?.avatarUrl ? (
-          <img
-            src={user.avatarUrl}
-            alt="avatar"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
+        {imgSrc ? (
+          <Avatar src={imgSrc} alt="avatar image" />
         ) : (
           <span style={{ fontWeight: 700, userSelect: 'none' }}>{letter}</span>
         )}
@@ -112,9 +132,7 @@ export const ClickableAvatar: React.FC<ClickableAvatarProps> = ({ size = 44, cla
               fontSize: 12,
               fontWeight: 600,
             }}
-          >
-            Upload...
-          </div>
+          />
         )}
       </button>
 
